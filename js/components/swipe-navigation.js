@@ -1,16 +1,22 @@
 // components/swipe-navigation.js
 // Adds swipe navigation to the tea collection
 
+import { teaEvents, TeaEventTypes } from '../services/event-manager.js';
+
 class SwipeNavigation extends HTMLElement {
   constructor() {
     super();
     
-    // Touch tracking
-    this._touchStartX = 0;
-    this._touchStartY = 0;
-    this._currentX = 0;
-    this._currentY = 0;
-    this._thresholdDistance = 30; // Minimum distance to trigger swipe
+    // Better structure for touch tracking
+    this._touchState = {
+      startX: 0,
+      startY: 0,
+      currentX: 0,
+      currentY: 0,
+      thresholdDistance: 30,
+      isTracking: false
+    };
+    
     this._categories = ['Green', 'Black', 'Oolong', 'White', 'Pu-erh', 'Yellow'];
     this._currentCategoryIndex = 0;
     
@@ -18,6 +24,8 @@ class SwipeNavigation extends HTMLElement {
     this._handleTouchStart = this._handleTouchStart.bind(this);
     this._handleTouchMove = this._handleTouchMove.bind(this);
     this._handleTouchEnd = this._handleTouchEnd.bind(this);
+    this._handleCategoryChange = this._handleCategoryChange.bind(this);
+    this._handlePillClick = this._handlePillClick.bind(this);
   }
 
   connectedCallback() {
@@ -31,10 +39,16 @@ class SwipeNavigation extends HTMLElement {
     
     // Set up the event listeners
     this._setupEventListeners();
+    
+    // Register with event manager to listen for category changes
+    teaEvents.on(TeaEventTypes.CATEGORY_CHANGED, this._handleCategoryChange);
   }
   
   disconnectedCallback() {
     this._removeEventListeners();
+    
+    // Clean up event listeners
+    teaEvents.off(TeaEventTypes.CATEGORY_CHANGED, this._handleCategoryChange);
   }
   
   _setupEventListeners() {
@@ -46,13 +60,10 @@ class SwipeNavigation extends HTMLElement {
       mainContainer.addEventListener('touchend', this._handleTouchEnd, { passive: true });
     }
     
-    // Listen for category changes to update our index
-    document.addEventListener('category-change', this._handleCategoryChange.bind(this));
-    
     // Also listen to category pill clicks
     const categoryPills = document.querySelectorAll('.category-pill');
     categoryPills.forEach(pill => {
-      pill.addEventListener('click', this._handlePillClick.bind(this));
+      pill.addEventListener('click', this._handlePillClick);
     });
   }
   
@@ -63,11 +74,17 @@ class SwipeNavigation extends HTMLElement {
       mainContainer.removeEventListener('touchmove', this._handleTouchMove);
       mainContainer.removeEventListener('touchend', this._handleTouchEnd);
     }
+    
+    // Remove category pill listeners
+    const categoryPills = document.querySelectorAll('.category-pill');
+    categoryPills.forEach(pill => {
+      pill.removeEventListener('click', this._handlePillClick);
+    });
   }
   
   _handleCategoryChange(event) {
     // Update our internal state when category changes
-    const category = event.detail.category;
+    const category = event.category;
     const newIndex = this._categories.indexOf(category);
     if (newIndex !== -1) {
       this._currentCategoryIndex = newIndex;
@@ -86,28 +103,36 @@ class SwipeNavigation extends HTMLElement {
   _handleTouchStart(event) {
     if (!event.touches[0]) return;
     
-    this._touchStartX = event.touches[0].clientX;
-    this._touchStartY = event.touches[0].clientY;
-    this._currentX = this._touchStartX;
-    this._currentY = this._touchStartY;
+    // Store initial touch position
+    this._touchState.startX = event.touches[0].clientX;
+    this._touchState.startY = event.touches[0].clientY;
+    this._touchState.currentX = this._touchState.startX;
+    this._touchState.currentY = this._touchState.startY;
+    this._touchState.isTracking = true;
   }
   
   _handleTouchMove(event) {
-    if (!event.touches[0]) return;
+    if (!this._touchState.isTracking || !event.touches[0]) return;
     
-    this._currentX = event.touches[0].clientX;
-    this._currentY = event.touches[0].clientY;
+    // Update current touch position
+    this._touchState.currentX = event.touches[0].clientX;
+    this._touchState.currentY = event.touches[0].clientY;
   }
   
   _handleTouchEnd(event) {
+    if (!this._touchState.isTracking) return;
+    
     // Calculate deltas
-    const deltaX = this._currentX - this._touchStartX;
-    const deltaY = this._currentY - this._touchStartY;
+    const deltaX = this._touchState.currentX - this._touchState.startX;
+    const deltaY = this._touchState.currentY - this._touchState.startY;
+    
+    // Reset tracking state
+    this._touchState.isTracking = false;
     
     // Check if horizontal swipe is dominant
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
       // Check if swipe distance meets threshold
-      if (Math.abs(deltaX) >= this._thresholdDistance) {
+      if (Math.abs(deltaX) >= this._touchState.thresholdDistance) {
         if (deltaX > 0) {
           // Swipe right - go to previous category
           this._navigateToPreviousCategory();
@@ -138,17 +163,31 @@ class SwipeNavigation extends HTMLElement {
     // Get the category at that index
     const category = this._categories[index];
     
+    // Update current index
+    this._currentCategoryIndex = index;
+    
+    // Use event manager to emit category change
+    teaEvents.emit(TeaEventTypes.CATEGORY_CHANGED, { 
+      category,
+      source: 'swipe'
+    });
+    
+    // Also visually update the UI
+    this._updateActivePill(category);
+  }
+  
+  _updateActivePill(category) {
     // Find the corresponding pill
     const pill = document.querySelector(`.category-pill[data-category="${category}"]`);
     if (pill) {
-      // Simulate click on the pill
-      pill.click();
+      // Update active class
+      document.querySelectorAll('.category-pill').forEach(p => {
+        p.classList.remove('active');
+      });
+      pill.classList.add('active');
       
       // Also scroll the pill into view
       pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      
-      // Update current index
-      this._currentCategoryIndex = index;
     }
   }
 }

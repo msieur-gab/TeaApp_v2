@@ -1,26 +1,31 @@
 // components/tea-circle.js
-// Enhanced version with improved DOM communication
+// Final version with proper size reset after interaction
+
+import { teaEvents, TeaEventTypes } from '../services/event-manager.js';
+import TeaTheme from '../utils/tea-theme.js';
 
 class TeaCircle extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     
-    // State
-    this._name = '';
-    this._category = '';
-    this._collected = false;
-    this._index = 0;
-    this._showTooltip = false;
-    this._animateIn = false;
-    this._teaId = ''; // Added tea ID property for better identification
+    // Structured state
+    this._state = {
+      name: '',
+      category: '',
+      collected: false,
+      index: 0,
+      showTooltip: false,
+      animateIn: false,
+      teaId: ''
+    };
     
-    // Debug flag
-    this._debug = false; // Changed to false for production
-    
-    // Long press timer
-    this._longPressTimer = null;
-    this._longPressDuration = 600; // ms
+    // Touch interaction improvements
+    this._touchState = {
+      timer: null,
+      duration: 600,
+      isPressed: false
+    };
     
     // Animation timeout
     this._animationTimeout = null;
@@ -32,20 +37,16 @@ class TeaCircle extends HTMLElement {
     this._handleClick = this._handleClick.bind(this);
     this._showNameTooltip = this._showNameTooltip.bind(this);
     this._hideNameTooltip = this._hideNameTooltip.bind(this);
-    
-    if (this._debug) console.log(`Tea circle created for: ${this._name}`);
   }
 
   connectedCallback() {
-    if (this._debug) console.log(`Tea circle connected: ${this._name || 'unnamed'}`);
-    
     // Extract attributes
-    this._name = this.getAttribute('name') || '';
-    this._category = this.getAttribute('category') || '';
-    this._collected = this.hasAttribute('collected');
-    this._index = parseInt(this.getAttribute('index') || '0', 10);
-    this._animateIn = this.hasAttribute('animate-in');
-    this._teaId = this.getAttribute('tea-id') || this.id || ''; // Get tea ID from attribute or element ID
+    this._state.name = this.getAttribute('name') || '';
+    this._state.category = this.getAttribute('category') || '';
+    this._state.collected = this.hasAttribute('collected');
+    this._state.index = parseInt(this.getAttribute('index') || '0', 10);
+    this._state.animateIn = this.hasAttribute('animate-in');
+    this._state.teaId = this.getAttribute('tea-id') || this.id || '';
     
     // Initial render
     this.render();
@@ -54,19 +55,17 @@ class TeaCircle extends HTMLElement {
     this._addEventListeners();
     
     // Set initial animation if needed
-    if (this._animateIn) {
+    if (this._state.animateIn) {
       this._triggerAnimation();
     } else {
-      // Set a timeout to trigger animation regardless, in case the attribute wasn't set
+      // Set a timeout to trigger animation
       this._animationTimeout = setTimeout(() => {
         this._triggerAnimation();
-      }, this._index * 30 + 300); // Staggered delay
+      }, this._state.index * 30 + 300); // Staggered delay
     }
   }
   
   disconnectedCallback() {
-    if (this._debug) console.log(`Tea circle disconnected: ${this._name}`);
-    
     this._removeEventListeners();
     this._clearLongPressTimer();
     
@@ -81,52 +80,89 @@ class TeaCircle extends HTMLElement {
   }
   
   attributeChangedCallback(name, oldValue, newValue) {
-    if (this._debug) console.log(`Tea circle attribute changed: ${name}, from ${oldValue} to ${newValue}`);
-    
     if (oldValue === newValue) return;
     
     switch (name) {
       case 'name':
-        this._name = newValue || '';
+        this._state.name = newValue || '';
         break;
       case 'category':
-        this._category = newValue || '';
+        this._state.category = newValue || '';
         break;
       case 'collected':
-        this._collected = this.hasAttribute('collected');
+        this._state.collected = this.hasAttribute('collected');
         break;
       case 'index':
-        this._index = parseInt(newValue || '0', 10);
+        this._state.index = parseInt(newValue || '0', 10);
         break;
       case 'animate-in':
         if (newValue === 'true' || newValue === '') {
-          this._animateIn = true;
+          this._state.animateIn = true;
           this._triggerAnimation();
         }
         break;
       case 'tea-id':
-        this._teaId = newValue || '';
+        this._state.teaId = newValue || '';
         break;
     }
     
-    this.render();
+    // Don't re-render the entire component for attribute changes
+    // Just update the affected parts
+    this._updateRenderedState();
+  }
+  
+  // Private method to update parts of the DOM without full re-render
+  _updateRenderedState() {
+    const circle = this.shadowRoot.querySelector('.tea-circle');
+    if (!circle) return;
+    
+    // Update color based on category
+    const color = TeaTheme.getColor(this._state.category, !this._state.collected);
+    circle.style.backgroundColor = color;
+    
+    // Update opacity based on collected state
+    circle.style.opacity = this._state.collected ? '1' : '0.5';
+    
+    // Update tooltip content
+    const tooltip = this.shadowRoot.querySelector('.tooltip');
+    if (tooltip) {
+      tooltip.textContent = this._state.name;
+    }
+    
+    // Update title attribute for accessibility
+    circle.setAttribute('title', this._state.name);
+    
+    // Update data-tea-id attribute
+    circle.setAttribute('data-tea-id', this._state.teaId);
   }
   
   // Private method to trigger the animation
   _triggerAnimation() {
     const circle = this.shadowRoot.querySelector('.tea-circle');
     if (circle) {
-      if (this._debug) console.log(`Triggering animation for: ${this._name}`);
       circle.classList.add('animate-in');
+    }
+  }
+  
+  // Reset circle to normal size (call this after click animation)
+  _resetCircleSize() {
+    const circle = this.shadowRoot.querySelector('.tea-circle');
+    if (circle) {
+      // Remove any temporary classes that might affect size
+      circle.classList.remove('active');
+      // Reset to base size (without affecting opacity/visibility)
+      circle.style.transform = 'scale(1)';
     }
   }
   
   // Public methods
   setCollected(isCollected) {
-    if (this._collected !== isCollected) {
-      this._collected = isCollected;
+    if (this._state.collected !== isCollected) {
+      this._state.collected = isCollected;
       this.toggleAttribute('collected', isCollected);
-      this.render();
+      
+      // Update rendered state
+      this._updateRenderedState();
       
       // Animate the state change
       const circle = this.shadowRoot.querySelector('.tea-circle');
@@ -143,15 +179,16 @@ class TeaCircle extends HTMLElement {
   _addEventListeners() {
     const circle = this.shadowRoot.querySelector('.tea-circle');
     if (circle) {
-      circle.addEventListener('pointerdown', this._handlePointerDown);
-      circle.addEventListener('pointerup', this._handlePointerUp);
-      circle.addEventListener('pointerleave', this._handlePointerLeave);
-      circle.addEventListener('click', this._handleClick);
+      // Use passive false for pointer events to ensure we can prevent default
+      circle.addEventListener('pointerdown', this._handlePointerDown, { passive: false });
+      circle.addEventListener('pointerup', this._handlePointerUp, { passive: true });
+      circle.addEventListener('pointerleave', this._handlePointerLeave, { passive: true });
+      circle.addEventListener('click', this._handleClick, { passive: false });
       
-      // Force visibility after a short delay - helps with circles not appearing
-      if (this._animateIn) {
-        this._triggerAnimation();
-      }
+      // Add direct mouse events as backup
+      circle.addEventListener('mousedown', this._handlePointerDown, { passive: false });
+      circle.addEventListener('mouseup', this._handlePointerUp, { passive: true });
+      circle.addEventListener('mouseleave', this._handlePointerLeave, { passive: true });
     }
   }
   
@@ -162,132 +199,166 @@ class TeaCircle extends HTMLElement {
       circle.removeEventListener('pointerup', this._handlePointerUp);
       circle.removeEventListener('pointerleave', this._handlePointerLeave);
       circle.removeEventListener('click', this._handleClick);
+      
+      // Remove backup mouse events
+      circle.removeEventListener('mousedown', this._handlePointerDown);
+      circle.removeEventListener('mouseup', this._handlePointerUp);
+      circle.removeEventListener('mouseleave', this._handlePointerLeave);
     }
   }
   
   _handlePointerDown(event) {
+    // Prevent default to avoid text selection but don't stop propagation
+    event.preventDefault();
+    
+    const circle = this.shadowRoot.querySelector('.tea-circle');
+    if (circle) {
+      // Add active class for visual feedback
+      circle.classList.add('active');
+    }
+    
     this._clearLongPressTimer();
+    this._touchState.isPressed = true;
     
     // Start long press timer
-    this._longPressTimer = setTimeout(() => {
+    this._touchState.timer = setTimeout(() => {
       this._showNameTooltip();
-    }, this._longPressDuration);
+    }, this._touchState.duration);
   }
   
   _handlePointerUp(event) {
     this._clearLongPressTimer();
+    this._touchState.isPressed = false;
     this._hideNameTooltip();
+    
+    // Make sure circle returns to normal size
+    setTimeout(() => {
+      this._resetCircleSize();
+    }, 150); // Small delay to ensure the active animation completes
   }
   
   _handlePointerLeave(event) {
     this._clearLongPressTimer();
+    this._touchState.isPressed = false;
     this._hideNameTooltip();
+    
+    // Make sure circle returns to normal size when pointer leaves
+    this._resetCircleSize();
   }
   
   _handleClick(event) {
+    // CRITICAL FIX: Only prevent default but DO NOT stop propagation
+    // This allows the event to bubble up while preventing browser actions
+    if (event.cancelable) {
+      event.preventDefault();
+    }
+    
     this._clearLongPressTimer();
     this._hideNameTooltip();
     
-    // Only proceed if collected
-    if (this._collected) {
-      if (this._debug) console.log(`Tea circle clicked: ${this._name} (ID: ${this._teaId})`);
+    // Apply visual feedback
+    const circle = this.shadowRoot.querySelector('.tea-circle');
+    if (circle) {
+      // Provide visual feedback for the click
+      circle.classList.add('clicked');
       
-      // Dispatch a custom event that can be caught by parent components
+      // Remove the class after animation completes
+      setTimeout(() => {
+        circle.classList.remove('clicked');
+        this._resetCircleSize();
+      }, 300);
+    }
+    
+    // Only proceed if collected
+    if (this._state.collected) {
+      // Use event manager instead of direct dispatch
+      teaEvents.emit(TeaEventTypes.TEA_SELECTED, {
+        name: this._state.name,
+        category: this._state.category,
+        id: this._state.teaId || this.id,
+        collected: this._state.collected
+      });
+      
+      // For backward compatibility also dispatch the DOM event
       const teaSelectEvent = new CustomEvent('tea-select', {
         bubbles: true,
-        composed: true, // Ensures the event crosses shadow DOM boundaries
+        composed: true,
         detail: {
-          name: this._name,
-          category: this._category,
-          id: this._teaId || this.id,
-          collected: this._collected // Add collected status to the event
-
+          name: this._state.name,
+          category: this._state.category,
+          id: this._state.teaId || this.id,
+          collected: this._state.collected
         }
       });
       
       this.dispatchEvent(teaSelectEvent);
-      
-      if (this._debug) console.log('Tea select event dispatched:', teaSelectEvent);
     }
   }
   
   _clearLongPressTimer() {
-    if (this._longPressTimer) {
-      clearTimeout(this._longPressTimer);
-      this._longPressTimer = null;
+    if (this._touchState.timer) {
+      clearTimeout(this._touchState.timer);
+      this._touchState.timer = null;
     }
   }
   
   _showNameTooltip() {
-    this._showTooltip = true;
-    this.render();
+    this._state.showTooltip = true;
+    const tooltip = this.shadowRoot.querySelector('.tooltip');
+    if (tooltip) {
+      tooltip.classList.add('visible');
+    }
   }
   
   _hideNameTooltip() {
-    this._showTooltip = false;
-    this.render();
-  }
-  
-  _getCategoryColor() {
-    // Color mapping for tea categories
-    const colorMap = {
-      'Green': { 
-        base: '#7B9070', 
-        light: '#C1D7B8' 
-      },
-      'Black': { 
-        base: '#A56256', 
-        light: '#E5B5AD' 
-      },
-      'Oolong': { 
-        base: '#C09565', 
-        light: '#E8D7BC' 
-      },
-      'White': { 
-        base: '#D8DCD5', 
-        light: '#F0F2EF' 
-      },
-      'Pu-erh': { 
-        base: '#6F5244', 
-        light: '#BDA99E' 
-      },
-      'Yellow': { 
-        base: '#D1CDA6', 
-        light: '#EEECD9' 
-      }
-    };
-    
-    return colorMap[this._category] || { base: '#888888', light: '#DDDDDD' };
+    this._state.showTooltip = false;
+    const tooltip = this.shadowRoot.querySelector('.tooltip');
+    if (tooltip) {
+      tooltip.classList.remove('visible');
+    }
   }
   
   render() {
-    const colors = this._getCategoryColor();
-    const circleColor = this._collected ? colors.base : colors.light;
-    const circleOpacity = this._collected ? 1 : 0.5;
+    // Get colors from theme utility
+    const color = TeaTheme.getColor(this._state.category, !this._state.collected);
+    const circleOpacity = this._state.collected ? 1 : 0.5;
     
     const styles = `
       :host {
-        display: block;
-        pointer-events: auto;
+        display: block !important;
+        --circle-size: 64px;
+        width: var(--circle-size);
+        height: var(--circle-size);
+        pointer-events: auto !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        contain: content;
       }
       
       .tea-circle-container {
         position: relative;
+        width: 100%;
+        height: 100%;
+        pointer-events: auto;
       }
       
       .tea-circle {
-        width: 64px;
-        height: 64px;
+        width: var(--circle-size);
+        height: var(--circle-size);
         border-radius: 50%;
-        background-color: ${circleColor};
+        background-color: ${color};
         opacity: 0; /* Start invisible */
         cursor: pointer;
         transform: scale(0.8);
-        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
                     opacity 0.5s ease, 
                     box-shadow 0.3s ease;
         margin: 0 auto;
         will-change: transform, opacity;
+        -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+        pointer-events: auto !important;
       }
       
       .tea-circle.animate-in {
@@ -298,6 +369,17 @@ class TeaCircle extends HTMLElement {
       .tea-circle:hover {
         transform: scale(1.05);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+      
+      /* Active state when pressed */
+      .tea-circle.active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+      }
+      
+      /* Click animation */
+      .tea-circle.clicked {
+        animation: click-pulse 0.3s ease;
       }
       
       .tea-circle.state-change {
@@ -345,39 +427,36 @@ class TeaCircle extends HTMLElement {
         100% { transform: scale(1); }
       }
       
-      /* Debug styles */
-      .debug-info {
-        position: absolute;
-        bottom: -20px;
-        left: 0;
-        right: 0;
-        font-size: 8px;
-        text-align: center;
-        color: #999;
-        pointer-events: none;
+      @keyframes click-pulse {
+        0% { transform: scale(0.95); }
+        50% { transform: scale(1.05); box-shadow: 0 0 8px rgba(0, 0, 0, 0.15); }
+        100% { transform: scale(1); }
       }
     `;
     
     this.shadowRoot.innerHTML = `
       <style>${styles}</style>
-      <div class="tea-circle-container">
-        <div class="tooltip ${this._showTooltip ? 'visible' : ''}">
-          ${this._name}
+      <div class="tea-circle-container" part="container">
+        <div class="tooltip ${this._state.showTooltip ? 'visible' : ''}" part="tooltip">
+          ${this._state.name}
         </div>
-        <div class="tea-circle" title="${this._name}" data-tea-id="${this._teaId}"></div>
-        ${this._debug ? `
-          <div class="debug-info">
-            ${this._index}${this._collected ? '•' : '°'} ${this._teaId}
-          </div>
-        ` : ''}
+        <div class="tea-circle" title="${this._state.name}" data-tea-id="${this._state.teaId}" part="tea-circle"></div>
       </div>
     `;
     
     // Re-attach event listeners after render
     this._addEventListeners();
+    
+    // Set initial animation state if needed
+    if (this._state.animateIn) {
+      this._triggerAnimation();
+    }
   }
 }
 
-customElements.define('tea-circle', TeaCircle);
+// Make sure we properly define the custom element
+if (!customElements.get('tea-circle')) {
+  customElements.define('tea-circle', TeaCircle);
+}
 
 export default TeaCircle;

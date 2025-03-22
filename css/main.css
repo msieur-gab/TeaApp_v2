@@ -131,10 +131,10 @@ main {
   100% { transform: rotate(360deg); }
 }
 
-/* Notifications */
+/* Notifications - UPDATED to fix click blocking issue */
 .notification {
   position: fixed;
-  top: 45vh;
+  top: -100vh; /* Off-screen when hidden */
   left: 50%;
   transform: translateX(-50%);
   padding: 0.75rem 1rem;
@@ -146,11 +146,14 @@ main {
   max-width: 80%;
   text-align: center;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, top 0.3s ease;
+  pointer-events: none; /* Never block clicks when hidden */
 }
 
 .notification.visible {
+  top: 45vh; /* Back in view when visible */
   opacity: 1;
+  pointer-events: auto; /* Allow interaction when visible */
 }
 
 /* Add Tea Button */

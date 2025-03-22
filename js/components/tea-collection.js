@@ -1,6 +1,8 @@
 // components/tea-collection.js
-// Enhanced version with debugging and improved rendering
+// Enhanced version with fixes for tea circle handling
 
+import { teaEvents, TeaEventTypes } from '../services/event-manager.js';
+import TeaTheme from '../utils/tea-theme.js';
 import TeaDatabase from '../services/tea-database.js';
 import TeaCollectionLevels from '../services/tea-collection-levels.js';
 
@@ -9,49 +11,51 @@ class TeaCollection extends HTMLElement {
     super();
     this.attachShadow({ mode: 'open' });
     
-    // State
-    this._category = 'Green';
-    this._collectedTeas = [];
-    this._totalTeas = 0;
-    this._levelInfo = null;
-    this._isTransitioning = false;
-    this._renderAttempts = 0;
-    
-    // Debug flag
-    this._debug = true;
+    // Improved state management
+    this._state = {
+      category: 'Green',
+      collectedTeas: [],
+      totalTeas: 0,
+      levelInfo: null,
+      isTransitioning: false,
+      renderAttempts: 0
+    };
     
     // Bind methods
     this._handleCategoryChange = this._handleCategoryChange.bind(this);
     this._handleTeaAdded = this._handleTeaAdded.bind(this);
     this._handleTeaSelect = this._handleTeaSelect.bind(this);
-    
-    if (this._debug) console.log('TeaCollection component constructor called');
   }
 
   connectedCallback() {
-    if (this._debug) console.log('TeaCollection connected to DOM');
+    // Get initial category from attribute or default to 'Green'
+    this._state.category = this.getAttribute('category') || 'Green';
     
     // Initial render
     this.render();
     
-    // Listen for category changes
-    this.addEventListener('category-change', this._handleCategoryChange);
+    // Listen for events using the event manager
+    teaEvents.on(TeaEventTypes.TEA_ADDED, this._handleTeaAdded);
+    teaEvents.on(TeaEventTypes.CATEGORY_CHANGED, this._handleCategoryChange);
+    teaEvents.on(TeaEventTypes.TEA_SELECTED, this._handleTeaSelect);
     
-    // Listen for tea added events
-    document.addEventListener('tea-added', this._handleTeaAdded);
+    // Also listen for the legacy event
+    this.addEventListener('tea-select', (event) => {
+      // Convert it to use the event manager
+      teaEvents.emit(TeaEventTypes.TEA_SELECTED, event.detail);
+    });
     
     // Load initial data
     this._loadCategoryData();
-    
-    // Add event listener for tea-select events
-    document.addEventListener('tea-select', this._handleTeaSelect);
   }
   
   disconnectedCallback() {
-    if (this._debug) console.log('TeaCollection disconnected from DOM');
-    this.removeEventListener('category-change', this._handleCategoryChange);
-    document.removeEventListener('tea-added', this._handleTeaAdded);
-    this.removeEventListener('tea-select', this._handleTeaSelect);
+    // Clean up event listeners
+    teaEvents.off(TeaEventTypes.TEA_ADDED, this._handleTeaAdded);
+    teaEvents.off(TeaEventTypes.CATEGORY_CHANGED, this._handleCategoryChange);
+    teaEvents.off(TeaEventTypes.TEA_SELECTED, this._handleTeaSelect);
+    
+    this.removeEventListener('tea-select', null);
   }
   
   static get observedAttributes() {
@@ -59,52 +63,44 @@ class TeaCollection extends HTMLElement {
   }
   
   attributeChangedCallback(name, oldValue, newValue) {
-    if (this._debug) console.log(`Attribute changed: ${name}, from ${oldValue} to ${newValue}`);
-    
     if (name === 'category' && oldValue !== newValue) {
-      this._category = newValue;
+      this._state.category = newValue;
       this._loadCategoryData();
     }
   }
   
   // Getters and setters for properties
   get category() {
-    return this._category;
+    return this._state.category;
   }
   
   set category(value) {
-    if (this._debug) console.log(`Setting category to: ${value}`);
-    
-    if (this._category !== value) {
-      this._category = value;
+    if (this._state.category !== value) {
+      this._state.category = value;
       this.setAttribute('category', value);
       this._loadCategoryData();
       
-      // Dispatch category change event
-      this.dispatchEvent(new CustomEvent('category-change', {
-        bubbles: true,
-        composed: true,
-        detail: { category: value }
-      }));
+      // Dispatch category change event via event manager
+      teaEvents.emit(TeaEventTypes.CATEGORY_CHANGED, { 
+        category: value,
+        source: 'tea-collection' 
+      });
     }
   }
   
-  // Private methods
+  // Event handlers
   _handleCategoryChange(event) {
-    const newCategory = event.detail.category;
-    if (this._debug) console.log(`Category change event received: ${newCategory}`);
-    this.category = newCategory;
+    // Only update if from external source to prevent loops
+    if (event.source !== 'tea-collection') {
+      this.category = event.category;
+    }
   }
   
   _handleTeaAdded(event) {
-    const teaData = event.detail.tea;
-    
-    if (this._debug) console.log('Tea added event received:', teaData);
+    const teaData = event.tea;
     
     // If the added tea is in our current category, refresh the data
-    if (teaData && teaData.category === this._category) {
-      if (this._debug) console.log('Tea matches current category, refreshing collection.');
-      
+    if (teaData && teaData.category === this._state.category) {
       // Force refresh with a small delay to let database operations complete
       setTimeout(() => {
         this._loadCategoryData();
@@ -113,103 +109,32 @@ class TeaCollection extends HTMLElement {
   }
   
   _handleTeaSelect(event) {
-    if (this._debug) console.log('Tea select event received:', event.detail);
-    
-    // Find the tea-detail component
-    const teaDetail = document.querySelector('tea-detail');
-    if (!teaDetail) {
-      console.error('Tea detail component not found');
-      return;
-    }
-    
-    // Get the selected tea's ID and other details from the event
-    const { id, name, category } = event.detail;
-    
-    // Try to find the tea in our collection first
-    let selectedTea = this._collectedTeas.find(tea => 
-      (tea.id === id || tea.name === name) && tea.collected
-    );
-    
-    if (!selectedTea) {
-      console.warn(`Tea not found in current collection. Using event data instead.`);
-      
-      // If not found in collection, use the data from the event
-      selectedTea = {
-        id: id,
-        name: name,
-        category: category,
-        collected: true
-      };
-      
-      // Optionally fetch more details from the database
-      TeaDatabase.getTeaById(id)
-        .then(teaData => {
-          if (teaData) {
-            // If we found more data, update the detail view
-            const updatedTeaData = {
-              ...teaData,
-              description: teaData.description || `A ${category.toLowerCase()} tea.`,
-              brewTime: teaData.brewTime || '3:00',
-              temperature: teaData.temperature || '85°C'
-            };
-            
-            // Only update if the detail is still open with this tea
-            if (teaDetail._isOpen && teaDetail._currentTeaId === id) {
-              teaDetail.updateData(updatedTeaData);
-            }
-          }
-        })
-        .catch(err => console.error('Error fetching additional tea data:', err));
-    }
-    
-    // Create the tea data object for the detail view
-    const teaData = {
-      id: selectedTea.id,
-      name: selectedTea.name,
-      category: selectedTea.category,
-      description: selectedTea.description || `A ${selectedTea.category.toLowerCase()} tea.`,
-      brewTime: selectedTea.brewTime || '3:00',
-      temperature: selectedTea.temperature || '85°C'
-    };
-    
-    // Check if tea detail is already open
-    if (teaDetail._isOpen) {
-      teaDetail.close();
-      
-      // Wait for the close animation to finish
-      setTimeout(() => {
-        teaDetail.open(teaData);
-      }, 300);
-    } else {
-      teaDetail.open(teaData);
-    }
+    // Handle tea selection - intentionally not doing anything that would
+    // remove tea circles from the DOM. The tea-detail component will
+    // handle showing the details.
+    console.log('Tea selected in collection:', event);
   }
   
   async _loadCategoryData() {
     try {
-      if (this._debug) console.log(`Loading data for category: ${this._category}`);
-      
-      this._isTransitioning = true;
+      this._state.isTransitioning = true;
       this.render(); // Show loading state
       
       // Get teas from database
       await this._fetchTeaData();
       
       // Get level information from TeaCollectionLevels
-      this._levelInfo = this._getLevelInfo();
+      this._state.levelInfo = this._getLevelInfo();
       
       // Update state
-      this._isTransitioning = false;
+      this._state.isTransitioning = false;
       
       // Update the DOM
       this.render();
       
       // Trigger animation after render
       setTimeout(() => {
-        if (this._debug) console.log('Triggering tea circle animations');
-        
         const circles = this.shadowRoot.querySelectorAll('tea-circle');
-        if (this._debug) console.log(`Found ${circles.length} tea circles to animate`);
         
         circles.forEach((circle, index) => {
           setTimeout(() => {
@@ -220,84 +145,83 @@ class TeaCollection extends HTMLElement {
       
     } catch (error) {
       console.error('Error loading tea data:', error);
-      this._isTransitioning = false;
+      this._state.isTransitioning = false;
       this.render();
     }
   }
   
   async _fetchTeaData() {
     try {
-      if (this._debug) console.log(`Fetching teas for category: ${this._category}`);
-      
       // Use TeaDatabase to get teas
-      const teas = await TeaDatabase.getTeasByCategory(this._category);
-      if (this._debug) console.log(`Found ${teas.length} collected teas in database`);
+      const teas = await TeaDatabase.getTeasByCategory(this._state.category);
       
       // Count collected teas
       const collectedCount = teas.length;
       
       // Set total based on level progression (using the last level threshold)
-      const levels = TeaCollectionLevels.categories[this._category] || [];
-      this._totalTeas = levels.length > 0 ? levels[levels.length - 1].threshold : 52;
+      const levels = TeaCollectionLevels.categories[this._state.category] || [];
+      this._state.totalTeas = levels.length > 0 ? levels[levels.length - 1].threshold : 52;
       
       // Generate uncollected tea spots
-      const uncollectedCount = this._totalTeas - collectedCount;
-      if (this._debug) console.log(`Adding ${uncollectedCount} uncollected tea spots`);
+      const uncollectedCount = this._state.totalTeas - collectedCount;
       
       const uncollectedTeas = Array(uncollectedCount)
         .fill()
         .map((_, index) => ({
           id: `uncollected-${index}`,
-          name: `Unknown ${this._category} Tea`,
-          category: this._category,
+          name: `Unknown ${this._state.category} Tea`,
+          category: this._state.category,
           collected: false
         }));
       
-      // Combine collected and uncollected, with collected teas first (at the top)
-      // and uncollected teas after them
-      this._collectedTeas = [...teas.map(tea => ({
+      // Combine collected and uncollected, with collected teas first
+      this._state.collectedTeas = [...teas.map(tea => ({
         ...tea,
         collected: true
       })), ...uncollectedTeas];
       
-      if (this._debug) console.log(`Total tea circles to display: ${this._collectedTeas.length}`);
-      
-      return this._collectedTeas;
+      return this._state.collectedTeas;
     } catch (error) {
       console.error('Error fetching tea data:', error);
-      this._collectedTeas = [];
-      this._totalTeas = 0;
+      this._state.collectedTeas = [];
+      this._state.totalTeas = 0;
       return [];
     }
   }
   
   _getLevelInfo() {
     // Get the collected count
-    const collectedCount = this._collectedTeas.filter(t => t.collected).length;
-    
-    if (this._debug) console.log(`Getting progress info for ${collectedCount} collected teas`);
+    const collectedCount = this._state.collectedTeas.filter(t => t.collected).length;
     
     // Use TeaCollectionLevels to get progress info
-    const progressInfo = TeaCollectionLevels.getCollectionProgress(this._category, collectedCount);
+    const progressInfo = TeaCollectionLevels.getCollectionProgress(this._state.category, collectedCount);
     
-    return progressInfo;
+    // Get category theme color
+    const categoryColor = TeaTheme.getColor(this._state.category);
+    
+    // Return enhanced progress info with theme color
+    return {
+      ...progressInfo,
+      color: categoryColor
+    };
   }
   
   _renderTeas() {
     // Empty container if transitioning
-    if (this._isTransitioning) {
+    if (this._state.isTransitioning) {
       return '<div class="loading">Loading teas...</div>';
     }
     
     // Create a grid of tea circles
     return `
       <div class="tea-grid">
-        ${this._collectedTeas.map((tea, index) => `
+        ${this._state.collectedTeas.map((tea, index) => `
           <tea-circle 
             id="${tea.id || `tea-${index}`}" 
             name="${tea.name || 'Unknown Tea'}" 
-            category="${tea.category || this._category}" 
+            category="${tea.category || this._state.category}" 
             ${tea.collected ? 'collected' : ''} 
+            tea-id="${tea.id || `tea-${index}`}"
             index="${index}">
           </tea-circle>
         `).join('')}
@@ -306,8 +230,10 @@ class TeaCollection extends HTMLElement {
   }
   
   render() {
-    this._renderAttempts++;
-    if (this._debug) console.log(`Rendering tea collection (attempt ${this._renderAttempts})`);
+    this._state.renderAttempts++;
+    
+    // Get theme color for progress bar
+    const categoryColor = TeaTheme.getColor(this._state.category);
     
     const styles = `
       :host {
@@ -316,7 +242,7 @@ class TeaCollection extends HTMLElement {
       }
       
       .collection-container {
-        // padding: 1rem;
+        position: relative;
       }
       
       .collection-header {
@@ -370,7 +296,7 @@ class TeaCollection extends HTMLElement {
       
       .progress-bar {
         height: 100%;
-        background-color: #4a90e2;
+        background-color: ${categoryColor};
         border-radius: 4px;
         transition: width 0.5s ease;
       }
@@ -386,22 +312,13 @@ class TeaCollection extends HTMLElement {
         gap: 16px;
         padding: 16px;
         justify-items: center;
+        align-items: center;
       }
       
       .loading {
         text-align: center;
         padding: 2rem;
         color: #666;
-      }
-      
-      .debug-info {
-        background-color: #fffde7;
-        padding: 0.5rem;
-        margin: 0.5rem 0;
-        border: 1px solid #ffeeba;
-        border-radius: 4px;
-        font-family: monospace;
-        font-size: 0.8rem;
       }
       
       @media (min-width: 768px) {
@@ -416,26 +333,28 @@ class TeaCollection extends HTMLElement {
         }
       }
       
-      ::slotted(tea-circle) {
-        width: calc(100% - 8px);
-        max-width: 64px;
+      /* Fix for tea-circle child components */
+      ::slotted(tea-circle),
+      tea-circle {
+        display: block !important;
+        pointer-events: auto !important;
       }
     `;
     
     // Get total count and collected count
-    const totalCount = this._totalTeas;
-    const collectedCount = this._collectedTeas.filter(t => t.collected).length;
+    const totalCount = this._state.totalTeas;
+    const collectedCount = this._state.collectedTeas.filter(t => t.collected).length;
     
     // Calculate progress percentage for next level
     let progressPercentage = 0;
     let currentThreshold = 0;
     let nextThreshold = 0;
     
-    if (this._levelInfo) {
-      if (this._levelInfo.nextLevel) {
+    if (this._state.levelInfo) {
+      if (this._state.levelInfo.nextLevel) {
         // If there is a next level, calculate progress towards it
-        currentThreshold = this._levelInfo.currentLevel.threshold || 0;
-        nextThreshold = this._levelInfo.nextLevel.threshold;
+        currentThreshold = this._state.levelInfo.currentLevel.threshold || 0;
+        nextThreshold = this._state.levelInfo.nextLevel.threshold;
         
         // Calculate percentage within the current level bracket
         const levelProgress = collectedCount - currentThreshold;
@@ -456,29 +375,20 @@ class TeaCollection extends HTMLElement {
             <div class="counter-value">${collectedCount}</div>
             <div class="counter-details">
               out of the available ${totalCount}<br>
-              ${this._category} teas<br>
+              ${this._state.category} teas<br>
               from our collection
             </div>
           </div>
-          ${this._levelInfo ? `
+          ${this._state.levelInfo ? `
             <div class="level-info">
-              <div><strong>Current Level:</strong> ${this._levelInfo.currentLevel.title}</div>
-              <div><strong>Next Level:</strong> ${this._levelInfo.nextLevel?.title || 'Collection Complete!'}</div>
+              <div><strong>Current Level:</strong> ${this._state.levelInfo.currentLevel.title}</div>
+              <div><strong>Next Level:</strong> ${this._state.levelInfo.nextLevel?.title || 'Collection Complete!'}</div>
               
               <div class="progress-bar-container">
                 <div class="progress-bar" style="width: ${progressPercentage}%"></div>
               </div>
               
-              <div class="progress-message">${this._levelInfo.progressMessage}</div>
-            </div>
-          ` : ''}
-          
-          ${this._debug ? `
-            <div class="debug-info">
-              Category: ${this._category}<br>
-              Collected: ${collectedCount}/${totalCount}<br>
-              Render Attempts: ${this._renderAttempts}<br>
-              Transitioning: ${this._isTransitioning ? 'Yes' : 'No'}
+              <div class="progress-message">${this._state.levelInfo.progressMessage}</div>
             </div>
           ` : ''}
         </header>

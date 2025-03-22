@@ -1,18 +1,24 @@
 // components/progress-modal.js
 // Enhanced modal to display tea collection progress and level-up rewards
 
+import { teaEvents, TeaEventTypes } from '../services/event-manager.js';
+import TeaTheme from '../utils/tea-theme.js';
+
 class ProgressModal extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     
-    // State
-    this._teaData = null;
-    this._progressMessage = '';
-    this._isComplete = false;
-    this._badges = [];
-    this._isLevelUp = false;
-    this._categoryProgress = null;
+    // Use structured state
+    this._state = {
+      teaData: null,
+      progressMessage: '',
+      isComplete: false,
+      badges: [],
+      isLevelUp: false,
+      categoryProgress: null,
+      isVisible: false
+    };
     
     // Bind methods
     this._handleClose = this._handleClose.bind(this);
@@ -27,7 +33,6 @@ class ProgressModal extends HTMLElement {
     this._removeEventListeners();
   }
   
-  // Public methods
   /**
    * Show the progress modal with tea and progress information
    * @param {Object} teaData - Tea data object
@@ -38,12 +43,16 @@ class ProgressModal extends HTMLElement {
    * @param {Object} categoryProgress - Category progress information from TeaCollectionLevels
    */
   show(teaData, progressMessage, isComplete = false, badges = [], isLevelUp = false, categoryProgress = null) {
-    this._teaData = teaData;
-    this._progressMessage = progressMessage;
-    this._isComplete = isComplete;
-    this._badges = badges || [];
-    this._isLevelUp = isLevelUp;
-    this._categoryProgress = categoryProgress;
+    // Update state object in a structured way
+    this._state = { 
+      teaData, 
+      progressMessage, 
+      isComplete, 
+      badges: badges || [], 
+      isLevelUp, 
+      categoryProgress,
+      isVisible: true
+    };
     
     this.render();
     this.style.display = 'flex';
@@ -60,12 +69,11 @@ class ProgressModal extends HTMLElement {
       if (button) button.focus();
     }, 100);
 
-    // Dispatch shown event
-    this.dispatchEvent(new CustomEvent('modal-shown', {
-      bubbles: true,
-      composed: true,
-      detail: { teaData: this._teaData }
-    }));
+    // Emit event through event manager
+    teaEvents.emit(TeaEventTypes.MODAL_OPENED, { 
+      id: 'progressModal', 
+      data: this._state 
+    });
   }
   
   close() {
@@ -77,25 +85,22 @@ class ProgressModal extends HTMLElement {
       
       // Wait for animation to complete
       setTimeout(() => {
+        this._state.isVisible = false;
         this.style.display = 'none';
+        
         if (container) {
           container.classList.remove('animate-out');
         }
         
-        // Dispatch closed event
-        this.dispatchEvent(new CustomEvent('modal-closed', {
-          bubbles: true,
-          composed: true
-        }));
+        // Emit event through the event manager
+        teaEvents.emit(TeaEventTypes.MODAL_CLOSED, { id: 'progressModal' });
       }, 300);
     } else {
+      this._state.isVisible = false;
       this.style.display = 'none';
       
-      // Dispatch closed event
-      this.dispatchEvent(new CustomEvent('modal-closed', {
-        bubbles: true,
-        composed: true
-      }));
+      // Emit event through the event manager
+      teaEvents.emit(TeaEventTypes.MODAL_CLOSED, { id: 'progressModal' });
     }
   }
   
@@ -129,24 +134,10 @@ class ProgressModal extends HTMLElement {
     }
   }
   
-  _getCategoryColor(category) {
-    // Color mapping for tea categories
-    const colorMap = {
-      'Green': '#7B9070',
-      'Black': '#A56256',
-      'Oolong': '#C09565',
-      'White': '#D8DCD5',
-      'Pu-erh': '#6F5244',
-      'Yellow': '#D1CDA6'
-    };
-    
-    return colorMap[category] || '#4a90e2';
-  }
-  
   _renderProgressBar() {
-    if (!this._categoryProgress) return '';
+    if (!this._state.categoryProgress) return '';
     
-    const { collectedCount, nextLevel } = this._categoryProgress;
+    const { collectedCount, nextLevel } = this._state.categoryProgress;
     
     // If there's no next level, the collection is complete
     if (!nextLevel) {
@@ -161,7 +152,7 @@ class ProgressModal extends HTMLElement {
       `;
     }
     
-    const currentLevelThreshold = this._categoryProgress.currentLevel.threshold || 0;
+    const currentLevelThreshold = this._state.categoryProgress.currentLevel.threshold || 0;
     const nextLevelThreshold = nextLevel.threshold;
     
     // Calculate progress within current level bracket
@@ -174,13 +165,23 @@ class ProgressModal extends HTMLElement {
         <div class="progress-bar" style="width: ${progressPercentage}%;"></div>
       </div>
       <div class="progress-labels">
-        <span class="progress-label">${this._categoryProgress.currentLevel.title}</span>
+        <span class="progress-label">${this._state.categoryProgress.currentLevel.title}</span>
         <span class="progress-count">${collectedCount}/${nextLevelThreshold}</span>
       </div>
     `;
   }
   
   render() {
+    if (!this._state.isVisible && !this._state.teaData) {
+      this.shadowRoot.innerHTML = `<style>:host { display: none; }</style>`;
+      return;
+    }
+
+    // Get the button color based on tea category using the theme utility
+    const buttonColor = this._state.teaData ? 
+      TeaTheme.getColor(this._state.teaData.category) : 
+      TeaTheme.colors.DEFAULT;
+    
     const styles = `
       :host {
         display: none;
@@ -331,7 +332,7 @@ class ProgressModal extends HTMLElement {
       
       .progress-bar {
         height: 100%;
-        background-color: #4a90e2;
+        background-color: ${buttonColor};
         border-radius: 4px;
         transition: width 1s ease;
       }
@@ -381,7 +382,7 @@ class ProgressModal extends HTMLElement {
         margin-bottom: 0.5rem;
         font-size: 2rem;
         color: white;
-        background-color: #4a90e2;
+        background-color: ${buttonColor};
       }
       
       .badge-name {
@@ -408,6 +409,7 @@ class ProgressModal extends HTMLElement {
         font-size: 1rem;
         transition: background-color 0.2s ease;
         color: white;
+        background-color: ${buttonColor};
       }
       
       .action-button:hover {
@@ -441,25 +443,23 @@ class ProgressModal extends HTMLElement {
       }
     `;
     
-    // Get the button color based on tea category
-    const buttonColor = this._teaData ? this._getCategoryColor(this._teaData.category) : '#4a90e2';
-    
     // Generate confetti elements if the level is complete or a level-up
-    const confettiElements = (this._isComplete || this._isLevelUp) ? this._generateConfetti(20, buttonColor) : '';
+    const confettiElements = (this._state.isComplete || this._state.isLevelUp) ? 
+      this._generateConfetti(20, buttonColor) : '';
     
     // Determine the message class based on whether it's a level-up, completion, or regular addition
     let messageClass = 'progress-message';
-    if (this._isLevelUp) {
+    if (this._state.isLevelUp) {
       messageClass += ' success-message';
-    } else if (this._isComplete) {
+    } else if (this._state.isComplete) {
       messageClass += ' level-up-message';
     }
     
     // Determine modal title based on context
     let modalTitle = 'Tea Added';
-    if (this._isLevelUp) {
+    if (this._state.isLevelUp) {
       modalTitle = 'Level Up!';
-    } else if (this._isComplete) {
+    } else if (this._state.isComplete) {
       modalTitle = 'Collection Complete!';
     }
     
@@ -470,7 +470,7 @@ class ProgressModal extends HTMLElement {
       <style>${styles}</style>
       
       <div class="modal-container">
-        ${(this._isComplete || this._isLevelUp) ? `<div class="confetti-container">${confettiElements}</div>` : ''}
+        ${(this._state.isComplete || this._state.isLevelUp) ? `<div class="confetti-container">${confettiElements}</div>` : ''}
       
         <div class="modal-header">
           <h2 class="modal-title">${modalTitle}</h2>
@@ -478,33 +478,33 @@ class ProgressModal extends HTMLElement {
         </div>
         
         <div class="modal-content">
-          ${this._teaData ? `
+          ${this._state.teaData ? `
             <div class="tea-info">
-              <div class="tea-icon" style="background-color: ${this._getCategoryColor(this._teaData.category)}; color: white;">
+              <div class="tea-icon" style="background-color: ${buttonColor}; color: white;">
                 🍵
               </div>
               <div class="tea-details">
-                <p class="tea-name">${this._teaData.name}</p>
-                <p class="tea-category">${this._teaData.category} Tea • ${this._teaData.origin || 'Unknown Origin'}</p>
+                <p class="tea-name">${this._state.teaData.name}</p>
+                <p class="tea-category">${this._state.teaData.category} Tea • ${this._state.teaData.origin || 'Unknown Origin'}</p>
               </div>
             </div>
           ` : ''}
           
           <div class="${messageClass}">
-            ${this._progressMessage}
+            ${this._state.progressMessage}
           </div>
           
-          ${this._categoryProgress ? `
+          ${this._state.categoryProgress ? `
             <div class="progress-section">
               ${progressBarHtml}
             </div>
           ` : ''}
           
-          ${this._badges && this._badges.length > 0 ? `
+          ${this._state.badges && this._state.badges.length > 0 ? `
             <div class="badges-section">
               <h3 class="badges-title">Badges Earned</h3>
               <div class="badges-grid">
-                ${this._badges.map(badge => `
+                ${this._state.badges.map(badge => `
                   <div class="badge">
                     <div class="badge-icon" style="background-color: ${badge.color || buttonColor};">
                       ${badge.icon || '🏆'}
@@ -518,7 +518,7 @@ class ProgressModal extends HTMLElement {
         </div>
         
         <div class="modal-actions">
-          <button class="action-button" style="background-color: ${buttonColor};">
+          <button class="action-button">
             Continue
           </button>
         </div>

@@ -1,23 +1,32 @@
-// tea-nav.js
+// components/tea-nav.js
 // Bottom navigation bar component with timer functionality
+
+import { teaEvents, TeaEventTypes } from '../services/event-manager.js';
+import TeaTheme from '../utils/tea-theme.js';
 
 class TeaNav extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     
-    // State
-    this._activeTab = 'collection';
-    this._timerActive = false;
-    this._timerRunning = false;
-    this._timerSeconds = 180; // 3 minutes default
-    this._timerInterval = null;
-    this._modalOpen = false;
-    this._modalContent = '';
-    
-    // Category info for the tea that's brewing
-    this._currentTeaCategory = '';
-    this._currentTeaName = '';
+    // Better state management
+    this._state = {
+      activeTab: 'collection',
+      timer: {
+        active: false,
+        running: false,
+        seconds: 180,
+        interval: null
+      },
+      modal: {
+        open: false,
+        content: ''
+      },
+      currentTea: {
+        category: '',
+        name: 'Tea'
+      }
+    };
     
     // Bind methods
     this._handleTabClick = this._handleTabClick.bind(this);
@@ -34,27 +43,36 @@ class TeaNav extends HTMLElement {
     
     // Add event listeners
     this._addEventListeners();
+    
+    // Listen for steeping events
+    teaEvents.on(TeaEventTypes.STEEP_STARTED, this._handleSteepStart.bind(this));
   }
   
   disconnectedCallback() {
     this._removeEventListeners();
     this._clearTimerInterval();
+    
+    // Clean up event listeners
+    teaEvents.off(TeaEventTypes.STEEP_STARTED, this._handleSteepStart);
   }
   
   // Timer methods
   startTimer(teaName, category, seconds) {
-    this._currentTeaName = teaName || 'Tea';
-    this._currentTeaCategory = category || '';
-    this._timerSeconds = seconds || 180;
-    this._timerActive = true;
-    this._timerRunning = true;
+    this._state.currentTea = { 
+      name: teaName || 'Tea', 
+      category: category || '' 
+    };
+    
+    this._state.timer.seconds = seconds || 180;
+    this._state.timer.active = true;
+    this._state.timer.running = true;
     
     this._clearTimerInterval();
-    this._timerInterval = setInterval(() => {
-      this._timerSeconds--;
+    this._state.timer.interval = setInterval(() => {
+      this._state.timer.seconds--;
       
-      if (this._timerSeconds <= 0) {
-        this._timerRunning = false;
+      if (this._state.timer.seconds <= 0) {
+        this._state.timer.running = false;
         this._clearTimerInterval();
         this._notifyTimerComplete();
       }
@@ -67,21 +85,21 @@ class TeaNav extends HTMLElement {
   }
   
   pauseTimer() {
-    this._timerRunning = false;
+    this._state.timer.running = false;
     this._clearTimerInterval();
     this._updateTimerDisplay();
   }
   
   resumeTimer() {
-    if (this._timerActive && !this._timerRunning && this._timerSeconds > 0) {
-      this._timerRunning = true;
+    if (this._state.timer.active && !this._state.timer.running && this._state.timer.seconds > 0) {
+      this._state.timer.running = true;
       
       this._clearTimerInterval();
-      this._timerInterval = setInterval(() => {
-        this._timerSeconds--;
+      this._state.timer.interval = setInterval(() => {
+        this._state.timer.seconds--;
         
-        if (this._timerSeconds <= 0) {
-          this._timerRunning = false;
+        if (this._state.timer.seconds <= 0) {
+          this._state.timer.running = false;
           this._clearTimerInterval();
           this._notifyTimerComplete();
         }
@@ -94,16 +112,16 @@ class TeaNav extends HTMLElement {
   }
   
   resetTimer() {
-    this._timerSeconds = 180; // 3 minutes default
-    this._timerRunning = false;
+    this._state.timer.seconds = 180; // 3 minutes default
+    this._state.timer.running = false;
     this._clearTimerInterval();
     this._updateTimerDisplay();
   }
   
   _clearTimerInterval() {
-    if (this._timerInterval) {
-      clearInterval(this._timerInterval);
-      this._timerInterval = null;
+    if (this._state.timer.interval) {
+      clearInterval(this._state.timer.interval);
+      this._state.timer.interval = null;
     }
   }
   
@@ -113,17 +131,17 @@ class TeaNav extends HTMLElement {
     const timerDisplay = this.shadowRoot.querySelector('.timer-display');
     
     if (miniTimerText) {
-      miniTimerText.textContent = this._formatTime(this._timerSeconds);
+      miniTimerText.textContent = this._formatTime(this._state.timer.seconds);
     }
     
     if (timerDisplay) {
-      timerDisplay.textContent = this._formatTime(this._timerSeconds);
+      timerDisplay.textContent = this._formatTime(this._state.timer.seconds);
       
       // Update progress bar if present
       const progressBar = this.shadowRoot.querySelector('.timer-progress-bar');
       if (progressBar) {
-        // Assuming a default timer of 3 minutes (180 seconds)
-        const percentage = (this._timerSeconds / 180) * 100;
+        // Calculate percentage based on original timer duration
+        const percentage = (this._state.timer.seconds / 180) * 100;
         progressBar.style.width = `${percentage}%`;
       }
     }
@@ -136,20 +154,16 @@ class TeaNav extends HTMLElement {
   }
   
   _notifyTimerComplete() {
-    // Dispatch timer complete event
-    this.dispatchEvent(new CustomEvent('timer-complete', {
-      bubbles: true,
-      composed: true,
-      detail: {
-        teaName: this._currentTeaName,
-        category: this._currentTeaCategory
-      }
-    }));
+    // Use event manager
+    teaEvents.emit(TeaEventTypes.TIMER_COMPLETED, {
+      teaName: this._state.currentTea.name,
+      category: this._state.currentTea.category
+    });
     
     // Play sound, show notification (browser notification if allowed)
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('Tea Timer', {
-        body: `Your ${this._currentTeaName} is ready!`,
+        body: `Your ${this._state.currentTea.name} is ready!`,
         icon: '/assets/icons/icon-192x192.png'
       });
     }
@@ -172,31 +186,47 @@ class TeaNav extends HTMLElement {
     }
   }
   
+  _handleSteepStart(event) {
+    const { tea } = event;
+    if (tea) {
+      const brewTimeSeconds = this._parseBrewTime(tea.brewTime);
+      this.startTimer(tea.name, tea.category, brewTimeSeconds);
+    }
+  }
+  
+  _parseBrewTime(brewTime) {
+    if (!brewTime) return 180; // Default 3 minutes
+    
+    // Check if it's in MM:SS format
+    if (typeof brewTime === 'string' && brewTime.includes(':')) {
+      const [minutes, seconds] = brewTime.split(':').map(part => parseInt(part, 10));
+      return (minutes * 60) + (seconds || 0);
+    }
+    
+    // If it's just seconds (for gongfu brewing)
+    return parseInt(brewTime, 10) || 180;
+  }
   // UI event handlers
   _handleTabClick(event) {
     const tabName = event.currentTarget.dataset.tab;
     if (tabName) {
-      this._activeTab = tabName;
+      this._state.activeTab = tabName;
       
       // If it's a modal tab, open the modal with appropriate content
       if (['timer', 'settings', 'favorites'].includes(tabName)) {
-        this._modalContent = tabName;
-        this._modalOpen = true;
+        this._state.modal.content = tabName;
+        this._state.modal.open = true;
       }
       
       this.render();
       
       // Dispatch event for tab change
-      this.dispatchEvent(new CustomEvent('tab-change', {
-        bubbles: true,
-        composed: true,
-        detail: { tab: tabName }
-      }));
+      teaEvents.emit(TeaEventTypes.TAB_CHANGED, { tab: tabName });
     }
   }
   
   _toggleTimer() {
-    if (this._timerRunning) {
+    if (this._state.timer.running) {
       this.pauseTimer();
     } else {
       this.resumeTimer();
@@ -210,23 +240,23 @@ class TeaNav extends HTMLElement {
   }
   
   _adjustTimer(seconds) {
-    this._timerSeconds = Math.max(0, this._timerSeconds + seconds);
+    this._state.timer.seconds = Math.max(0, this._state.timer.seconds + seconds);
     this._updateTimerDisplay();
   }
   
   _usePreset(seconds) {
-    this._timerSeconds = seconds;
-    this._timerRunning = false;
+    this._state.timer.seconds = seconds;
+    this._state.timer.running = false;
     this._clearTimerInterval();
     this._updateTimerDisplay();
   }
   
   _closeModal() {
-    this._modalOpen = false;
+    this._state.modal.open = false;
     
     // Reset to collection tab if not timer
-    if (this._activeTab !== 'collection' && this._activeTab !== 'timer') {
-      this._activeTab = 'collection';
+    if (this._state.activeTab !== 'collection' && this._state.activeTab !== 'timer') {
+      this._state.activeTab = 'collection';
     }
     
     this.render();
@@ -281,20 +311,14 @@ class TeaNav extends HTMLElement {
   }
   
   _getCategoryColor(category) {
-    // Color mapping for tea categories
-    const colorMap = {
-      'Green': '#7B9070',
-      'Black': '#A56256',
-      'Oolong': '#C09565',
-      'White': '#D8DCD5',
-      'Pu-erh': '#6F5244',
-      'Yellow': '#D1CDA6'
-    };
-    
-    return colorMap[category] || '#4a90e2';
+    // Use theme utility
+    return TeaTheme.getColor(category, false);
   }
   
   render() {
+    // Get the color for the current tea category
+    const categoryColor = this._getCategoryColor(this._state.currentTea.category);
+    
     const styles = `
       :host {
         display: block;
@@ -312,11 +336,11 @@ class TeaNav extends HTMLElement {
       }
       
       .timer-mini {
-        display: ${this._timerActive ? 'flex' : 'none'};
+        display: ${this._state.timer.active ? 'flex' : 'none'};
         height: 28px;
         align-items: center;
         justify-content: center;
-        background-color: ${this._getCategoryColor(this._currentTeaCategory)};
+        background-color: ${categoryColor};
         color: white;
         font-size: 0.875rem;
       }
@@ -347,7 +371,7 @@ class TeaNav extends HTMLElement {
       }
       
       .nav-tab.active {
-        color: ${this._activeTab === 'timer' ? this._getCategoryColor(this._currentTeaCategory) : '#4a90e2'};
+        color: ${this._state.activeTab === 'timer' ? categoryColor : '#4a90e2'};
       }
       
       .nav-tab-icon {
@@ -368,7 +392,7 @@ class TeaNav extends HTMLElement {
         bottom: 0;
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 1100;
-        display: ${this._modalOpen ? 'flex' : 'none'};
+        display: ${this._state.modal.open ? 'flex' : 'none'};
         align-items: flex-end;
         justify-content: center;
       }
@@ -429,15 +453,15 @@ class TeaNav extends HTMLElement {
       
       .timer-progress-bar {
         height: 100%;
-        background-color: ${this._getCategoryColor(this._currentTeaCategory)};
-        width: ${(this._timerSeconds / 180) * 100}%;
+        background-color: ${categoryColor};
+        width: ${(this._state.timer.seconds / 180) * 100}%;
         transition: width 1s linear;
       }
       
       .timer-display {
         font-size: 3rem;
         font-weight: 300;
-        color: ${this._getCategoryColor(this._currentTeaCategory)};
+        color: ${categoryColor};
         font-family: monospace;
         margin-bottom: 16px;
       }
@@ -466,7 +490,7 @@ class TeaNav extends HTMLElement {
       
       .timer-start-pause {
         padding: 12px 24px;
-        background-color: ${this._timerRunning ? '#FF9800' : this._getCategoryColor(this._currentTeaCategory)};
+        background-color: ${this._state.timer.running ? '#FF9800' : categoryColor};
         color: white;
         border: none;
         border-radius: 8px;
@@ -547,7 +571,7 @@ class TeaNav extends HTMLElement {
       .toggle-slider {
         position: absolute;
         top: 2px;
-        left: ${this._activeTab === 'timer' ? '26px' : '2px'};
+        left: ${this._state.activeTab === 'timer' ? '26px' : '2px'};
         width: 20px;
         height: 20px;
         background-color: white;
@@ -635,16 +659,16 @@ class TeaNav extends HTMLElement {
         <!-- Mini Timer Display - Shows when timer is active -->
         <div class="timer-mini">
           <span class="timer-mini-status">
-            ${this._timerRunning ? 'Brewing' : 'Paused'}
+            ${this._state.timer.running ? 'Brewing' : 'Paused'}
           </span>
           <span class="timer-mini-time">
-            ${this._formatTime(this._timerSeconds)}
+            ${this._formatTime(this._state.timer.seconds)}
           </span>
         </div>
         
         <!-- Main Navigation Tabs -->
         <div class="nav-tabs">
-          <div class="nav-tab ${this._activeTab === 'collection' ? 'active' : ''}" data-tab="collection">
+          <div class="nav-tab ${this._state.activeTab === 'collection' ? 'active' : ''}" data-tab="collection">
             <svg class="nav-tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
               <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -652,23 +676,23 @@ class TeaNav extends HTMLElement {
             <span class="nav-tab-label">Collection</span>
           </div>
           
-          <div class="nav-tab ${this._activeTab === 'favorites' ? 'active' : ''}" data-tab="favorites">
+          <div class="nav-tab ${this._state.activeTab === 'favorites' ? 'active' : ''}" data-tab="favorites">
             <svg class="nav-tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
             <span class="nav-tab-label">Favorites</span>
           </div>
           
-          <div class="nav-tab ${this._activeTab === 'timer' ? 'active' : ''}" data-tab="timer">
+          <div class="nav-tab ${this._state.activeTab === 'timer' ? 'active' : ''}" data-tab="timer">
             <svg class="nav-tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
             <span class="nav-tab-label">Timer</span>
-            ${this._timerActive ? '<span class="timer-indicator"></span>' : ''}
+            ${this._state.timer.active ? '<span class="timer-indicator"></span>' : ''}
           </div>
           
-          <div class="nav-tab ${this._activeTab === 'settings' ? 'active' : ''}" data-tab="settings">
+          <div class="nav-tab ${this._state.activeTab === 'settings' ? 'active' : ''}" data-tab="settings">
             <svg class="nav-tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -684,8 +708,8 @@ class TeaNav extends HTMLElement {
           <!-- Modal Header -->
           <div class="modal-header">
             <h2 class="modal-title">
-              ${this._modalContent === 'timer' ? 'Tea Timer' : 
-                this._modalContent === 'settings' ? 'Settings' : 'Favorites'}
+              ${this._state.modal.content === 'timer' ? 'Tea Timer' : 
+                this._state.modal.content === 'settings' ? 'Settings' : 'Favorites'}
             </h2>
             <button class="modal-close">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -697,12 +721,12 @@ class TeaNav extends HTMLElement {
           
           <!-- Modal Body -->
           <div class="modal-body">
-            ${this._modalContent === 'timer' ? `
+            ${this._state.modal.content === 'timer' ? `
               <div class="timer-display-container">
                 <div class="timer-progress">
                   <div class="timer-progress-bar"></div>
                 </div>
-                <div class="timer-display">${this._formatTime(this._timerSeconds)}</div>
+                <div class="timer-display">${this._formatTime(this._state.timer.seconds)}</div>
                 
                 <div class="timer-adjust-buttons">
                   <button class="timer-minus">-30s</button>
@@ -711,7 +735,7 @@ class TeaNav extends HTMLElement {
                 
                 <div class="timer-control-buttons">
                   <button class="timer-start-pause">
-                    ${this._timerRunning ? 'Pause' : 'Start'}
+                    ${this._state.timer.running ? 'Pause' : 'Start'}
                   </button>
                   <button class="timer-reset">Reset</button>
                 </div>
@@ -726,7 +750,7 @@ class TeaNav extends HTMLElement {
                   </div>
                 </div>
               </div>
-            ` : this._modalContent === 'settings' ? `
+            ` : this._state.modal.content === 'settings' ? `
               <div class="settings-section">
                 <div class="settings-title">Display Settings</div>
                 <div class="setting-toggle">
@@ -762,7 +786,7 @@ class TeaNav extends HTMLElement {
                 <div class="settings-title">About</div>
                 <p>Tea Collection App v1.0.0<br>© 2025 All Rights Reserved</p>
               </div>
-            ` : `
+              ` : `
               <div class="favorites-search">
                 <input type="text" class="favorites-search-input" placeholder="Search favorites...">
                 <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -817,3 +841,5 @@ class TeaNav extends HTMLElement {
 }
 
 customElements.define('tea-nav', TeaNav);
+
+export default TeaNav;
