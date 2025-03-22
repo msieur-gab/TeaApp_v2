@@ -1,4 +1,5 @@
 // components/tea-detail.js
+// Consolidated tea detail component with improved organization
 
 class TeaDetail extends HTMLElement {
   constructor() {
@@ -9,18 +10,18 @@ class TeaDetail extends HTMLElement {
     this._teaData = null;
     this._isOpen = false;
     this._brewStyle = 'western'; // 'western' or 'gongfu'
+    this._currentTeaId = null;
     
     // Touch tracking for swipe to close
-    this._touchStartY = 0;
-    this._touchStartX = 0;
-    this._lastTouch = { y: 0, x: 0 };
-    this._panelHeight = 0;
-    this._isDragging = false;
-    this._initialPanelY = 0;
-    
-    // References to main content elements
-    this._mainContent = null;
-    this._teaContainer = null;
+    this._touchState = {
+      startY: 0,
+      startX: 0,
+      lastY: 0,
+      lastX: 0,
+      panelHeight: 0,
+      isDragging: false,
+      initialPanelY: 0
+    };
     
     // Bind methods
     this._handleClose = this._handleClose.bind(this);
@@ -33,10 +34,7 @@ class TeaDetail extends HTMLElement {
   }
 
   connectedCallback() {
-    // Store references to main content elements
     this._mainContent = document.querySelector('.app-container');
-    this._teaContainer = document.querySelector('.tea-cards-container') || document.querySelector('tea-collection');
-    
     this.render();
     this._setupEventListeners();
   }
@@ -47,13 +45,13 @@ class TeaDetail extends HTMLElement {
   
   // Public methods
   open(teaData) {
-    console.log('TeaDetail.open() called with data:', teaData);
-    
-    // Ensure we have valid tea data with at least the basic properties
     if (!teaData || typeof teaData !== 'object') {
       console.error('Invalid tea data provided to TeaDetail.open()');
       return;
     }
+    
+    // Save current ID for reference
+    this._currentTeaId = teaData.id || null;
     
     // Create a complete tea data object with default values for missing properties
     this._teaData = {
@@ -68,7 +66,7 @@ class TeaDetail extends HTMLElement {
       ...teaData  // Include any other properties from the original data
     };
     
-    // If we have an ID but no other data, try to fetch more details from the database
+    // If we have an ID but limited data, try to fetch more details
     if (teaData.id && (!teaData.description || !teaData.brewTime)) {
       this._fetchTeaDetails(teaData.id);
     }
@@ -83,77 +81,33 @@ class TeaDetail extends HTMLElement {
     setTimeout(() => {
       const panel = this.shadowRoot.querySelector('.detail-panel');
       const backdrop = this.shadowRoot.querySelector('.detail-backdrop');
+      
       if (panel) {
         panel.classList.add('open');
         // Update our cached panel height
-        this._panelHeight = panel.offsetHeight;
-        
-        // Push main content up
+        this._touchState.panelHeight = panel.offsetHeight;
         this._pushMainContentUp();
       }
+      
       if (backdrop) {
         backdrop.classList.add('open');
       }
       
       // Dispatch open event
-      this.dispatchEvent(new CustomEvent('tea-detail-opened', {
-        bubbles: true,
-        composed: true,
-        detail: { teaData: this._teaData }
-      }));
+      this._dispatchEvent('tea-detail-opened', { teaData: this._teaData });
     }, 10);
     
     // Block body scrolling when detail view is open
     document.body.style.overflow = 'hidden';
   }
   
-  // Helper method to fetch more tea details
-  async _fetchTeaDetails(teaId) {
-    try {
-      // Check if TeaDatabase is available in the window
-      if (window.TeaDatabase) {
-        const teaDetails = await window.TeaDatabase.getTea(teaId);
-        if (teaDetails) {
-          // Update our data with the fetched details
-          this._teaData = {
-            ...this._teaData,
-            ...teaDetails
-          };
-          
-          // Re-render with the updated data
-          this.render();
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching tea details:', error);
-    }
-  }
-  
-  // Default helper methods
-  _getDefaultBrewTime(category) {
-    const defaults = {
-      'Green': '2:30',
-      'Black': '3:30',
-      'Oolong': '3:15',
-      'White': '3:00',
-      'Pu-erh': '4:00',
-      'Yellow': '2:45'
-    };
+  // Update data without closing/reopening
+  updateData(newData) {
+    if (!this._isOpen || !newData) return;
     
-    return defaults[category] || '3:00';
-  }
-  
-  _getDefaultTemperature(category) {
-    const defaults = {
-      'Green': '80°C',
-      'Black': '95°C',
-      'Oolong': '90°C',
-      'White': '80°C',
-      'Pu-erh': '95°C',
-      'Yellow': '80°C'
-    };
-    
-    return defaults[category] || '85°C';
+    this._teaData = { ...this._teaData, ...newData };
+    this.render();
+    this._setupEventListeners();
   }
   
   close() {
@@ -182,44 +136,53 @@ class TeaDetail extends HTMLElement {
     this._resetMainContent();
     
     // Dispatch close event immediately so UI can begin updating
-    this.dispatchEvent(new CustomEvent('tea-detail-closed', {
-      bubbles: true,
-      composed: true
-    }));
+    this._dispatchEvent('tea-detail-closed');
     
     // Wait for animation to complete before hiding
     setTimeout(() => {
       this._isOpen = false;
+      this._currentTeaId = null;
       this.render();
       document.body.style.overflow = '';
     }, 300);
   }
   
-  // Push main content up
+  // Helper method to fetch more tea details
+  async _fetchTeaDetails(teaId) {
+    try {
+      // Use global TeaDatabase service if available
+      if (window.TeaDatabase) {
+        const teaDetails = await window.TeaDatabase.getTea(teaId);
+        if (teaDetails) {
+          // Update our data with the fetched details
+          this._teaData = { ...this._teaData, ...teaDetails };
+          
+          // Re-render with the updated data
+          this.render();
+          this._setupEventListeners();
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching tea details:', error);
+    }
+  }
+  
+  // Main content management
   _pushMainContentUp() {
     // Get viewport height to calculate proportions
     const viewportHeight = window.innerHeight;
-    
-    // Determine if device is in portrait or landscape
     const isPortrait = window.innerHeight > window.innerWidth;
     
-    // On taller screens or portrait mode, we want to show more of the detail panel
-    // On shorter screens or landscape, we want to keep more tea cards visible
+    // Adjust ratio based on screen orientation
     let pushRatio = isPortrait ? 0.6 : 0.4;
     
-    // But always leave room for at least 1 row of cards at the top
-    const minVisibleTeaCards = 100; // Approx height needed for one row
+    // Always leave room for at least 1 row of cards at the top
+    const minVisibleTeaCards = 100; 
     
     // Calculate how much to push up
-    let pushHeight = Math.min(this._panelHeight * pushRatio, viewportHeight * 0.5);
-    
-    // But ensure we don't push too much, always leaving space for tea cards
+    let pushHeight = Math.min(this._touchState.panelHeight * pushRatio, viewportHeight * 0.5);
     pushHeight = Math.min(pushHeight, viewportHeight - minVisibleTeaCards);
-    
-    // Make sure push height is at least 200px to show a meaningful amount of detail panel
     pushHeight = Math.max(pushHeight, Math.min(200, viewportHeight * 0.3));
-    
-    console.log(`Pushing content up by ${pushHeight}px (viewport: ${viewportHeight}px)`);
     
     // Apply push to main content
     if (this._mainContent) {
@@ -227,7 +190,7 @@ class TeaDetail extends HTMLElement {
       this._mainContent.style.transform = `translateY(-${pushHeight}px)`;
     }
     
-    // Also handle the add button
+    // Handle the add button
     const addButton = document.querySelector('.add-tea-button');
     if (addButton) {
       addButton.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease';
@@ -236,7 +199,6 @@ class TeaDetail extends HTMLElement {
     }
   }
   
-  // Reset main content position
   _resetMainContent() {
     if (this._mainContent) {
       this._mainContent.style.transform = 'translateY(0)';
@@ -250,7 +212,7 @@ class TeaDetail extends HTMLElement {
     }
   }
   
-  // Private methods
+  // Event handling
   _setupEventListeners() {
     // Close button
     const closeButton = this.shadowRoot.querySelector('.close-button');
@@ -286,7 +248,6 @@ class TeaDetail extends HTMLElement {
   }
   
   _removeEventListeners() {
-    // Clean up just before re-rendering
     const closeButton = this.shadowRoot.querySelector('.close-button');
     if (closeButton) {
       closeButton.removeEventListener('click', this._handleClose);
@@ -320,7 +281,6 @@ class TeaDetail extends HTMLElement {
   }
   
   _handleBackdropClick(event) {
-    // Only close if the backdrop itself was clicked
     if (event.target === event.currentTarget) {
       this.close();
     }
@@ -328,8 +288,6 @@ class TeaDetail extends HTMLElement {
   
   _handleBrewStyleToggle(event) {
     this._brewStyle = event.target.checked ? 'gongfu' : 'western';
-    
-    // Update brewing parameters display
     this._updateBrewingParameters();
   }
   
@@ -349,11 +307,7 @@ class TeaDetail extends HTMLElement {
     }
     
     // Dispatch steep event
-    this.dispatchEvent(new CustomEvent('start-steeping', {
-      bubbles: true,
-      composed: true,
-      detail: { tea: teaForSteeping }
-    }));
+    this._dispatchEvent('start-steeping', { tea: teaForSteeping });
     
     // Close the detail view
     this.close();
@@ -375,25 +329,22 @@ class TeaDetail extends HTMLElement {
     const timeElement = this.shadowRoot.querySelector('.brew-time');
     const tempElement = this.shadowRoot.querySelector('.brew-temp');
     
-    if (timeElement) {
-      timeElement.textContent = brewingTime;
-    }
-    
-    if (tempElement) {
-      tempElement.textContent = temperature;
-    }
+    if (timeElement) timeElement.textContent = brewingTime;
+    if (tempElement) tempElement.textContent = temperature;
   }
   
   // Touch event handlers for swipe to close gesture
   _handleTouchStart(event) {
     if (!event.touches[0]) return;
     
-    this._isDragging = false;
-    this._touchStartY = event.touches[0].clientY;
-    this._touchStartX = event.touches[0].clientX;
-    this._lastTouch = { 
-      y: this._touchStartY,
-      x: this._touchStartX
+    const touch = event.touches[0];
+    this._touchState = {
+      ...this._touchState,
+      isDragging: false,
+      startY: touch.clientY,
+      startX: touch.clientX,
+      lastY: touch.clientY,
+      lastX: touch.clientX
     };
     
     // Store the initial position of the panel
@@ -404,9 +355,9 @@ class TeaDetail extends HTMLElement {
       if (transform && transform !== 'none') {
         // Extract the Y translation from the matrix
         const matrix = new DOMMatrix(transform);
-        this._initialPanelY = matrix.m42;
+        this._touchState.initialPanelY = matrix.m42;
       } else {
-        this._initialPanelY = 0;
+        this._touchState.initialPanelY = 0;
       }
       
       // Remove transition during dragging for responsiveness
@@ -417,45 +368,43 @@ class TeaDetail extends HTMLElement {
   _handleTouchMove(event) {
     if (!event.touches[0]) return;
     
-    const currentY = event.touches[0].clientY;
-    const currentX = event.touches[0].clientX;
-    const deltaY = currentY - this._touchStartY;
-    const deltaX = currentX - this._touchStartX;
+    const touch = event.touches[0];
+    const currentY = touch.clientY;
+    const currentX = touch.clientX;
+    const deltaY = currentY - this._touchState.startY;
+    const deltaX = currentX - this._touchState.startX;
     
-    // Store the last touch position
-    this._lastTouch = { y: currentY, x: currentX };
+    // Store current position
+    this._touchState.lastY = currentY;
+    this._touchState.lastX = currentX;
     
-    // If we're scrolling more horizontally than vertically, let the scroll happen normally
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      return;
-    }
+    // If more horizontal than vertical movement, let scroll happen
+    if (Math.abs(deltaX) > Math.abs(deltaY)) return;
     
-    // Determine if we should start dragging - only drag if moving down or already dragging
-    if (!this._isDragging) {
+    // Determine if we should start dragging
+    if (!this._touchState.isDragging) {
       const detailContent = this.shadowRoot.querySelector('.detail-content');
       
-      // Only start dragging if at the top of the content or dragging down
-      if (deltaY > 0 || detailContent.scrollTop <= 0) {
-        this._isDragging = true;
+      // Only start dragging if at top of content or dragging down
+      if (deltaY > 0 || (detailContent && detailContent.scrollTop <= 0)) {
+        this._touchState.isDragging = true;
         
-        // If we just started dragging and we're not at the top, prevent further movement
-        if (detailContent.scrollTop > 0) {
-          return;
-        }
+        // If just started dragging but not at the top, prevent movement
+        if (detailContent && detailContent.scrollTop > 0) return;
       } else {
         // Allow normal scrolling
         return;
       }
     }
     
-    // Now we're definitely dragging, prevent default scrolling
+    // Now dragging, prevent default scroll
     event.preventDefault();
     
     // Allow dragging only if moving down or already displaced
-    if (deltaY > 0 || this._initialPanelY > 0) {
+    if (deltaY > 0 || this._touchState.initialPanelY > 0) {
       // Apply resistance to dragging - more resistance as you drag further
       const resistance = 0.3 + (0.7 * (1 - Math.min(deltaY / window.innerHeight, 1)));
-      const newTranslateY = this._initialPanelY + (deltaY * resistance);
+      const newTranslateY = this._touchState.initialPanelY + (deltaY * resistance);
       
       // Update panel position
       const panel = this.shadowRoot.querySelector('.detail-panel');
@@ -463,12 +412,12 @@ class TeaDetail extends HTMLElement {
         panel.style.transform = `translateY(${newTranslateY}px)`;
       }
       
-      // Also adjust main content to follow
+      // Adjust main content to follow
       if (this._mainContent) {
-        // Calculate how much the main content should move up based on panel movement
+        // Calculate how much the main content should move
         const mainAdjustment = Math.max(0, deltaY * -0.3);
-        // Calculate the new position - smoothly transitioning back to original position
-        const pushHeight = Math.min(this._panelHeight * 0.6, window.innerHeight * 0.5);
+        // Calculate new position - smoothly transitioning back
+        const pushHeight = Math.min(this._touchState.panelHeight * 0.6, window.innerHeight * 0.5);
         const newMainPosition = Math.max(-pushHeight, -pushHeight + mainAdjustment);
         
         this._mainContent.style.transform = `translateY(${newMainPosition}px)`;
@@ -476,25 +425,23 @@ class TeaDetail extends HTMLElement {
     }
   }
   
-  _handleTouchEnd(event) {
+  _handleTouchEnd() {
     // Re-enable transitions
     const panel = this.shadowRoot.querySelector('.detail-panel');
     if (panel) {
       panel.style.transition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
     }
     
-    if (!this._isDragging) return;
-    this._isDragging = false;
+    if (!this._touchState.isDragging) return;
     
-    // Calculate velocity of the swipe
-    const endY = this._lastTouch.y;
-    const deltaY = endY - this._touchStartY;
+    // Calculate distance of swipe
+    const deltaY = this._touchState.lastY - this._touchState.startY;
     
-    // Close if dragged down more than 25% of panel height or with a fast velocity
-    if (deltaY > this._panelHeight * 0.25) {
+    // Close if dragged down more than 25% of panel height
+    if (deltaY > this._touchState.panelHeight * 0.25) {
       this.close();
     } else {
-      // Reset position
+      // Reset panel position
       if (panel) {
         panel.style.transform = 'translateY(0)';
       }
@@ -502,10 +449,62 @@ class TeaDetail extends HTMLElement {
       // Reset main content to pushed-up position
       this._pushMainContentUp();
     }
+    
+    // Reset drag state
+    this._touchState.isDragging = false;
+  }
+  
+  // Utility methods
+  _dispatchEvent(name, detail = {}) {
+    const event = new CustomEvent(name, {
+      bubbles: true,
+      composed: true,
+      detail
+    });
+    
+    this.dispatchEvent(event);
+    
+    // If global event manager exists, use it too
+    if (window.TeaEvents) {
+      // Convert event names to match global event types if needed
+      // For example: 'tea-detail-opened' -> 'DETAIL_OPENED'
+      const eventType = window.TeaEventTypes?.[name.replace(/^tea-|-/g, '_').toUpperCase()] || name;
+      window.TeaEvents.emit(eventType, detail);
+    }
+  }
+  
+  _getDefaultBrewTime(category) {
+    const defaults = {
+      'Green': '2:30',
+      'Black': '3:30',
+      'Oolong': '3:15',
+      'White': '3:00',
+      'Pu-erh': '4:00',
+      'Yellow': '2:45'
+    };
+    
+    return defaults[category] || '3:00';
+  }
+  
+  _getDefaultTemperature(category) {
+    const defaults = {
+      'Green': '80°C',
+      'Black': '95°C',
+      'Oolong': '90°C',
+      'White': '80°C',
+      'Pu-erh': '95°C',
+      'Yellow': '80°C'
+    };
+    
+    return defaults[category] || '85°C';
   }
   
   _getCategoryColor(category) {
-    // Color mapping for tea categories
+    // Color mapping for tea categories using CSS variables when possible
+    return `var(--tea-${category.toLowerCase()}-color, ${this._getFallbackCategoryColor(category)})`;
+  }
+  
+  _getFallbackCategoryColor(category) {
     const colorMap = {
       'Green': '#7B9070',
       'Black': '#A56256',
@@ -536,6 +535,13 @@ class TeaDetail extends HTMLElement {
         height: 100%;
         z-index: 95; /* Lower z-index to be below nav */
         pointer-events: auto;
+        --tea-green-color: #7B9070;
+        --tea-black-color: #A56256;
+        --tea-oolong-color: #C09565;
+        --tea-white-color: #D8DCD5;
+        --tea-pu-erh-color: #6F5244;
+        --tea-yellow-color: #D1CDA6;
+        --tea-current-color: ${categoryColor};
       }
       
       .detail-backdrop {
@@ -559,7 +565,7 @@ class TeaDetail extends HTMLElement {
         left: 0;
         width: 100%;
         max-height: calc(90vh - 64px); /* Adjust max height to account for nav */
-        background-color: ${categoryColor};
+        background-color: var(--tea-current-color);
         color: white;
         border-top-left-radius: 16px;
         border-top-right-radius: 16px;
@@ -617,6 +623,7 @@ class TeaDetail extends HTMLElement {
         overflow-y: auto;
         padding: 16px;
         color: #333;
+        background-color: white;
       }
       
       .tea-image {
@@ -629,6 +636,8 @@ class TeaDetail extends HTMLElement {
         align-items: center;
         margin: 0 auto 16px;
         font-size: 2rem;
+        color: var(--tea-current-color);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       }
       
       .tea-meta {
@@ -662,7 +671,7 @@ class TeaDetail extends HTMLElement {
         margin-bottom: 12px;
         position: relative;
         padding-left: 12px;
-        color: ${categoryColor};
+        color: var(--tea-current-color);
       }
       
       .section-title::before {
@@ -672,12 +681,14 @@ class TeaDetail extends HTMLElement {
         top: 0;
         height: 100%;
         width: 4px;
-        background-color: ${categoryColor};
+        background-color: var(--tea-current-color);
         border-radius: 2px;
       }
       
       .brewing-section {
+        background-color: #f9f9f9;
         padding: 16px;
+        border-radius: 8px;
       }
       
       .brew-style-toggle {
@@ -731,7 +742,7 @@ class TeaDetail extends HTMLElement {
       }
       
       input:checked + .brew-toggle-slider {
-        background-color: ${categoryColor};
+        background-color: var(--tea-current-color);
       }
       
       input:checked + .brew-toggle-slider:before {
@@ -742,6 +753,7 @@ class TeaDetail extends HTMLElement {
         display: flex;
         justify-content: space-around;
         align-items: center;
+        gap: 8px;
       }
       
       .brew-param {
@@ -750,7 +762,7 @@ class TeaDetail extends HTMLElement {
         padding: 12px;
         background-color: white;
         border-radius: 8px;
-        margin: 0 6px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
       
       .brew-param-label {
@@ -762,7 +774,7 @@ class TeaDetail extends HTMLElement {
       .brew-param-value {
         font-size: 1.1rem;
         font-weight: 600;
-        color: ${categoryColor};
+        color: var(--tea-current-color);
       }
       
       .tea-properties {
@@ -815,13 +827,23 @@ class TeaDetail extends HTMLElement {
         width: 100%;
         padding: 16px;
         margin-top: 16px;
-        background-color: ${categoryColor};
+        background-color: var(--tea-current-color);
         border: none;
         border-radius: 8px;
         color: white;
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+      
+      .steep-button:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+      
+      .steep-button:active {
+        transform: translateY(1px);
       }
       
       @media (min-width: 768px) {
@@ -829,7 +851,6 @@ class TeaDetail extends HTMLElement {
           width: 90%;
           max-width: 500px;
           left: 50%;
-          bottom: 64px; /* Keep space for nav on desktop too */
           transform: translateX(-50%) translateY(100%);
         }
         
@@ -992,4 +1013,3 @@ class TeaDetail extends HTMLElement {
 customElements.define('tea-detail', TeaDetail);
 
 export default TeaDetail;
-                    

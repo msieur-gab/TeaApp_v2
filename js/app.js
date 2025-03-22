@@ -3,9 +3,11 @@
 // Import Services
 import TeaDatabase from './services/tea-database.js';
 import TeaCollectionLevels from './services/tea-collection-levels.js';
+import { teaEvents, TeaEventTypes } from './services/event-manager.js';
+import TeaTheme from './utils/tea-theme.js';
 
 // App version constants
-const APP_VERSION = 'v1.0.1';
+const APP_VERSION = 'v1.0.2';
 const APP_BUILD_DATE = '2025-03-22';
 
 class TeaApp {
@@ -41,6 +43,9 @@ class TeaApp {
       // Initialize database
       await TeaDatabase.init();
       
+      // Set up CSS theme variables
+      TeaTheme.setupVariables();
+      
       // Set up event listeners
       this.setupEventListeners();
       
@@ -68,19 +73,11 @@ class TeaApp {
       });
     });
     
-    // Tea selection
-    document.addEventListener('tea-select', this.handleTeaSelect.bind(this));
-    
-    // Start steeping
-    document.addEventListener('start-steeping', this.handleSteepingStart.bind(this));
-    
-    // Timer complete
-    document.addEventListener('timer-complete', this.handleTimerComplete.bind(this));
-    
     // Add tea button
     if (this.addTeaButton) {
       this.addTeaButton.addEventListener('click', () => {
         this.addTeaModal.classList.add('visible');
+        teaEvents.emit(TeaEventTypes.MODAL_OPENED, { id: 'addTeaModal' });
       });
     }
     
@@ -88,12 +85,14 @@ class TeaApp {
     if (this.closeModalButton) {
       this.closeModalButton.addEventListener('click', () => {
         this.addTeaModal.classList.remove('visible');
+        teaEvents.emit(TeaEventTypes.MODAL_CLOSED, { id: 'addTeaModal' });
       });
     }
     
     if (this.cancelAddTeaButton) {
       this.cancelAddTeaButton.addEventListener('click', () => {
         this.addTeaModal.classList.remove('visible');
+        teaEvents.emit(TeaEventTypes.MODAL_CLOSED, { id: 'addTeaModal' });
       });
     }
     
@@ -102,13 +101,33 @@ class TeaApp {
       this.addTeaForm.addEventListener('submit', this.handleAddTeaSubmit.bind(this));
     }
     
-    // Handle tea added event
-    document.addEventListener('tea-added', this.handleTeaAdded.bind(this));
+    // Setup global event listeners via the event manager
+    teaEvents.on(TeaEventTypes.TEA_SELECTED, this.handleTeaSelect.bind(this));
+    teaEvents.on(TeaEventTypes.STEEP_STARTED, this.handleSteepingStart.bind(this));
+    teaEvents.on(TeaEventTypes.TIMER_COMPLETED, this.handleTimerComplete.bind(this));
+    teaEvents.on(TeaEventTypes.TEA_ADDED, this.handleTeaAdded.bind(this));
+    
+    // Legacy event listeners (keeping these for backward compatibility with existing components)
+    document.addEventListener('tea-select', (event) => {
+      teaEvents.emit(TeaEventTypes.TEA_SELECTED, event.detail);
+    });
+    
+    document.addEventListener('start-steeping', (event) => {
+      teaEvents.emit(TeaEventTypes.STEEP_STARTED, event.detail);
+    });
+    
+    document.addEventListener('timer-complete', (event) => {
+      teaEvents.emit(TeaEventTypes.TIMER_COMPLETED, event.detail);
+    });
+    
+    document.addEventListener('tea-added', (event) => {
+      teaEvents.emit(TeaEventTypes.TEA_ADDED, event.detail);
+    });
     
     // Progress modal events
     if (this.progressModal) {
       this.progressModal.addEventListener('modal-closed', () => {
-        console.log('Progress modal closed');
+        teaEvents.emit(TeaEventTypes.MODAL_CLOSED, { id: 'progressModal' });
       });
     }
   }
@@ -130,8 +149,11 @@ class TeaApp {
     this.categoryPills.forEach(pill => {
       if (pill.dataset.category === category) {
         pill.classList.add('active');
+        TeaTheme.applyTheme(pill, category, { useBackground: true });
       } else {
         pill.classList.remove('active');
+        pill.style.backgroundColor = '';
+        pill.style.color = '';
       }
     });
     
@@ -142,6 +164,9 @@ class TeaApp {
     
     // Update state
     this.currentCategory = category;
+    
+    // Dispatch event via event manager
+    teaEvents.emit(TeaEventTypes.CATEGORY_CHANGED, { category });
   }
   
   async handleAddTeaSubmit(event) {
@@ -159,6 +184,7 @@ class TeaApp {
     
     // Close the modal
     this.addTeaModal.classList.remove('visible');
+    teaEvents.emit(TeaEventTypes.MODAL_CLOSED, { id: 'addTeaModal' });
     
     // Show loader
     this.showLoader();
@@ -259,6 +285,13 @@ class TeaApp {
             true, // is level up
             progressInfo
           );
+          
+          // Emit level-up event
+          teaEvents.emit(TeaEventTypes.LEVEL_UP, {
+            tea: teaData,
+            levelUp,
+            progressInfo
+          });
         } else {
           // No level-up - show regular progress update
           this.progressModal.show(
@@ -285,8 +318,8 @@ class TeaApp {
         }
       }
       
-      // Dispatch tea added event
-      this.dispatchTeaAddedEvent(teaData);
+      // Emit tea added event
+      teaEvents.emit(TeaEventTypes.TEA_ADDED, { tea: teaData });
       
       return id;
     } catch (error) {
@@ -340,6 +373,13 @@ class TeaApp {
             true, // is level up
             progressInfo
           );
+          
+          // Emit level-up event
+          teaEvents.emit(TeaEventTypes.LEVEL_UP, {
+            tea: teaData,
+            levelUp,
+            progressInfo
+          });
         } else {
           // No level-up - show regular progress update
           this.progressModal.show(
@@ -366,8 +406,8 @@ class TeaApp {
         }
       }
       
-      // Dispatch tea added event
-      this.dispatchTeaAddedEvent(teaData);
+      // Emit tea added event
+      teaEvents.emit(TeaEventTypes.TEA_ADDED, { tea: teaData });
       
       return id;
     } catch (error) {
@@ -378,29 +418,9 @@ class TeaApp {
     }
   }
   
-  dispatchTeaAddedEvent(teaData) {
-    // Create and dispatch tea-added event
-    const event = new CustomEvent('tea-added', {
-      bubbles: true,
-      composed: true,
-      detail: { tea: teaData }
-    });
-    
-    document.dispatchEvent(event);
-  }
-  
-  handleTeaAdded(event) {
-    const tea = event.detail.tea;
-    
-    // Ensure the collection is refreshed
-    if (tea.category === this.currentCategory && this.teaCollection) {
-      this.teaCollection.category = this.currentCategory;
-    }
-  }
-  
-  handleTeaSelect(event) {
+  handleTeaSelect(data) {
     // Get the tea data from the event
-    const teaData = event.detail;
+    const teaData = data;
     console.log('Tea selected:', teaData);
     
     // Make sure we have the tea detail component
@@ -420,8 +440,8 @@ class TeaApp {
     this.teaDetail.open(teaData);
   }
   
-  handleSteepingStart(event) {
-    const teaData = event.detail.tea;
+  handleSteepingStart(data) {
+    const teaData = data.tea;
     
     // Parse brew time to seconds
     const brewTimeSeconds = this.parseBrewTime(teaData.brewTime);
@@ -433,9 +453,18 @@ class TeaApp {
     }
   }
   
-  handleTimerComplete(event) {
-    const teaName = event.detail.teaName;
+  handleTimerComplete(data) {
+    const teaName = data.teaName;
     this.showNotification(`Your ${teaName} is ready!`, 5000);
+  }
+  
+  handleTeaAdded(data) {
+    const tea = data.tea;
+    
+    // Ensure the collection is refreshed
+    if (tea.category === this.currentCategory && this.teaCollection) {
+      this.teaCollection.category = this.currentCategory;
+    }
   }
   
   parseBrewTime(brewTime) {
@@ -563,6 +592,9 @@ class TeaApp {
       this.notification.textContent = message;
       this.notification.classList.add('visible');
       
+      // Emit notification event
+      teaEvents.emit(TeaEventTypes.NOTIFICATION_SHOW, { message, duration });
+      
       // Hide after duration
       setTimeout(() => {
         this.notification.classList.remove('visible');
@@ -588,3 +620,11 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+
+// Make services globally available for debug/development purposes
+window.TeaDatabase = TeaDatabase;
+window.TeaEvents = teaEvents;
+window.TeaEventTypes = TeaEventTypes;
+window.TeaTheme = TeaTheme;
+
+export default TeaApp;

@@ -113,9 +113,14 @@
   <div id="message-container" class="message-container"></div>
   
   <!-- Scripts -->
-  <!-- First load database and services -->
-  <script type="module" src="./js/services/tea-database.js"></script>
-  <script type="module" src="./js/services/tea-collection-levels.js"></script>
+  <!-- First load utilities -->
+<script type="module" src="./js/utils/tea-theme.js"></script>
+
+<!-- Then load services -->
+<script type="module" src="./js/services/event-manager.js"></script>
+<script type="module" src="./js/services/tea-database.js"></script>
+<script type="module" src="./js/services/tea-collection-levels.js"></script>
+
   
   <!-- Load components -->
   <script type="module" src="./js/components/tea-circle.js"></script>
