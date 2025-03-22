@@ -1,0 +1,183 @@
+/* tea-app-fixes.css */
+
+/* Fix visibility of custom elements */
+tea-collection:not(:defined),
+tea-circle:not(:defined),
+tea-detail:not(:defined),
+tea-nav:not(:defined),
+progress-modal:not(:defined) {
+  display: none;
+}
+
+/* Ensure collection is visible once defined */
+tea-collection:defined {
+  display: block !important;
+}
+
+/* Smooth animations */
+* {
+  transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+/* Modal fixes */
+.modal {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal.visible {
+  opacity: 1;
+  pointer-events: auto;
+  display: flex !important;
+}
+
+.modal-content {
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.modal.visible .modal-content {
+  transform: translateY(0);
+}
+
+/* Notification improvements */
+.notification {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 2000 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.notification.visible {
+  opacity: 1 !important;
+  transform: translateY(0);
+}
+
+/* Navigation fixes */
+tea-nav {
+  z-index: 1000 !important;
+  display: block !important;
+}
+
+/* Progress modal styling */
+progress-modal {
+  display: none;
+  z-index: 1500 !important;
+}
+
+/* Tea detail styling */
+tea-detail {
+  z-index: 1200 !important;
+}
+
+/* Loader improvements */
+.loader {
+  z-index: 2000 !important;
+}
+
+.loader-spinner {
+  border-width: 3px !important;
+}
+
+/* Category pills scrolling */
+.category-pills {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
+}
+
+.category-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.category-pill {
+  scroll-snap-align: start;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+.category-pill:hover {
+  transform: translateY(-2px);
+}
+
+.category-pill.active {
+  transform: translateY(-2px);
+}
+
+/* Mobile optimization */
+@media (max-width: 480px) {
+  .app-header {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .category-pills {
+    padding-bottom: 0.25rem;
+  }
+  
+  .category-pill {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  /* Adjust tea grid for small screens */
+  tea-circle {
+    --circle-size: 54px;
+  }
+}
+
+/* Tea circles visualization fix */
+tea-circle {
+  display: block !important;
+  --circle-size: 64px;
+  width: var(--circle-size);
+  height: var(--circle-size);
+}
+
+/* Ensure tea circles are clickable */
+tea-circle::part(tea-circle) {
+  cursor: pointer;
+}
+
+/* Touch areas optimization */
+.category-pill,
+.close-button,
+.steep-button,
+.action-button,
+.add-tea-button {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Add tea button improvements */
+.add-tea-button {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  z-index: 990 !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.add-tea-button:hover,
+.add-tea-button:focus {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Debug outline for development */
+[data-debug-outline] * {
+  outline: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+/* Ensure pointer events work through all layers */
+tea-collection,
+tea-circle,
+.tea-grid,
+.tea-circle-container,
+.tea-circle {
+  pointer-events: auto !important;
+}
+
+/* Make sure tea circles are visible and clickable */
+tea-circle::part(tea-circle) {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}

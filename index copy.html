@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <title>Tea Collection App</title>
+  
+  <!-- <link rel="manifest" href="manifest.json"> -->
+  <!-- <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"> -->
+  <!-- <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon"> -->
+  
+  <style>
+    /* Reset and Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: #333;
+      min-height: 100vh;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+      padding-bottom: 64px; /* Space for the navigation bar */
+    }
+    
+    /* App Container */
+    .app-container {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+    
+    /* Header */
+    .app-header {
+      background-color: #fff;
+      border-bottom: 1px solid #eee;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      height: 60px;
+    }
+    
+    .category-pills {
+      display: flex;
+      overflow-x: auto;
+      gap: 0.5rem;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* Hide scrollbar for Firefox */
+      padding-bottom: 0.5rem;
+      margin-bottom: -0.5rem; /* Compensate for padding */
+    }
+    
+    .category-pills::-webkit-scrollbar {
+      display: none; /* Hide scrollbar for WebKit */
+    }
+    
+    .category-pill {
+      background-color: #f0f0f0;
+      border: none;
+      border-radius: 16px;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    
+    .category-pill.active {
+      color: #fff;
+    }
+    
+    .category-pill[data-category="Green"].active {
+      background-color: #7B9070;
+    }
+    
+    .category-pill[data-category="Black"].active {
+      background-color: #A56256;
+    }
+    
+    .category-pill[data-category="Oolong"].active {
+      background-color: #C09565;
+    }
+    
+    .category-pill[data-category="White"].active {
+      background-color: #D8DCD5;
+      color: #333; /* Better contrast for light color */
+    }
+    
+    .category-pill[data-category="Pu-erh"].active {
+      background-color: #6F5244;
+    }
+    
+    .category-pill[data-category="Yellow"].active {
+      background-color: #D1CDA6;
+      color: #333; /* Better contrast for light color */
+    }
+    
+    /* Main Content */
+    main {
+      padding: 1rem;
+    }
+    
+    /* Loader */
+    .loader {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .loader.active {
+      display: flex;
+    }
+    
+    .loader-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(74, 144, 226, 0.1);
+      border-radius: 50%;
+      border-top-color: #4a90e2;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Notifications */
+    .notification {
+      position: fixed;
+      top: 45vh;
+      left: 50%;
+      transform: translateX(-50vh);
+      padding: 0.75rem 1rem;
+      background-color: #333;
+      color: white;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 1001;
+      max-width: 80%;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .notification.visible {
+      opacity: 1;
+    }
+    
+    /* Add Tea Button */
+    .add-tea-button {
+      position: fixed;
+      bottom: 80px; /* Above navigation bar */
+      right: 1rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 50;
+    }
+    
+    /* Version Display */
+    .version-display {
+      position: fixed;
+      bottom: 76px; /* Above navigation */
+      right: 4px;
+      font-size: 0.7rem;
+      color: rgba(0, 0, 0, 0.4);
+      padding: 2px 5px;
+      z-index: 5;
+    }
+    
+    /* Add Tea Form Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+    
+    .modal.visible {
+      display: flex;
+    }
+    
+    .modal-content {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal-header {
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin: 0;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+    }
+    
+    .modal-body {
+      padding: 1rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    
+    .form-actions {
+      margin-top: 1rem;
+      text-align: right;
+    }
+    
+    .form-button {
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    
+    .form-button-primary {
+      background-color: #4a90e2;
+      color: white;
+    }
+    
+    .form-button-secondary {
+      background-color: #f0f0f0;
+      color: #333;
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="category-pills">
+        <button class="category-pill active" data-category="Green">Green</button>
+        <button class="category-pill" data-category="Black">Black</button>
+        <button class="category-pill" data-category="Oolong">Oolong</button>
+        <button class="category-pill" data-category="White">White</button>
+        <button class="category-pill" data-category="Pu-erh">Pu-erh</button>
+        <button class="category-pill" data-category="Yellow">Yellow</button>
+      </div>
+    </header>
+    
+    <main>
+      <!-- Tea Collection Web Component -->
+      <tea-collection category="Green"></tea-collection>
+      
+      <!-- Tea Detail View (hidden by default) -->
+      <tea-detail></tea-detail>
+    </main>
+  </div>
+  
+  <!-- Bottom Navigation -->
+  <tea-nav></tea-nav>
+  
+  <!-- Add Tea Button -->
+  <button class="add-tea-button" id="addTeaButton">+</button>
+  
+  <!-- Add Tea Form Modal -->
+  <div class="modal" id="addTeaModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Add Tea</h2>
+        <button class="modal-close" id="closeModalButton">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="addTeaForm">
+          <div class="form-group">
+            <label for="teaId">Tea ID</label>
+            <input type="text" id="teaId" placeholder="Enter tea ID (e.g., 000, 010)" required>
+          </div>
+          <div class="form-group">
+            <label>Or enter tea name and details manually:</label>
+          </div>
+          <div class="form-group">
+            <label for="teaName">Tea Name</label>
+            <input type="text" id="teaName" placeholder="e.g., Dragon Well">
+          </div>
+          <div class="form-group">
+            <label for="teaCategory">Category</label>
+            <select id="teaCategory">
+              <option value="Green">Green</option>
+              <option value="Black">Black</option>
+              <option value="Oolong">Oolong</option>
+              <option value="White">White</option>
+              <option value="Pu-erh">Pu-erh</option>
+              <option value="Yellow">Yellow</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="teaOrigin">Origin</label>
+            <input type="text" id="teaOrigin" placeholder="e.g., Hangzhou, China">
+          </div>
+          <div class="form-actions">
+            <button type="button" class="form-button form-button-secondary" id="cancelAddTeaButton">Cancel</button>
+            <button type="submit" class="form-button form-button-primary">Add Tea</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Progress Modal Component for Level-ups -->
+  <progress-modal></progress-modal>
+  
+  <!-- Loader -->
+  <div id="loader" class="loader">
+    <div class="loader-spinner"></div>
+  </div>
+  
+  <!-- Notification -->
+  <div id="notification" class="notification"></div>
+  
+  <!-- Version Display -->
+  <div class="version-display">v1.0.0</div>
+  
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.3/dist/dexie.min.js"></script>
+  <script type="module">
+    // Import Components
+    import './components/tea-circle.js';
+    import './components/tea-collection.js';
+    import './components/tea-detail.js';
+    import './components/tea-nav.js';
+    import './components/progress-modal.js';
+    
+    // Import Services and Utilities
+    import TeaCollectionLevels from './services/tea-collection-levels.js';
+    import TeaDatabase from './services/tea-database.js';
+    
+    class TeaApp {
+      constructor() {
+        // Elements
+        this.categoryPills = document.querySelectorAll('.category-pill');
+        this.teaCollection = document.querySelector('tea-collection');
+        this.teaDetail = document.querySelector('tea-detail');
+        this.teaNav = document.querySelector('tea-nav');
+        this.progressModal = document.querySelector('progress-modal');
+        this.loader = document.getElementById('loader');
+        this.notification = document.getElementById('notification');
+        this.addTeaButton = document.getElementById('addTeaButton');
+        this.addTeaModal = document.getElementById('addTeaModal');
+        this.addTeaForm = document.getElementById('addTeaForm');
+        this.closeModalButton = document.getElementById('closeModalButton');
+        this.cancelAddTeaButton = document.getElementById('cancelAddTeaButton');
+        
+        // Tea file path settings
+        this.teaFolder = 'tea/';
+        
+        // State
+        this.currentCategory = 'Green';
+        
+        // Initialize
+        this.init();
+      }
+      
+      async init() {
+        this.showLoader();
+        
+        try {
+          // Initialize database
+          await TeaDatabase.init();
+          
+          // Set up event listeners
+          this.setupEventListeners();
+          
+          // Load initial data
+          await this.loadInitialData();
+          
+          this.hideLoader();
+          this.showNotification('Ready! Explore your tea collection or add new teas.', 3000);
+        } catch (error) {
+          console.error('Failed to initialize app:', error);
+          this.hideLoader();
+          this.showNotification('Error initializing app. Please refresh.', 5000);
+        }
+      }
+      
+      setupEventListeners() {
+        // Category selection
+        this.categoryPills.forEach(pill => {
+          pill.addEventListener('click', event => {
+            const category = event.target.dataset.category;
+            this.changeCategory(category);
+          });
+        });
+        
+        // Tea selection
+        document.addEventListener('tea-select', event => {
+          const teaData = event.detail;
+          this.teaDetail.open(teaData);
+        });
+        
+        // Start steeping
+        document.addEventListener('start-steeping', event => {
+          const teaData = event.detail.tea;
+          const brewTimeSeconds = this.parseBrewTime(teaData.brewTime);
+          
+          // Start the timer
+          this.teaNav.startTimer(
+            teaData.name, 
+            teaData.category, 
+            brewTimeSeconds
+          );
+          
+          // Show notification
+          this.showNotification(`Started brewing ${teaData.name}`, 2000);
+        });
+        
+        // Timer complete
+        document.addEventListener('timer-complete', event => {
+          const teaName = event.detail.teaName;
+          this.showNotification(`Your ${teaName} is ready!`, 5000);
+        });
+        
+        // Add tea button
+        this.addTeaButton.addEventListener('click', () => {
+          this.addTeaModal.classList.add('visible');
+        });
+        
+        // Close modal buttons
+        this.closeModalButton.addEventListener('click', () => {
+          this.addTeaModal.classList.remove('visible');
+        });
+        
+        this.cancelAddTeaButton.addEventListener('click', () => {
+          this.addTeaModal.classList.remove('visible');
+        });
+        
+        // Add tea form submission
+        this.addTeaForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          
+          const teaIdInput = document.getElementById('teaId');
+          const teaNameInput = document.getElementById('teaName');
+          const teaCategoryInput = document.getElementById('teaCategory');
+          const teaOriginInput = document.getElementById('teaOrigin');
+          
+          const teaId = teaIdInput.value.trim();
+          const teaName = teaNameInput.value.trim();
+          const teaCategory = teaCategoryInput.value;
+          const teaOrigin = teaOriginInput.value.trim();
+          
+          // Close the modal
+          this.addTeaModal.classList.remove('visible');
+          
+          // Show loader
+          this.showLoader();
+          
+          try {
+            if (teaId) {
+              // If tea ID is provided, try to load from file
+              await this.loadTeaFromId(teaId);
+            } else if (teaName) {
+              // If manual entry, create and add tea
+              await this.addManualTea(teaName, teaCategory, teaOrigin);
+            } else {
+              this.showNotification('Please enter either a Tea ID or Tea Name', 3000);
+              this.hideLoader();
+              return;
+            }
+            
+            // Reset form
+            teaIdInput.value = '';
+            teaNameInput.value = '';
+            teaOriginInput.value = '';
+            
+          } catch (error) {
+            console.error('Error adding tea:', error);
+            this.showNotification('Failed to add tea. Please try again.', 3000);
+            this.hideLoader();
+          }
+        });
+        
+        // Handle tea added event
+        document.addEventListener('tea-added', this.handleTeaAdded.bind(this));
+      }
+      
+      async loadInitialData() {
+        // If database is empty, add demo data
+        const count = await TeaDatabase.getTeasCount();
+        
+        if (count === 0) {
+          await this.loadDemoData();
+        }
+      }
+      
+      // async loadDemoData() {
+      //   // Load some sample teas
+      //   const sampleTeas = [
+      //     {
+      //       name: "Dragon Well",
+      //       category: "Green",
+      //       origin: "Hangzhou, China",
+      //       brewTime: "2:30",
+      //       temperature: "80°C",
+      //       description: "A famous Chinese green tea known for its flat, sword-shaped leaves and distinctive toasty flavor."
+      //     },
+      //     {
+      //       name: "Silver Needle",
+      //       category: "White",
+      //       origin: "Fujian, China",
+      //       brewTime: "3:00",
+      //       temperature: "80°C",
+      //       description: "One of the most revered white teas, consisting of only unopened leaf buds covered in white down."
+      //     },
+      //     {
+      //       name: "Earl Grey",
+      //       category: "Black",
+      //       origin: "Blend",
+      //       brewTime: "3:30",
+      //       temperature: "95°C",
+      //       description: "A black tea blend flavored with bergamot oil, giving it a distinctive citrus aroma."
+      //     },
+      //     {
+      //       name: "Tie Guan Yin",
+      //       category: "Oolong",
+      //       origin: "Fujian, China",
+      //       brewTime: "3:15",
+      //       temperature: "90°C",
+      //       description: "One of China's most celebrated oolongs, known for its orchid aroma and complex flavor."
+      //     }
+      //   ];
+        
+      //   for (const tea of sampleTeas) {
+      //     await TeaDatabase.addTea(tea);
+      //   }
+        
+      //   // Dispatch events for each tea added
+      //   for (const tea of sampleTeas) {
+      //     this.dispatchTeaAddedEvent(tea);
+      //   }
+      // }
+      
+      async loadTeaFromId(teaId) {
+  try {
+    // Format the tea URL
+    const teaUrl = `${this.getBaseUrl()}${this.teaFolder}${teaId}.cha`;
+    
+    // Fetch tea data
+    const response = await fetch(teaUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to load tea data: ${response.status}`);
+    }
+    
+    const teaData = await response.json();
+    
+    // Get previous count for this category
+    const previousCount = await TeaDatabase.getCategoryTeaCount(teaData.category);
+    
+    // Add tea to database
+    const id = await TeaDatabase.addTea(teaData);
+    
+    // Get new count
+    const newCount = await TeaDatabase.getCategoryTeaCount(teaData.category);
+    
+    // Check for level-up
+    const levelUp = TeaCollectionLevels.checkLevelUp(teaData.category, previousCount, newCount);
+    
+    // Get category progress information
+    const progressInfo = TeaCollectionLevels.getCollectionProgress(teaData.category, newCount);
+    
+    // Always show progress modal, but with different content based on whether level-up occurred
+    if (levelUp) {
+      // Level-up occurred - show with badges and level-up message
+      this.progressModal.show(
+        teaData,
+        levelUp.message,
+        progressInfo.isCollectionComplete,
+        levelUp.badges,
+        true, // is level up
+        progressInfo
+      );
+    } else {
+      // No level-up - show regular progress update
+      this.progressModal.show(
+        teaData,
+        `Added ${teaData.name} to your collection!`,
+        progressInfo.isCollectionComplete,
+        [], // No new badges
+        false, // not a level up
+        progressInfo
+      );
+    }
+    
+    // Update category if needed
+    if (teaData.category !== this.currentCategory) {
+      this.changeCategory(teaData.category);
+    } else {
+      // Just refresh the current category
+      this.teaCollection.category = this.currentCategory;
+    }
+    
+    // Dispatch tea added event
+    this.dispatchTeaAddedEvent(teaData);
+    
+    this.hideLoader();
+    return id;
+  } catch (error) {
+    console.error('Error loading tea from ID:', error);
+    this.showNotification('Failed to load tea data', 3000);
+    this.hideLoader();
+    throw error;
+  }
+}
+
+async addManualTea(name, category, origin) {
+  try {
+    // Create basic tea object
+    const teaData = {
+      name,
+      category,
+      origin: origin || 'Unknown',
+      brewTime: this.getDefaultBrewTime(category),
+      temperature: this.getDefaultTemperature(category),
+      description: `A ${category.toLowerCase()} tea from ${origin || 'unknown origin'}.`,
+      tags: []
+    };
+    
+    // Get previous count for this category
+    const previousCount = await TeaDatabase.getCategoryTeaCount(category);
+    
+    // Add tea to database
+    const id = await TeaDatabase.addTea(teaData);
+    
+    // Get new count
+    const newCount = await TeaDatabase.getCategoryTeaCount(category);
+    
+    // Check for level-up
+    const levelUp = TeaCollectionLevels.checkLevelUp(category, previousCount, newCount);
+    
+    // Get category progress information
+    const progressInfo = TeaCollectionLevels.getCollectionProgress(category, newCount);
+    
+    // Always show progress modal, but with different content based on whether level-up occurred
+    if (levelUp) {
+      // Level-up occurred - show with badges and level-up message
+      this.progressModal.show(
+        teaData,
+        levelUp.message,
+        progressInfo.isCollectionComplete,
+        levelUp.badges,
+        true, // is level up
+        progressInfo
+      );
+    } else {
+      // No level-up - show regular progress update
+      this.progressModal.show(
+        teaData,
+        `Added ${name} to your collection!`,
+        progressInfo.isCollectionComplete,
+        [], // No new badges
+        false, // not a level up
+        progressInfo
+      );
+    }
+    
+    // Update category if needed
+    if (category !== this.currentCategory) {
+      this.changeCategory(category);
+    } else {
+      // Just refresh the current category
+      this.teaCollection.category = this.currentCategory;
+    }
+    
+    // Dispatch tea added event
+    this.dispatchTeaAddedEvent(teaData);
+    
+    this.hideLoader();
+    return id;
+  } catch (error) {
+    console.error('Error adding manual tea:', error);
+    this.showNotification('Failed to add tea', 3000);
+    this.hideLoader();
+    throw error;
+  }
+}
+      dispatchTeaAddedEvent(teaData) {
+        // Create and dispatch tea-added event
+        const event = new CustomEvent('tea-added', {
+          bubbles: true,
+          composed: true,
+          detail: { tea: teaData }
+        });
+        
+        document.dispatchEvent(event);
+      }
+      
+      handleTeaAdded(event) {
+        const tea = event.detail.tea;
+        
+        // Ensure the collection is refreshed
+        if (tea.category === this.currentCategory) {
+          this.teaCollection.category = this.currentCategory;
+        }
+      }
+      
+      changeCategory(category) {
+        if (category === this.currentCategory) return;
+        
+        // Update active pill
+        this.categoryPills.forEach(pill => {
+          if (pill.dataset.category === category) {
+            pill.classList.add('active');
+          } else {
+            pill.classList.remove('active');
+          }
+        });
+        
+        // Update tea collection
+        this.teaCollection.category = category;
+        
+        // Update state
+        this.currentCategory = category;
+      }
+      
+      // Helper to get default brew time for a category
+      getDefaultBrewTime(category) {
+        const defaults = {
+          'Green': '2:30',
+          'Black': '3:30',
+          'Oolong': '3:15',
+          'White': '3:00',
+          'Pu-erh': '4:00',
+          'Yellow': '2:45'
+        };
+        
+        return defaults[category] || '3:00';
+      }
+      
+      // Helper to get default temperature for a category
+      getDefaultTemperature(category) {
+        const defaults = {
+          'Green': '80°C',
+          'Black': '95°C',
+          'Oolong': '90°C',
+          'White': '80°C',
+          'Pu-erh': '95°C',
+          'Yellow': '80°C'
+        };
+        
+        return defaults[category] || '85°C';
+      }
+      
+      // Helper to parse brew time string to seconds
+      parseBrewTime(brewTime) {
+        if (!brewTime) return 180; // Default 3 minutes
+        
+        // Check if it's in MM:SS format
+        if (brewTime.includes(':')) {
+          const [minutes, seconds] = brewTime.split(':').map(part => parseInt(part, 10));
+          return (minutes * 60) + (seconds || 0);
+        }
+        
+        // If it's just seconds (for gongfu brewing)
+        return parseInt(brewTime, 10);
+      }
+      
+      // Get base URL for tea file loading
+      getBaseUrl() {
+        const url = new URL(window.location.href);
+        let pathname = url.pathname;
+        
+        // Remove index.html or other files from the path
+        pathname = pathname.replace(/\/[^\/]*\.[^\/]*$/, '/');
+        
+        // Ensure the path ends with a slash
+        if (!pathname.endsWith('/')) {
+          pathname += '/';
+        }
+        
+        return url.origin + pathname;
+      }
+      
+      showLoader() {
+        this.loader.classList.add('active');
+      }
+      
+      hideLoader() {
+        this.loader.classList.remove('active');
+      }
+      
+      showNotification(message, duration = 3000) {
+        this.notification.textContent = message;
+        this.notification.classList.add('visible');
+        
+        // Hide after duration
+        setTimeout(() => {
+          this.notification.classList.remove('visible');
+        }, duration);
+      }
+    }
+    
+    // Initialize app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      window.teaApp = new TeaApp();
+    });
+    
+    // Register service worker for PWA support
+    // if ('serviceWorker' in navigator) {
+    //   window.addEventListener('load', () => {
+    //     navigator.serviceWorker.register('./service-worker.js')
+    //       .then(registration => {
+    //         console.log('ServiceWorker registration successful:', registration.scope);
+    //       })
+    //       .catch(error => {
+    //         console.log('ServiceWorker registration failed:', error);
+    //       });
+    //   });
+    // }
+  </script>
+</body>
+</html>

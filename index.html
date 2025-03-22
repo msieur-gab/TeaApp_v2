@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <title>Tea Collection App</title>
+  
+  <!-- Manifest for PWA -->
+  <!-- <link rel="manifest" href="manifest.json"> -->
+  <!-- <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"> -->
+  <!-- <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon"> -->
+  
+  <!-- Dexie.js Database Library -->
+  <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.3/dist/dexie.min.js"></script>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/menu.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="category-pills">
+        <button class="category-pill active" data-category="Green">Green</button>
+        <button class="category-pill" data-category="Black">Black</button>
+        <button class="category-pill" data-category="Oolong">Oolong</button>
+        <button class="category-pill" data-category="White">White</button>
+        <button class="category-pill" data-category="Pu-erh">Pu-erh</button>
+        <button class="category-pill" data-category="Yellow">Yellow</button>
+      </div>
+    </header>
+    
+    <main>
+      <!-- Tea Collection Web Component -->
+      <tea-collection category="Green"></tea-collection>
+    </main>
+  </div>
+  
+  <!-- Bottom Navigation -->
+  <tea-nav></tea-nav>
+  
+  <!-- Add Tea Button -->
+  <button class="add-tea-button" id="addTeaButton">+</button>
+  
+  <!-- Add Tea Form Modal -->
+  <div class="modal" id="addTeaModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Add Tea</h2>
+        <button class="modal-close" id="closeModalButton">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="addTeaForm">
+          <div class="form-group">
+            <label for="teaId">Tea ID</label>
+            <input type="text" id="teaId" placeholder="Enter tea ID (e.g., 000, 010)">
+          </div>
+          <div class="form-group">
+            <label>Or enter tea name and details manually:</label>
+          </div>
+          <div class="form-group">
+            <label for="teaName">Tea Name</label>
+            <input type="text" id="teaName" placeholder="e.g., Dragon Well">
+          </div>
+          <div class="form-group">
+            <label for="teaCategory">Category</label>
+            <select id="teaCategory">
+              <option value="Green">Green</option>
+              <option value="Black">Black</option>
+              <option value="Oolong">Oolong</option>
+              <option value="White">White</option>
+              <option value="Pu-erh">Pu-erh</option>
+              <option value="Yellow">Yellow</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="teaOrigin">Origin</label>
+            <input type="text" id="teaOrigin" placeholder="e.g., Hangzhou, China">
+          </div>
+          <div class="form-actions">
+            <button type="button" class="form-button form-button-secondary" id="cancelAddTeaButton">Cancel</button>
+            <button type="submit" class="form-button form-button-primary">Add Tea</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tea Detail Bottom Sheet Component -->
+  <tea-detail></tea-detail>
+  
+  <!-- Progress Modal Component for Level-ups -->
+  <progress-modal></progress-modal>
+  
+  <!-- Loader -->
+  <div id="loader" class="loader">
+    <div class="loader-spinner"></div>
+  </div>
+  
+  <!-- Notification -->
+  <div id="notification" class="notification"></div>
+  
+  <!-- Message Container -->
+  <div id="message-container" class="message-container"></div>
+  
+  <!-- Scripts -->
+  <!-- First load database and services -->
+  <script type="module" src="./js/services/tea-database.js"></script>
+  
+  <!-- Load components -->
+  <script type="module" src="./js/components/tea-circle.js"></script>
+  <script type="module" src="./js/components/tea-collection.js"></script>
+  <script type="module" src="./js/components/tea-detail-bottomsheet.js"></script>
+  <script type="module" src="./js/components/tea-nav.js"></script>
+  <script type="module" src="./js/components/progress-modal.js"></script>
+  
+  <!-- Load main app logic -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

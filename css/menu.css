@@ -1,0 +1,50 @@
+/* css/menu.css */
+
+/* 
+ * This file contains basic fallback styles for the menu component
+ * Most styling is handled in the component's shadow DOM
+ */
+
+/* Ensure the content area adjusts properly on desktop */
+@media (min-width: 768px) {
+  .content-area {
+    margin-left: 200px; /* Match menu width in desktop mode */
+    width: calc(100% - 200px);
+  }
+  
+  .app-header {
+    padding-left: 220px; /* Add extra padding for the header on desktop */
+  }
+  
+  /* Hide the menu toggle button on desktop */
+  .menu-toggle-container {
+    display: none;
+  }
+}
+
+/* Content adjustments for mobile */
+@media (max-width: 767px) {
+  .content-area {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .app-header {
+    padding-left: 1rem;
+  }
+  
+  /* Show the menu toggle button on mobile */
+  .menu-toggle-container {
+    display: block;
+  }
+}
+
+/* Fallback styles if component fails to load */
+category-menu:not(:defined) {
+  display: none;
+}
+
+/* Animation for menu transitions */
+.menu-transition {
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
