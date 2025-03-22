@@ -79,6 +79,13 @@ class TeaCollection extends HTMLElement {
       this._category = value;
       this.setAttribute('category', value);
       this._loadCategoryData();
+      
+      // Dispatch category change event
+      this.dispatchEvent(new CustomEvent('category-change', {
+        bubbles: true,
+        composed: true,
+        detail: { category: value }
+      }));
     }
   }
   

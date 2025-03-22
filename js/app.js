@@ -1,7 +1,11 @@
 // app.js - Main application logic
 
+// Import Services
+import TeaDatabase from './services/tea-database.js';
+import TeaCollectionLevels from './services/tea-collection-levels.js';
+
 // App version constants
-const APP_VERSION = 'v1.0.0';
+const APP_VERSION = 'v1.0.1';
 const APP_BUILD_DATE = '2025-03-22';
 
 class TeaApp {
@@ -9,7 +13,7 @@ class TeaApp {
     // Elements
     this.categoryPills = document.querySelectorAll('.category-pill');
     this.teaCollection = document.querySelector('tea-collection');
-    this.teaDetailBottomsheet = document.querySelector('tea-detail-bottomsheet');
+    this.teaDetail = document.querySelector('tea-detail');
     this.teaNav = document.querySelector('tea-nav');
     this.progressModal = document.querySelector('progress-modal');
     this.loader = document.getElementById('loader');
@@ -35,9 +39,7 @@ class TeaApp {
     
     try {
       // Initialize database
-      if (window.TeaDatabase) {
-        await TeaDatabase.init();
-      }
+      await TeaDatabase.init();
       
       // Set up event listeners
       this.setupEventListeners();
@@ -66,7 +68,7 @@ class TeaApp {
       });
     });
     
-    // Tea selection - this is how we'll open the detail view
+    // Tea selection
     document.addEventListener('tea-select', this.handleTeaSelect.bind(this));
     
     // Start steeping
@@ -102,17 +104,22 @@ class TeaApp {
     
     // Handle tea added event
     document.addEventListener('tea-added', this.handleTeaAdded.bind(this));
+    
+    // Progress modal events
+    if (this.progressModal) {
+      this.progressModal.addEventListener('modal-closed', () => {
+        console.log('Progress modal closed');
+      });
+    }
   }
   
   async loadInitialData() {
-    if (window.TeaDatabase) {
-      // If database is empty, add demo data
-      const count = await TeaDatabase.getTeasCount();
-      
-      if (count === 0) {
-        console.log('Database is empty, loading sample data would go here');
-        // Implement your demo data loading logic
-      }
+    // If database is empty, add demo data
+    const count = await TeaDatabase.getTeasCount();
+    
+    if (count === 0) {
+      console.log('Database is empty, no demo data loaded');
+      // You could implement demo data loading here if desired
     }
   }
   
@@ -183,47 +190,108 @@ class TeaApp {
   
   async loadTeaFromId(teaId) {
     try {
-      const baseUrl = this.getBaseUrl();
-      const teaUrl = `${baseUrl}${this.teaFolder}${teaId}.cha`;
-      
-      this.showNotification('Loading tea data...', 2000);
-      
-      // Fetch tea data
-      const response = await fetch(teaUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to load tea data: ${response.status}`);
-      }
-      
-      const teaData = await response.json();
-      
-      // We'll assume the TeaDatabase is available here
-      if (window.TeaDatabase) {
-        // Get previous count for this category
-        const previousCount = await TeaDatabase.getCategoryTeaCount(teaData.category);
+      // Try with .cha extension by default
+      let teaData = null;
+      let response = null;
+
+      // Show a notification that we're looking for the tea
+      this.showNotification('Loading tea data...', 1000);
+
+      try {
+        // Try with .cha extension first
+        const baseUrl = this.getBaseUrl();
+        const teaUrl = `${baseUrl}${this.teaFolder}${teaId}.cha`;
         
-        // Add tea to database
-        const id = await TeaDatabase.addTea(teaData);
-        
-        // Get new count
-        const newCount = await TeaDatabase.getCategoryTeaCount(teaData.category);
-        
-        // Here you can implement level-up logic if needed
-        
-        // Update category if needed
-        if (teaData.category !== this.currentCategory) {
-          this.changeCategory(teaData.category);
+        response = await fetch(teaUrl);
+        if (response.ok) {
+          teaData = await response.json();
         }
-        
-        // Dispatch tea added event
-        this.dispatchTeaAddedEvent(teaData);
+      } catch (err) {
+        console.log('Tea not found with .cha extension, trying .json');
+      }
+
+      // If .cha failed, try .json
+      if (!teaData) {
+        try {
+          const baseUrl = this.getBaseUrl();
+          const teaUrl = `${baseUrl}${this.teaFolder}${teaId}.json`;
+          
+          response = await fetch(teaUrl);
+          if (response.ok) {
+            teaData = await response.json();
+          }
+        } catch (err) {
+          console.log('Tea not found with .json extension either');
+        }
       }
       
-      this.showNotification(`Added ${teaData.name} to your collection!`, 3000);
+      if (!teaData) {
+        throw new Error(`Tea with ID ${teaId} not found.`);
+      }
+      
+      // Get previous count for this category
+      const previousCount = await TeaDatabase.getCategoryTeaCount(teaData.category);
+      
+      // Add tea to database
+      const id = await TeaDatabase.addTea(teaData);
+      
+      // Get new count
+      const newCount = await TeaDatabase.getCategoryTeaCount(teaData.category);
+      
+      // Check for level-up
+      const levelUp = TeaCollectionLevels.checkLevelUp(teaData.category, previousCount, newCount);
+      
+      // Get category progress information
+      const progressInfo = TeaCollectionLevels.getCollectionProgress(teaData.category, newCount);
+      
+      // Use progress modal to show success!
       this.hideLoader();
       
+      // Always show progress modal, but with different content based on whether level-up occurred
+      if (this.progressModal) {
+        if (levelUp) {
+          // Level-up occurred - show with badges and level-up message
+          this.progressModal.show(
+            teaData,
+            levelUp.message,
+            progressInfo.isCollectionComplete,
+            levelUp.badges,
+            true, // is level up
+            progressInfo
+          );
+        } else {
+          // No level-up - show regular progress update
+          this.progressModal.show(
+            teaData,
+            `Added ${teaData.name} to your collection!`,
+            progressInfo.isCollectionComplete,
+            [], // No new badges
+            false, // not a level up
+            progressInfo
+          );
+        }
+      } else {
+        // Fallback to notification if modal not available
+        this.showNotification(`Added ${teaData.name} to your collection!`, 3000);
+      }
+      
+      // Update category if needed
+      if (teaData.category !== this.currentCategory) {
+        this.changeCategory(teaData.category);
+      } else {
+        // Just refresh the current category
+        if (this.teaCollection) {
+          this.teaCollection.category = this.currentCategory;
+        }
+      }
+      
+      // Dispatch tea added event
+      this.dispatchTeaAddedEvent(teaData);
+      
+      return id;
     } catch (error) {
       console.error('Error loading tea from ID:', error);
-      this.showNotification('Failed to load tea data', 3000);
+      this.showNotification(`Failed to load tea data: ${error.message}`, 3000);
       this.hideLoader();
       throw error;
     }
@@ -239,33 +307,69 @@ class TeaApp {
         brewTime: this.getDefaultBrewTime(category),
         temperature: this.getDefaultTemperature(category),
         description: `A ${category.toLowerCase()} tea from ${origin || 'unknown origin'}.`,
-        tags: []
+        tags: [category.toLowerCase()]
       };
       
-      if (window.TeaDatabase) {
-        // Get previous count for this category
-        const previousCount = await TeaDatabase.getCategoryTeaCount(category);
-        
-        // Add tea to database
-        const id = await TeaDatabase.addTea(teaData);
-        
-        // Get new count
-        const newCount = await TeaDatabase.getCategoryTeaCount(category);
-        
-        // Here you can implement level-up logic if needed
-        
-        // Update category if needed
-        if (category !== this.currentCategory) {
-          this.changeCategory(category);
+      // Get previous count for this category
+      const previousCount = await TeaDatabase.getCategoryTeaCount(category);
+      
+      // Add tea to database
+      const id = await TeaDatabase.addTea(teaData);
+      
+      // Get new count
+      const newCount = await TeaDatabase.getCategoryTeaCount(category);
+      
+      // Check for level-up
+      const levelUp = TeaCollectionLevels.checkLevelUp(category, previousCount, newCount);
+      
+      // Get category progress information
+      const progressInfo = TeaCollectionLevels.getCollectionProgress(category, newCount);
+      
+      // Hide the loader
+      this.hideLoader();
+      
+      // Use progress modal to show success!
+      if (this.progressModal) {
+        if (levelUp) {
+          // Level-up occurred - show with badges and level-up message
+          this.progressModal.show(
+            teaData,
+            levelUp.message,
+            progressInfo.isCollectionComplete,
+            levelUp.badges,
+            true, // is level up
+            progressInfo
+          );
+        } else {
+          // No level-up - show regular progress update
+          this.progressModal.show(
+            teaData,
+            `Added ${name} to your collection!`,
+            progressInfo.isCollectionComplete,
+            [], // No new badges
+            false, // not a level up
+            progressInfo
+          );
+        }
+      } else {
+        // Fallback to notification
+        this.showNotification(`Added ${name} to your collection!`, 3000);
+      }
+      
+      // Update category if needed
+      if (category !== this.currentCategory) {
+        this.changeCategory(category);
+      } else {
+        // Just refresh the current category
+        if (this.teaCollection) {
+          this.teaCollection.category = this.currentCategory;
         }
       }
       
       // Dispatch tea added event
       this.dispatchTeaAddedEvent(teaData);
       
-      this.showNotification(`Added ${name} to your collection!`, 3000);
-      this.hideLoader();
-      
+      return id;
     } catch (error) {
       console.error('Error adding manual tea:', error);
       this.showNotification('Failed to add tea', 3000);
@@ -299,21 +403,21 @@ class TeaApp {
     const teaData = event.detail;
     console.log('Tea selected:', teaData);
     
-    // Make sure we have the tea detail bottomsheet component
-    if (!this.teaDetailBottomsheet) {
-      this.teaDetailBottomsheet = document.querySelector('tea-detail-bottomsheet');
+    // Make sure we have the tea detail component
+    if (!this.teaDetail) {
+      this.teaDetail = document.querySelector('tea-detail');
       
       // Create the component if it doesn't exist
-      if (!this.teaDetailBottomsheet) {
-        this.teaDetailBottomsheet = document.createElement('tea-detail-bottomsheet');
-        document.body.appendChild(this.teaDetailBottomsheet);
-        console.log('Created tea detail bottomsheet component');
+      if (!this.teaDetail) {
+        this.teaDetail = document.createElement('tea-detail');
+        document.body.appendChild(this.teaDetail);
+        console.log('Created tea detail component');
       }
     }
     
     // Show the tea detail with the data from the event
     // The component will fetch full details if needed
-    this.teaDetailBottomsheet.open(teaData);
+    this.teaDetail.open(teaData);
   }
   
   handleSteepingStart(event) {
@@ -322,13 +426,9 @@ class TeaApp {
     // Parse brew time to seconds
     const brewTimeSeconds = this.parseBrewTime(teaData.brewTime);
     
-    // Start the timer 
+    // Start the timer with the tea nav component
     if (this.teaNav) {
       this.teaNav.startTimer(teaData.name, teaData.category, brewTimeSeconds);
-      this.showNotification(`Started brewing ${teaData.name}`, 2000);
-    } else if (window.timerService) {
-      // Alternative if you're using a timer service
-      window.timerService.startTimer(brewTimeSeconds, teaData.name);
       this.showNotification(`Started brewing ${teaData.name}`, 2000);
     }
   }
@@ -467,33 +567,6 @@ class TeaApp {
       setTimeout(() => {
         this.notification.classList.remove('visible');
       }, duration);
-    } else {
-      // Create a notification element if it doesn't exist
-      const messageContainer = document.querySelector('.message-container');
-      
-      if (messageContainer) {
-        const messageElement = document.createElement('div');
-        messageElement.className = 'message message-info';
-        messageElement.textContent = message;
-        
-        // Add close button
-        const closeButton = document.createElement('button');
-        closeButton.className = 'message-close';
-        closeButton.innerHTML = '&times;';
-        closeButton.addEventListener('click', () => {
-          messageElement.remove();
-        });
-        
-        messageElement.appendChild(closeButton);
-        messageContainer.appendChild(messageElement);
-        
-        // Auto-remove after 5 seconds
-        setTimeout(() => {
-          if (messageElement.parentNode === messageContainer) {
-            messageElement.remove();
-          }
-        }, duration);
-      }
     }
   }
 }

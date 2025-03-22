@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="./css/main.css">
   <link rel="stylesheet" href="./css/components.css">
   <link rel="stylesheet" href="./css/menu.css">
+  <link rel="stylesheet" href="./css/tea-app-fixes.css">
 </head>
 <body>
   <div class="app-container">
@@ -38,6 +39,9 @@
     <main>
       <!-- Tea Collection Web Component -->
       <tea-collection category="Green"></tea-collection>
+      
+      <!-- Swipe Navigation Handler -->
+      <swipe-navigation></swipe-navigation>
     </main>
   </div>
   
@@ -91,7 +95,7 @@
     </div>
   </div>
   
-  <!-- Tea Detail Bottom Sheet Component -->
+  <!-- Tea Detail Component -->
   <tea-detail></tea-detail>
   
   <!-- Progress Modal Component for Level-ups -->
@@ -111,13 +115,15 @@
   <!-- Scripts -->
   <!-- First load database and services -->
   <script type="module" src="./js/services/tea-database.js"></script>
+  <script type="module" src="./js/services/tea-collection-levels.js"></script>
   
   <!-- Load components -->
   <script type="module" src="./js/components/tea-circle.js"></script>
   <script type="module" src="./js/components/tea-collection.js"></script>
-  <script type="module" src="./js/components/tea-detail-bottomsheet.js"></script>
+  <script type="module" src="./js/components/tea-detail.js"></script>
   <script type="module" src="./js/components/tea-nav.js"></script>
   <script type="module" src="./js/components/progress-modal.js"></script>
+  <script type="module" src="./js/components/swipe-navigation.js"></script>
   
   <!-- Load main app logic -->
   <script type="module" src="./js/app.js"></script>

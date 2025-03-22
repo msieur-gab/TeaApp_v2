@@ -4,10 +4,11 @@
 class TeaDatabaseService {
   constructor() {
     this.db = null;
+    this.initialized = false;
   }
 
   async init() {
-    if (this.db) return this.db;
+    if (this.initialized) return this.db;
 
     try {
       // Initialize Dexie database
@@ -24,6 +25,7 @@ class TeaDatabaseService {
       // Add default categories if none exist
       await this._initCategories();
       
+      this.initialized = true;
       console.log('Tea database initialized');
       return this.db;
     } catch (error) {
@@ -52,20 +54,23 @@ class TeaDatabaseService {
   
   // Tea CRUD methods
   async addTea(teaData) {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       // Check if tea already exists
-      const existing = await this.db.teas
+      const existingTeas = await this.db.teas
         .where({ name: teaData.name, category: teaData.category })
-        .first();
+        .toArray();
       
-      if (existing) {
+      if (existingTeas.length > 0) {
+        const existing = existingTeas[0];
+        console.log(`Tea "${teaData.name}" already exists, updating instead`);
         // Update existing tea
         await this.db.teas.update(existing.id, teaData);
         return existing.id;
       } else {
         // Add new tea
+        console.log(`Adding new tea "${teaData.name}" to database`);
         const id = await this.db.teas.add(teaData);
         return id;
       }
@@ -76,7 +81,7 @@ class TeaDatabaseService {
   }
   
   async updateTea(id, teaData) {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       await this.db.teas.update(id, teaData);
@@ -88,7 +93,7 @@ class TeaDatabaseService {
   }
   
   async deleteTea(id) {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       await this.db.teas.delete(id);
@@ -100,7 +105,7 @@ class TeaDatabaseService {
   }
   
   async getTea(id) {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       return await this.db.teas.get(id);
@@ -110,8 +115,12 @@ class TeaDatabaseService {
     }
   }
   
+  async getTeaById(id) {
+    return this.getTea(id);
+  }
+  
   async getAllTeas() {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       return await this.db.teas.toArray();
@@ -122,7 +131,7 @@ class TeaDatabaseService {
   }
   
   async getTeasByCategory(category) {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       return await this.db.teas.where('category').equals(category).toArray();
@@ -133,7 +142,7 @@ class TeaDatabaseService {
   }
   
   async getTeasCount() {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       return await this.db.teas.count();
@@ -144,7 +153,7 @@ class TeaDatabaseService {
   }
   
   async getCategoryTeaCount(category) {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       return await this.db.teas.where('category').equals(category).count();
@@ -156,7 +165,7 @@ class TeaDatabaseService {
   
   // Favorites management
   async addFavorite(teaId) {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       const tea = await this.getTea(teaId);
@@ -184,7 +193,7 @@ class TeaDatabaseService {
   }
   
   async removeFavorite(teaId) {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       await this.db.favorites.where({ teaId }).delete();
@@ -196,7 +205,7 @@ class TeaDatabaseService {
   }
   
   async getFavorites() {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       // Get favorites with tea details
@@ -218,7 +227,7 @@ class TeaDatabaseService {
   }
   
   async isFavorite(teaId) {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       const favorite = await this.db.favorites
@@ -234,7 +243,7 @@ class TeaDatabaseService {
   
   // Categories management
   async getCategories() {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       return await this.db.categories.toArray();
@@ -245,7 +254,7 @@ class TeaDatabaseService {
   }
   
   async addCategory(name) {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       // Check if category already exists
@@ -266,7 +275,7 @@ class TeaDatabaseService {
   
   // Achievement tracking
   async addAchievement(type, details = {}) {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       await this.db.achievements.add({
@@ -283,7 +292,7 @@ class TeaDatabaseService {
   }
   
   async getAchievements() {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       return await this.db.achievements.toArray();
@@ -294,7 +303,7 @@ class TeaDatabaseService {
   }
   
   async hasAchievement(type) {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       const achievement = await this.db.achievements
@@ -309,7 +318,7 @@ class TeaDatabaseService {
   }
 
   async clearAllTeas() {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       await this.db.teas.clear();
@@ -322,7 +331,7 @@ class TeaDatabaseService {
   }
 
   async getTeasByNameAndCategory(name, category) {
-    if (!this.db) await this.init();
+    if (!this.initialized) await this.init();
     
     try {
       return await this.db.teas
@@ -331,6 +340,82 @@ class TeaDatabaseService {
     } catch (error) {
       console.error('Error getting teas by name and category:', error);
       return [];
+    }
+  }
+  
+  // Export database as JSON for backup
+  async exportDatabase() {
+    if (!this.initialized) await this.init();
+    
+    try {
+      const teas = await this.db.teas.toArray();
+      const favorites = await this.db.favorites.toArray();
+      const categories = await this.db.categories.toArray();
+      const achievements = await this.db.achievements.toArray();
+      
+      return {
+        teas,
+        favorites,
+        categories,
+        achievements,
+        exportDate: new Date().toISOString(),
+        version: 1
+      };
+    } catch (error) {
+      console.error('Error exporting database:', error);
+      throw error;
+    }
+  }
+  
+  // Import database from JSON backup
+  async importDatabase(data) {
+    if (!this.initialized) await this.init();
+    
+    try {
+      // Validate data structure
+      if (!data.teas || !Array.isArray(data.teas)) {
+        throw new Error('Invalid data format: missing teas array');
+      }
+      
+      // Begin transaction
+      await this.db.transaction('rw', 
+        [this.db.teas, this.db.favorites, this.db.categories, this.db.achievements], 
+        async () => {
+          // Clear existing data
+          await this.db.teas.clear();
+          await this.db.favorites.clear();
+          await this.db.categories.clear();
+          await this.db.achievements.clear();
+          
+          // Import teas
+          if (data.teas.length > 0) {
+            await this.db.teas.bulkAdd(data.teas);
+          }
+          
+          // Import favorites
+          if (data.favorites && data.favorites.length > 0) {
+            await this.db.favorites.bulkAdd(data.favorites);
+          }
+          
+          // Import categories
+          if (data.categories && data.categories.length > 0) {
+            await this.db.categories.bulkAdd(data.categories);
+          } else {
+            // Add default categories if none in import
+            await this._initCategories();
+          }
+          
+          // Import achievements
+          if (data.achievements && data.achievements.length > 0) {
+            await this.db.achievements.bulkAdd(data.achievements);
+          }
+        });
+      
+      console.log('Database import completed successfully');
+      return true;
+    } catch (error) {
+      console.error('Error importing database:', error);
+      throw error;
     }
   }
 }

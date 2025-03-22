@@ -199,7 +199,9 @@ class TeaCircle extends HTMLElement {
         detail: {
           name: this._name,
           category: this._category,
-          id: this._teaId || this.id
+          id: this._teaId || this.id,
+          collected: this._collected // Add collected status to the event
+
         }
       });
       
