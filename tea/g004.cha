@@ -1,0 +1,23 @@
+{
+  "name": "Dragon Pearl Jasmine",
+  "category": "Green",
+  "origin": "Fujian, China",
+  "description": "Jasmine Dragon Pearl is a premium green tea from Fujian province, hand-rolled into small pearls and scented with fresh jasmine flowers. Each pearl unfurls beautifully during steeping, releasing a sweet floral aroma and smooth flavor.",
+  "brewTime": "3:00",
+  "temperature": "80°C",
+  "notes": "The tea leaves are picked in early spring and stored until summer when fresh jasmine flowers bloom. The tea is then scented through a repeated process of layering tea with jasmine flowers, allowing them to open during the night and release their fragrance which is absorbed by the tea.",
+  "tags": ["jasmine", "floral", "sweet", "aromatic", "hand-rolled"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Pan-fired, scented with jasmine flowers",
+  "flavorProfile": ["jasmine", "floral", "sweet", "honey", "vegetable"],
+  "caffeineLevel": "Medium"
+}

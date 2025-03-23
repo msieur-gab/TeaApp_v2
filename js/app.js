@@ -1,14 +1,17 @@
-// app.js - Main application logic
+// app.js - Main application logic with integrated theming
 
 // Import Services
 import TeaDatabase from './services/tea-database.js';
 import TeaCollectionLevels from './services/tea-collection-levels.js';
 import { teaEvents, TeaEventTypes } from './services/event-manager.js';
+
+// Import Theme Utilities
 import TeaTheme from './utils/tea-theme.js';
+import { TeaThemeGenerator } from './utils/theme-generator.js';
 
 // App version constants
-const APP_VERSION = 'v1.0.2';
-const APP_BUILD_DATE = '2025-03-22';
+const APP_VERSION = 'v1.1.0'; // Updated version with theme support
+const APP_BUILD_DATE = '2025-03-24';
 
 class TeaApp {
   constructor() {
@@ -43,14 +46,17 @@ class TeaApp {
       // Initialize database
       await TeaDatabase.init();
       
-      // Set up CSS theme variables
-      TeaTheme.setupVariables();
+      // Initialize theme system
+      TeaTheme.init();
       
       // Set up event listeners
       this.setupEventListeners();
       
       // Load initial data
       await this.loadInitialData();
+      
+      // Apply initial theme based on starting category
+      TeaTheme.setTheme(this.currentCategory);
       
       // Display version
       this.displayAppVersion();
@@ -65,14 +71,21 @@ class TeaApp {
   }
   
   setupEventListeners() {
-    // Category selection
+    // Category selection with source attribution
     this.categoryPills.forEach(pill => {
       pill.addEventListener('click', event => {
         const category = event.target.dataset.category;
-        this.changeCategory(category);
+        
+        // Only proceed if this is not already the active category
+        if (category !== this.currentCategory) {
+          console.log(`Category pill clicked: ${category}`);
+          
+          // Change category with source='category-pill'
+          this.changeCategory(category, 'category-pill');
+        }
       });
     });
-    
+
     // Add tea button
     if (this.addTeaButton) {
       this.addTeaButton.addEventListener('click', () => {
@@ -106,6 +119,11 @@ class TeaApp {
     teaEvents.on(TeaEventTypes.STEEP_STARTED, this.handleSteepingStart.bind(this));
     teaEvents.on(TeaEventTypes.TIMER_COMPLETED, this.handleTimerComplete.bind(this));
     teaEvents.on(TeaEventTypes.TEA_ADDED, this.handleTeaAdded.bind(this));
+    teaEvents.on(TeaEventTypes.CATEGORY_CHANGED, this.handleCategoryChange.bind(this));
+
+
+    // Listen for theme changes
+    document.addEventListener('tea-theme-changed', this.handleThemeChange.bind(this));
     
     // Legacy event listeners (keeping these for backward compatibility with existing components)
     document.addEventListener('tea-select', (event) => {
@@ -142,20 +160,16 @@ class TeaApp {
     }
   }
   
-  changeCategory(category) {
+  changeCategory(category, source = 'app') {
     if (category === this.currentCategory) return;
     
-    // Update active pill
-    this.categoryPills.forEach(pill => {
-      if (pill.dataset.category === category) {
-        pill.classList.add('active');
-        TeaTheme.applyTheme(pill, category, { useBackground: true });
-      } else {
-        pill.classList.remove('active');
-        pill.style.backgroundColor = '';
-        pill.style.color = '';
-      }
-    });
+    console.log(`Changing category to ${category} from source: ${source}`);
+    
+    // Update active pill - regardless of source
+    this.updateActivePill(category);
+    
+    // Apply theme based on category
+    TeaTheme.setTheme(category);
     
     // Update tea collection
     if (this.teaCollection) {
@@ -165,8 +179,61 @@ class TeaApp {
     // Update state
     this.currentCategory = category;
     
-    // Dispatch event via event manager
-    teaEvents.emit(TeaEventTypes.CATEGORY_CHANGED, { category });
+    // Only emit event if we're the source (to prevent loops)
+    // Other components already emitted their own events
+    if (source === 'app') {
+      console.log(`App emitting category change: ${category}`);
+      teaEvents.emit(TeaEventTypes.CATEGORY_CHANGED, { 
+        category,
+        source: 'app'
+      });
+    }
+  }
+
+  // Update active pill UI
+  updateActivePill(category) {
+    console.log(`Updating active pill to: ${category}`);
+    this.categoryPills.forEach(pill => {
+      if (pill.dataset.category === category) {
+        pill.classList.add('active');
+        // Use TeaTheme to apply the appropriate styling
+        TeaTheme.applyTheme(pill, category, { useBackground: true });
+      } else {
+        pill.classList.remove('active');
+        pill.style.backgroundColor = '';
+        pill.style.color = '';
+      }
+    });
+  }
+  
+  // Event handlers
+  handleCategoryChange(event) {
+    console.log(`App received category change: ${event.category} from: ${event.source}`);
+    
+    // Only respond if it wasn't triggered by app itself
+    if (event.source !== 'app') {
+      // Change the category but don't re-emit the event
+      this.changeCategory(event.category, event.source);
+    }
+  }
+  
+  handleThemeChange(event) {
+    // You can respond to theme changes here if needed
+    console.log(`Theme changed to ${event.detail.category}`);
+    
+    // Update UI elements that might need theme-specific handling
+    this.updateUIWithTheme(event.detail.category, event.detail.colors);
+  }
+  
+  // Update UI elements with new theme colors
+  updateUIWithTheme(category, colors) {
+    // Update add tea button color
+    if (this.addTeaButton) {
+      this.addTeaButton.style.backgroundColor = colors['--tea-primary-color'];
+      this.addTeaButton.style.color = colors['--tea-text-on-primary'];
+    }
+    
+    // Other dynamic theme updates can be added here
   }
   
   async handleAddTeaSubmit(event) {
@@ -592,6 +659,15 @@ class TeaApp {
       this.notification.textContent = message;
       this.notification.classList.add('visible');
       
+      // Apply theme-based styling to notification
+      const currentColor = getComputedStyle(document.documentElement)
+        .getPropertyValue('--tea-primary-color').trim();
+      
+      this.notification.style.backgroundColor = currentColor;
+      this.notification.style.color = 
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--tea-text-on-primary').trim();
+      
       // Emit notification event
       teaEvents.emit(TeaEventTypes.NOTIFICATION_SHOW, { message, duration });
       
@@ -626,5 +702,6 @@ window.TeaDatabase = TeaDatabase;
 window.TeaEvents = teaEvents;
 window.TeaEventTypes = TeaEventTypes;
 window.TeaTheme = TeaTheme;
+window.TeaThemeGenerator = TeaThemeGenerator;
 
 export default TeaApp;

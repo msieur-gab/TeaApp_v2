@@ -1,5 +1,5 @@
 // components/swipe-navigation.js
-// Adds swipe navigation to the tea collection
+// Enhanced swipe navigation with improved event synchronization
 
 import { teaEvents, TeaEventTypes } from '../services/event-manager.js';
 
@@ -42,6 +42,9 @@ class SwipeNavigation extends HTMLElement {
     
     // Register with event manager to listen for category changes
     teaEvents.on(TeaEventTypes.CATEGORY_CHANGED, this._handleCategoryChange);
+    
+    // Log initial state for debugging
+    console.log(`SwipeNavigation initialized with category index: ${this._currentCategoryIndex}`);
   }
   
   disconnectedCallback() {
@@ -58,9 +61,11 @@ class SwipeNavigation extends HTMLElement {
       mainContainer.addEventListener('touchstart', this._handleTouchStart, { passive: true });
       mainContainer.addEventListener('touchmove', this._handleTouchMove, { passive: true });
       mainContainer.addEventListener('touchend', this._handleTouchEnd, { passive: true });
+    } else {
+      console.warn('SwipeNavigation: main container not found');
     }
     
-    // Also listen to category pill clicks
+    // Also listen to category pill clicks for synchronization
     const categoryPills = document.querySelectorAll('.category-pill');
     categoryPills.forEach(pill => {
       pill.addEventListener('click', this._handlePillClick);
@@ -83,20 +88,29 @@ class SwipeNavigation extends HTMLElement {
   }
   
   _handleCategoryChange(event) {
-    // Update our internal state when category changes
+    // Prevent handling events that originated from this component to avoid loops
+    if (event.source === 'swipe-navigation') {
+      return;
+    }
+    
+    console.log(`SwipeNavigation received category change: ${event.category} from source: ${event.source}`);
+    
+    // Update our internal state when category changes from elsewhere (like button clicks)
     const category = event.category;
     const newIndex = this._categories.indexOf(category);
     if (newIndex !== -1) {
       this._currentCategoryIndex = newIndex;
+      console.log(`SwipeNavigation updated index to: ${this._currentCategoryIndex}`);
     }
   }
   
   _handlePillClick(event) {
-    // Update our internal state when category pills are clicked
+    // Update our internal state when category pills are clicked directly
     const category = event.target.dataset.category;
     const newIndex = this._categories.indexOf(category);
     if (newIndex !== -1) {
       this._currentCategoryIndex = newIndex;
+      console.log(`SwipeNavigation updated index from pill click: ${this._currentCategoryIndex}`);
     }
   }
   
@@ -145,12 +159,14 @@ class SwipeNavigation extends HTMLElement {
   }
   
   _navigateToNextCategory() {
+    console.log('SwipeNavigation: navigate to next category');
     // Move to next category, with wrap-around
     const nextIndex = (this._currentCategoryIndex + 1) % this._categories.length;
     this._navigateToCategory(nextIndex);
   }
   
   _navigateToPreviousCategory() {
+    console.log('SwipeNavigation: navigate to previous category');
     // Move to previous category, with wrap-around
     const prevIndex = (this._currentCategoryIndex - 1 + this._categories.length) % this._categories.length;
     this._navigateToCategory(prevIndex);
@@ -166,13 +182,16 @@ class SwipeNavigation extends HTMLElement {
     // Update current index
     this._currentCategoryIndex = index;
     
-    // Use event manager to emit category change
+    console.log(`SwipeNavigation: emitting category change to ${category}`);
+    
+    // Use event manager to emit category change with source='swipe-navigation'
     teaEvents.emit(TeaEventTypes.CATEGORY_CHANGED, { 
       category,
-      source: 'swipe'
+      source: 'swipe-navigation'
     });
     
-    // Also visually update the UI
+    // Also visually update the UI (this is now handled by the app.js)
+    // but we keep it for redundancy to ensure UI is always in sync
     this._updateActivePill(category);
   }
   

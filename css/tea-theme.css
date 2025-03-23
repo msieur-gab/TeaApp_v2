@@ -1,0 +1,172 @@
+/* tea-theme.css - Global theming styles */
+
+/* Base theme variables with defaults */
+:root {
+  /* Primary color palette */
+  --tea-primary-color: #7B9070;  /* Default: Green Tea */
+  --tea-primary-light: #9db293;
+  --tea-primary-dark: #5d6e54;
+  
+  /* Text colors */
+  --tea-text-on-primary: #FFFFFF;
+  --tea-text-color: #333333;
+  --tea-text-muted: #666666;
+  
+  /* UI element colors */
+  --tea-surface-color: #FFFFFF;
+  --tea-border-color: rgba(0, 0, 0, 0.1);
+  --tea-hover-color: #a9c2a0;
+  --tea-active-color: #6b7f60;
+  
+  /* Background variants */
+  --tea-bg-light: #e8eee5;
+  --tea-bg-subtle: #f0f5ee;
+  
+  /* Legacy variables for backward compatibility */
+  --primary-color: var(--tea-primary-color);
+  --background-color: var(--tea-primary-color);
+  --text-color: var(--tea-text-on-primary);
+  --button-background: rgba(255, 255, 255, 0.1);
+  --chip-background: rgba(255, 255, 255, 0.1);
+  
+  /* Category-specific colors for direct access */
+  --tea-green-color: #7B9070;
+  --tea-black-color: #A56256;
+  --tea-oolong-color: #C09565;
+  --tea-white-color: #D8DCD5;
+  --tea-pu-erh-color: #6F5244;
+  --tea-yellow-color: #D1CDA6;
+}
+
+/* Apply themed styles to common elements */
+
+/* Category pills with theme-aware styling */
+.category-pill {
+  background-color: var(--tea-surface-color);
+  border: 1px solid var(--tea-border-color);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.category-pill.active {
+  background-color: var(--tea-primary-color);
+  color: var(--tea-text-on-primary);
+  border-color: var(--tea-primary-color);
+}
+
+/* Add tea button with themed colors */
+.add-tea-button {
+  background-color: var(--tea-primary-color);
+  color: var(--tea-text-on-primary);
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.add-tea-button:hover {
+  background-color: var(--tea-active-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Form button styling */
+.form-button-primary {
+  background-color: var(--tea-primary-color);
+  color: var(--tea-text-on-primary);
+  transition: background-color 0.2s ease;
+}
+
+.form-button-primary:hover {
+  background-color: var(--tea-active-color);
+}
+
+/* Subtle animations on transitions */
+.tea-theme-transition * {
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* Override default notification styling */
+.notification {
+  background-color: var(--tea-primary-color);
+  color: var(--tea-text-on-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Theme-specific progress bar */
+.progress-bar {
+  background-color: var(--tea-primary-color);
+}
+
+/* Theme-specific badges */
+.badge, .tea-badge {
+  background-color: var(--tea-primary-light);
+  color: var(--tea-text-color);
+}
+
+/* Loader theme colors */
+.loader-spinner {
+  border-color: rgba(0, 0, 0, 0.1);
+  border-top-color: var(--tea-primary-color);
+}
+
+/* Add transition class for smooth theme changes */
+body {
+  transition: background-color 0.5s ease;
+}
+
+body.tea-theme-transition * {
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease;
+}
+
+/* Modal themed styles */
+.modal-content {
+  border-top: 4px solid var(--tea-primary-color);
+}
+
+.modal-title {
+  color: var(--tea-primary-color);
+}
+
+/* Version display themed styling */
+.version-display {
+  background-color: var(--tea-primary-color);
+  color: var(--tea-text-on-primary);
+  opacity: 0.7;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  transition: opacity 0.3s ease;
+}
+
+.version-display:hover {
+  opacity: 1;
+}
+
+/* Theme-specific styles for each tea category */
+body.tea-theme-green .tea-category-badge {
+  background-color: var(--tea-green-color);
+}
+
+body.tea-theme-black .tea-category-badge {
+  background-color: var(--tea-black-color);
+}
+
+body.tea-theme-oolong .tea-category-badge {
+  background-color: var(--tea-oolong-color);
+}
+
+body.tea-theme-white .tea-category-badge {
+  background-color: var(--tea-white-color);
+  color: #333; /* Better contrast for light colors */
+}
+
+body.tea-theme-pu-erh .tea-category-badge {
+  background-color: var(--tea-pu-erh-color);
+}
+
+body.tea-theme-yellow .tea-category-badge {
+  background-color: var(--tea-yellow-color);
+  color: #333; /* Better contrast for light colors */
+}

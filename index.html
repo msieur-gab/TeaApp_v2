@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#7B9070"> <!-- Default to Green Tea theme -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
@@ -21,9 +21,9 @@
   <link rel="stylesheet" href="./css/main.css">
   <link rel="stylesheet" href="./css/components.css">
   <link rel="stylesheet" href="./css/menu.css">
-  <!-- <link rel="stylesheet" href="./css/tea-app-fixes.css"> -->
+  <link rel="stylesheet" href="./css/tea-theme.css"> <!-- New theme CSS -->
 </head>
-<body>
+<body class="tea-theme-green">
   <div class="app-container">
     <header class="app-header">
       <div class="category-pills">
@@ -114,12 +114,14 @@
   
   <!-- Scripts -->
   <!-- First load utilities -->
-<script type="module" src="./js/utils/tea-theme.js"></script>
+  <script type="module" src="./js/utils/color-utility.js"></script>
+  <script type="module" src="./js/utils/theme-generator.js"></script>
+  <script type="module" src="./js/utils/tea-theme.js"></script>
 
-<!-- Then load services -->
-<script type="module" src="./js/services/event-manager.js"></script>
-<script type="module" src="./js/services/tea-database.js"></script>
-<script type="module" src="./js/services/tea-collection-levels.js"></script>
+  <!-- Then load services -->
+  <script type="module" src="./js/services/event-manager.js"></script>
+  <script type="module" src="./js/services/tea-database.js"></script>
+  <script type="module" src="./js/services/tea-collection-levels.js"></script>
 
   
   <!-- Load components -->
