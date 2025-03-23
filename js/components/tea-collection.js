@@ -35,7 +35,6 @@ class TeaCollection extends HTMLElement {
     this._handleCategoryChange = this._handleCategoryChange.bind(this);
     this._handleTeaAdded = this._handleTeaAdded.bind(this);
     this._handleTeaSelect = this._handleTeaSelect.bind(this);
-    this._handleResize = this._handleResize.bind(this);
   }
 
   connectedCallback() {
@@ -53,10 +52,9 @@ class TeaCollection extends HTMLElement {
     teaEvents.on(TeaEventTypes.CATEGORY_CHANGED, this._handleCategoryChange);
     teaEvents.on(TeaEventTypes.TEA_SELECTED, this._handleTeaSelect);
     
-    // Handle window resize for responsive design
-    window.addEventListener('resize', this._handleResize);
-
+    // Listen specifically for category changes to update pills
     document.addEventListener('category-changed', () => {
+      // Only update header colors, not the entire component
       setTimeout(() => this._applyThemeToAppHeader(), 10);
     });
     
@@ -78,7 +76,7 @@ class TeaCollection extends HTMLElement {
     teaEvents.off(TeaEventTypes.CATEGORY_CHANGED, this._handleCategoryChange);
     teaEvents.off(TeaEventTypes.TEA_SELECTED, this._handleTeaSelect);
     
-    window.removeEventListener('resize', this._handleResize);
+    document.removeEventListener('category-changed', null);
     this.removeEventListener('tea-select', null);
   }
   
@@ -113,7 +111,8 @@ class TeaCollection extends HTMLElement {
         category: value,
         source: 'tea-collection' 
       });
-
+      
+      // Also trigger DOM event for broader compatibility
       const event = new CustomEvent('category-changed', { 
         bubbles: true,
         detail: { category: value }
@@ -142,15 +141,13 @@ class TeaCollection extends HTMLElement {
       appHeader.style.backgroundColor = this._themeColors.primary;
       appHeader.style.color = this._themeColors.text;
       
-      // Update category pills
-      const pills = appHeader.querySelectorAll('.category-pill');
-      
       // First, get the current category base color
       const currentCategoryColor = this._themeColors.primary;
       const darkerColor = ColorUtility.darkenColor(currentCategoryColor, 20);
       const lighterColor = ColorUtility.lightenColor(currentCategoryColor, 20);
       
-      // Now update each pill
+      // Update category pills
+      const pills = appHeader.querySelectorAll('.category-pill');
       pills.forEach(pill => {
         const pillCategory = pill.dataset.category;
         const isActive = pillCategory === this._state.category;
@@ -191,11 +188,6 @@ class TeaCollection extends HTMLElement {
   _handleTeaSelect(event) {
     // Handle tea selection
     console.log('Tea selected in collection:', event);
-  }
-  
-  _handleResize() {
-    // Update the viewport-based styles when window is resized
-    this.render();
   }
   
   async _loadCategoryData() {
@@ -313,8 +305,8 @@ class TeaCollection extends HTMLElement {
   }
   
   render() {
-    // Calculate the header height (60% of viewport height as requested)
-    const headerHeight = `60vh`;
+    // Use a fixed pixel height for the header that doesn't change on scroll
+    const headerHeight = `${Math.round(window.innerHeight * 0.6)}px`;
     
     // Generate styles with dynamic header height and theme colors
     const styles = `
@@ -396,7 +388,7 @@ class TeaCollection extends HTMLElement {
       }
       
       .level-info {
-        // background-color: rgba(255, 255, 255, 0.15);
+        background-color: rgba(255, 255, 255, 0.15);
         border-radius: 12px;
         padding: 1.5rem;
         position: relative;
@@ -573,11 +565,9 @@ class TeaCollection extends HTMLElement {
           <div class="header-bottom-content">
             ${this._state.levelInfo ? `
               <div class="level-info">
-                <!-- <div><strong>Current Level:</strong> ${this._state.levelInfo.currentLevel.title}</div>
-                 <div><strong>Next Level:</strong> ${this._state.levelInfo.nextLevel?.title || 'Collection Complete!'}</div>
-                -->
-                                <div class="progress-message">${this._state.levelInfo.progressMessage}</div>
-
+                <div><strong>Current Level:</strong> ${this._state.levelInfo.currentLevel.title}</div>
+                <div><strong>Next Level:</strong> ${this._state.levelInfo.nextLevel?.title || 'Collection Complete!'}</div>
+                
                 <div class="progress-bar-container">
                   <div class="progress-bar" style="width: ${progressPercentage}%"></div>
                 </div>
@@ -589,6 +579,7 @@ class TeaCollection extends HTMLElement {
                   </span>
                 </div>
                 
+                <div class="progress-message">${this._state.levelInfo.progressMessage}</div>
               </div>
             ` : ''}
             

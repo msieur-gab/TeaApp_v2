@@ -54,7 +54,7 @@ body::after {
   font-size: 0.9rem;
   font-weight: 500;
   letter-spacing: 0.5px;
-  /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
   min-width: unset; /* Let content determine width */
 }
@@ -154,4 +154,37 @@ tea-detail,
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* tea-circles visualization fix */
+tea-circle {
+  display: block !important;
+  --circle-size: 64px;
+  width: var(--circle-size);
+  height: var(--circle-size);
+}
+
+/* Adjust tea circle size for mobile */
+@media (max-width: 480px) {
+  tea-circle {
+    --circle-size: 56px;
+  }
+}
+
+/* Ensure tea circles are clickable */
+tea-circle::part(tea-circle) {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+/* Make sure tea collection maintains proper layout */
+tea-collection {
+  display: block !important;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Prevent unwanted refreshes during scrolling */
+html, body {
+  overscroll-behavior-y: none;
 }
