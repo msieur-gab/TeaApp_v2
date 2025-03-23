@@ -113,7 +113,7 @@ class TeaCollection extends HTMLElement {
         category: value,
         source: 'tea-collection' 
       });
-      
+
       const event = new CustomEvent('category-changed', { 
         bubbles: true,
         detail: { category: value }
@@ -396,7 +396,7 @@ class TeaCollection extends HTMLElement {
       }
       
       .level-info {
-        background-color: rgba(255, 255, 255, 0.15);
+        // background-color: rgba(255, 255, 255, 0.15);
         border-radius: 12px;
         padding: 1.5rem;
         position: relative;
@@ -573,9 +573,11 @@ class TeaCollection extends HTMLElement {
           <div class="header-bottom-content">
             ${this._state.levelInfo ? `
               <div class="level-info">
-                <div><strong>Current Level:</strong> ${this._state.levelInfo.currentLevel.title}</div>
-                <div><strong>Next Level:</strong> ${this._state.levelInfo.nextLevel?.title || 'Collection Complete!'}</div>
-                
+                <!-- <div><strong>Current Level:</strong> ${this._state.levelInfo.currentLevel.title}</div>
+                 <div><strong>Next Level:</strong> ${this._state.levelInfo.nextLevel?.title || 'Collection Complete!'}</div>
+                -->
+                                <div class="progress-message">${this._state.levelInfo.progressMessage}</div>
+
                 <div class="progress-bar-container">
                   <div class="progress-bar" style="width: ${progressPercentage}%"></div>
                 </div>
@@ -587,7 +589,6 @@ class TeaCollection extends HTMLElement {
                   </span>
                 </div>
                 
-                <div class="progress-message">${this._state.levelInfo.progressMessage}</div>
               </div>
             ` : ''}
             
