@@ -1,5 +1,9 @@
 // components/tea-detail.js
-// Consolidated tea detail component with improved organization
+// Enhanced tea detail component with theme integration
+
+import { teaEvents, TeaEventTypes } from '../services/event-manager.js';
+import ColorUtility from '../utils/color-utility.js';
+import { TeaThemeGenerator } from '../utils/theme-generator.js';
 
 class TeaDetail extends HTMLElement {
   constructor() {
@@ -23,6 +27,14 @@ class TeaDetail extends HTMLElement {
       initialPanelY: 0
     };
     
+    // Theme state
+    this._themeColors = {
+      primary: '#7B9070', // Default to Green tea
+      text: '#FFFFFF',
+      light: '#9db293',
+      dark: '#5d6e54'
+    };
+    
     // Bind methods
     this._handleClose = this._handleClose.bind(this);
     this._handleBrewStyleToggle = this._handleBrewStyleToggle.bind(this);
@@ -31,16 +43,55 @@ class TeaDetail extends HTMLElement {
     this._handleTouchMove = this._handleTouchMove.bind(this);
     this._handleTouchEnd = this._handleTouchEnd.bind(this);
     this._handleBackdropClick = this._handleBackdropClick.bind(this);
+    this._handleThemeChange = this._handleThemeChange.bind(this);
   }
 
   connectedCallback() {
     this._mainContent = document.querySelector('.app-container');
+    
+    // Listen for theme changes
+    document.addEventListener('tea-theme-changed', this._handleThemeChange);
+    
+    // Get initial theme colors
+    this._updateThemeColors();
+    
     this.render();
     this._setupEventListeners();
   }
   
   disconnectedCallback() {
     this._removeEventListeners();
+    document.removeEventListener('tea-theme-changed', this._handleThemeChange);
+  }
+  
+  _handleThemeChange(event) {
+    // Update theme colors based on the event
+    const { category, colors } = event.detail;
+    
+    this._themeColors = {
+      primary: colors['--tea-primary-color'],
+      text: colors['--tea-text-on-primary'],
+      light: colors['--tea-primary-light'],
+      dark: colors['--tea-primary-dark']
+    };
+    
+    // Re-render with new colors if already open
+    if (this._isOpen) {
+      this.render();
+      this._setupEventListeners();
+    }
+  }
+  
+  _updateThemeColors() {
+    // Get current theme colors from CSS variables
+    const style = getComputedStyle(document.documentElement);
+    
+    this._themeColors = {
+      primary: style.getPropertyValue('--tea-primary-color').trim(),
+      text: style.getPropertyValue('--tea-text-on-primary').trim(),
+      light: style.getPropertyValue('--tea-primary-light').trim(),
+      dark: style.getPropertyValue('--tea-primary-dark').trim()
+    };
   }
   
   // Public methods
@@ -65,6 +116,15 @@ class TeaDetail extends HTMLElement {
       notes: teaData.notes || '',
       ...teaData  // Include any other properties from the original data
     };
+    
+    // Get theme colors for the specific tea category
+    if (teaData.category) {
+      const baseColor = TeaThemeGenerator.getTeaColor(teaData.category);
+      this._themeColors.primary = baseColor;
+      this._themeColors.text = ColorUtility.getOptimalTextColor(baseColor);
+      this._themeColors.light = ColorUtility.lightenColor(baseColor, 15);
+      this._themeColors.dark = ColorUtility.darkenColor(baseColor, 15);
+    }
     
     // If we have an ID but limited data, try to fetch more details
     if (teaData.id && (!teaData.description || !teaData.brewTime)) {
@@ -499,31 +559,14 @@ class TeaDetail extends HTMLElement {
     return defaults[category] || '85°C';
   }
   
-  _getCategoryColor(category) {
-    // Color mapping for tea categories using CSS variables when possible
-    return `var(--tea-${category.toLowerCase()}-color, ${this._getFallbackCategoryColor(category)})`;
-  }
-  
-  _getFallbackCategoryColor(category) {
-    const colorMap = {
-      'Green': '#7B9070',
-      'Black': '#A56256',
-      'Oolong': '#C09565',
-      'White': '#D8DCD5',
-      'Pu-erh': '#6F5244',
-      'Yellow': '#D1CDA6'
-    };
-    
-    return colorMap[category] || '#4a90e2';
-  }
-  
   render() {
     if (!this._isOpen) {
       this.shadowRoot.innerHTML = `<style>:host { display: none; }</style>`;
       return;
     }
     
-    const categoryColor = this._teaData ? this._getCategoryColor(this._teaData.category) : '#4a90e2';
+    // Use theme colors for styling
+    const { primary, text, light, dark } = this._themeColors;
     
     const styles = `
       :host {
@@ -535,13 +578,10 @@ class TeaDetail extends HTMLElement {
         height: 100%;
         z-index: 95; /* Lower z-index to be below nav */
         pointer-events: auto;
-        --tea-green-color: #7B9070;
-        --tea-black-color: #A56256;
-        --tea-oolong-color: #C09565;
-        --tea-white-color: #D8DCD5;
-        --tea-pu-erh-color: #6F5244;
-        --tea-yellow-color: #D1CDA6;
-        --tea-current-color: ${categoryColor};
+        --detail-primary-color: ${primary};
+        --detail-text-color: ${text};
+        --detail-light-color: ${light};
+        --detail-dark-color: ${dark};
       }
       
       .detail-backdrop {
@@ -565,8 +605,8 @@ class TeaDetail extends HTMLElement {
         left: 0;
         width: 100%;
         max-height: calc(90vh - 64px); /* Adjust max height to account for nav */
-        background-color: var(--tea-current-color);
-        color: white;
+        background-color: var(--detail-primary-color);
+        color: var(--detail-text-color);
         border-top-left-radius: 16px;
         border-top-right-radius: 16px;
         transform: translateY(100%);
@@ -607,7 +647,7 @@ class TeaDetail extends HTMLElement {
       .close-button {
         background: rgba(255, 255, 255, 0.2);
         border: none;
-        color: white;
+        color: var(--detail-text-color);
         width: 32px;
         height: 32px;
         border-radius: 50%;
@@ -636,7 +676,7 @@ class TeaDetail extends HTMLElement {
         align-items: center;
         margin: 0 auto 16px;
         font-size: 2rem;
-        color: var(--tea-current-color);
+        color: var(--detail-primary-color);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       }
       
@@ -671,7 +711,7 @@ class TeaDetail extends HTMLElement {
         margin-bottom: 12px;
         position: relative;
         padding-left: 12px;
-        color: var(--tea-current-color);
+        color: var(--detail-primary-color);
       }
       
       .section-title::before {
@@ -681,7 +721,7 @@ class TeaDetail extends HTMLElement {
         top: 0;
         height: 100%;
         width: 4px;
-        background-color: var(--tea-current-color);
+        background-color: var(--detail-primary-color);
         border-radius: 2px;
       }
       
@@ -742,7 +782,7 @@ class TeaDetail extends HTMLElement {
       }
       
       input:checked + .brew-toggle-slider {
-        background-color: var(--tea-current-color);
+        background-color: var(--detail-primary-color);
       }
       
       input:checked + .brew-toggle-slider:before {
@@ -774,7 +814,7 @@ class TeaDetail extends HTMLElement {
       .brew-param-value {
         font-size: 1.1rem;
         font-weight: 600;
-        color: var(--tea-current-color);
+        color: var(--detail-primary-color);
       }
       
       .tea-properties {
@@ -816,10 +856,10 @@ class TeaDetail extends HTMLElement {
       
       .flavor-tag {
         padding: 6px 12px;
-        background-color: #f0f0f0;
+        background-color: var(--detail-light-color);
         border-radius: 16px;
         font-size: 0.85rem;
-        color: #666;
+        color: #333;
       }
       
       .steep-button {
@@ -827,18 +867,18 @@ class TeaDetail extends HTMLElement {
         width: 100%;
         padding: 16px;
         margin-top: 16px;
-        background-color: var(--tea-current-color);
+        background-color: var(--detail-primary-color);
         border: none;
         border-radius: 8px;
-        color: white;
+        color: var(--detail-text-color);
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
-        transition: opacity 0.2s ease, transform 0.2s ease;
+        transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
       }
       
       .steep-button:hover {
-        opacity: 0.9;
+        background-color: var(--detail-dark-color);
         transform: translateY(-1px);
       }
       

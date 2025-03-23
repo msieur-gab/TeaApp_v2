@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tea Atoms Component Library Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 24px;
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    h1, h2, h3 {
+      margin-bottom: 1rem;
+    }
+    
+    section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+    
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0;
+      align-items: center;
+    }
+    
+    .color-swatch {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .dark-bg {
+      background-color: #333;
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    
+    .section-title {
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .theme-controls {
+      margin-bottom: 1rem;
+    }
+    
+    .component-demo {
+      margin-bottom: 2rem;
+    }
+    
+    .component-label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tea Atoms Component Library</h1>
+  <p>A refined component library that works directly on background colors without requiring wrappers.</p>
+  
+  <section>
+    <h2 class="section-title">Theme Controls</h2>
+    <div class="theme-controls" id="theme-controls">
+      <!-- Theme category buttons will be added here -->
+    </div>
+    <p>Select a tea category to see how components adapt to the theme.</p>
+  </section>
+  
+  <section>
+    <h2 class="section-title">Badges</h2>
+    <div class="component-demo">
+      <p class="component-label">Standard Badges:</p>
+      <div class="component-row" id="badges-demo"></div>
+    </div>
+    
+    <div class="component-demo">
+      <p class="component-label">Badges on Dark Background:</p>
+      <div class="dark-bg">
+        <div class="component-row" id="badges-dark-demo"></div>
+      </div>
+    </div>
+    
+    <div class="component-demo">
+      <p class="component-label">Outline Badges:</p>
+      <div class="component-row" id="badges-outline-demo"></div>
+    </div>
+  </section>
+  
+  <section>
+    <h2 class="section-title">Chips</h2>
+    <div class="component-demo">
+      <p class="component-label">Standard Chips:</p>
+      <div class="component-row" id="chips-demo"></div>
+    </div>
+    
+    <div class="component-demo">
+      <p class="component-label">Active Chips:</p>
+      <div class="component-row" id="chips-active-demo"></div>
+    </div>
+    
+    <div class="component-demo">
+      <p class="component-label">Closable Chips:</p>
+      <div class="component-row" id="chips-closable-demo"></div>
+    </div>
+  </section>
+  
+  <section>
+    <h2 class="section-title">Buttons</h2>
+    <div class="component-demo">
+      <p class="component-label">Button Variants:</p>
+      <div class="component-row" id="buttons-demo"></div>
+    </div>
+    
+    <div class="component-demo">
+      <p class="component-label">Button Sizes:</p>
+      <div class="component-row" id="buttons-size-demo"></div>
+    </div>
+    
+    <div class="component-demo">
+      <p class="component-label">Buttons on Dark Background:</p>
+      <div class="dark-bg">
+        <div class="component-row" id="buttons-dark-demo"></div>
+      </div>
+    </div>
+  </section>
+  
+  <section>
+    <h2 class="section-title">Form Controls</h2>
+    <div class="component-demo">
+      <p class="component-label">Toggle Switches:</p>
+      <div class="component-row" id="toggles-demo"></div>
+    </div>
+    
+    <div class="component-demo">
+      <p class="component-label">Search Inputs:</p>
+      <div class="component-row" id="search-demo"></div>
+    </div>
+  </section>
+  
+  <section>
+    <h2 class="section-title">Progress Bars</h2>
+    <div class="component-demo">
+      <p class="component-label">Progress Bar Variants:</p>
+      <div id="progress-demo"></div>
+    </div>
+    
+    <div class="component-demo">
+      <p class="component-label">Progress on Dark Background:</p>
+      <div class="dark-bg">
+        <div id="progress-dark-demo"></div>
+      </div>
+    </div>
+  </section>
+  
+  <section>
+    <h2 class="section-title">Cards</h2>
+    <div class="component-grid" id="cards-demo">
+      <!-- Cards will be added here -->
+    </div>
+  </section>
+  
+  <section>
+    <h2 class="section-title">Tea Detail Example</h2>
+    <p>This example shows how the TeaAtoms components can be used to build a tea detail view:</p>
+    <div class="component-demo">
+      <button id="show-detail-button">Show Tea Detail Example</button>
+      <tea-detail-atoms id="demo-detail"></tea-detail-atoms>
+    </div>
+  </section>
+
+  <script type="module">
+    import TeaAtoms from './js/utils/tea-atoms-lib.js';
+    import ColorUtility from './js/utils/color-utility.js';
+    import { TeaThemeGenerator, TeaColorPalette } from './js/utils/theme-generator.js';
+    import TeaDetailAtoms from './js/examples/tea-detail-atoms-example.js';
+
+    // Demo tea data
+    const teaData = {
+      name: "Dragon Well",
+      category: "Green",
+      origin: "Hangzhou, Zhejiang, China",
+      description: "Dragon Well (Longjing) is one of China's most famous green teas, known for its flat, sword-shaped leaves and distinctive taste. It has a rich, toasty aroma with notes of chestnuts and a sweet, rounded flavor with a clean finish.",
+      brewTime: "2:30",
+      temperature: "80°C",
+      notes: "High-quality Dragon Well has a beautiful jade-green color and smooth, velvety mouthfeel. The leaves can be eaten after brewing.",
+      tags: ["nutty", "toasty", "vegetal", "sweet", "smooth"],
+      harvestDate: "Pre-Qingming (early Spring)",
+      processingMethod: "Pan-fired",
+      caffeineLevel: "Medium",
+      
+      westernBrewTime: "2:30",
+      westernTemperature: "80°C",
+      westernLeafRatio: "3g per 200ml",
+      
+      gongfuBrewTime: "30",
+      gongfuTemperature: "85°C",
+      gongfuLeafRatio: "5g per 100ml"
+    };
+    
+    // Current theme category
+    let currentCategory = 'Green';
+    
+    // Initialize demo
+    function initDemo() {
+      createThemeControls();
+      createBadgesDemo();
+      createChipsDemo();
+      createButtonsDemo();
+      createToggleDemo();
+      createSearchDemo();
+      createProgressDemo();
+      createCardsDemo();
+      setupDetailExample();
+      
+      // Apply initial theme
+      applyTheme(currentCategory);
+    }
+    
+    // Create theme controls
+    function createThemeControls() {
+      const container = document.getElementById('theme-controls');
+      if (!container) return;
+      
+      // Clear container
+      container.innerHTML = '';
+      
+      // Create buttons for each tea category
+      Object.entries(TeaColorPalette).forEach(([category, color]) => {
+        const button = TeaAtoms.createButton(category, {
+          variant: category === currentCategory ? 'primary' : 'secondary',
+          category: category,
+          onClick: () => {
+            currentCategory = category;
+            applyTheme(category);
+            createThemeControls(); // Recreate controls to update active state
+          }
+        });
+        
+        container.appendChild(button);
+      });
+    }
+    
+    // Apply theme to the page
+    function applyTheme(category) {
+      const baseColor = TeaColorPalette[category];
+      document.documentElement.style.setProperty('--tea-primary-color', baseColor);
+      
+      // Create other variables
+      const textColor = ColorUtility.getOptimalTextColor(baseColor);
+      document.documentElement.style.setProperty('--tea-text-on-primary', textColor);
+      
+      const lightColor = ColorUtility.lightenColor(baseColor, 15);
+      document.documentElement.style.setProperty('--tea-primary-light', lightColor);
+      
+      const darkColor = ColorUtility.darkenColor(baseColor, 15);
+      document.documentElement.style.setProperty('--tea-primary-dark', darkColor);
+      
+      // Emit theme change event
+      const event = new CustomEvent('tea-theme-changed', {
+        bubbles: true,
+        detail: {
+          category,
+          colors: {
+            '--tea-primary-color': baseColor,
+            '--tea-text-on-primary': textColor,
+            '--tea-primary-light': lightColor,
+            '--tea-primary-dark': darkColor
+          },
+          baseColor
+        }
+      });
+      
+      document.dispatchEvent(event);
+    }
+    
+    // Create badges demo
+    function createBadgesDemo() {
+      // Standard badges
+      const badgesContainer = document.getElementById('badges-demo');
+      if (badgesContainer) {
+        badgesContainer.innerHTML = '';
+        Object.keys(TeaColorPalette).forEach(category => {
+          const badge = TeaAtoms.createBadge(category, category);
+          badgesContainer.appendChild(badge);
+        });
+      }
+      
+      // Badges on dark background
+      const badgesDarkContainer = document.getElementById('badges-dark-demo');
+      if (badgesDarkContainer) {
+        badgesDarkContainer.innerHTML = '';
+        Object.keys(TeaColorPalette).forEach(category => {
+          const badge = TeaAtoms.createBadge(category, category, {
+            parentBackground: '#333'
+          });
+          badgesDarkContainer.appendChild(badge);
+        });
+      }
+      
+      // Outline badges
+      const badgesOutlineContainer = document.getElementById('badges-outline-demo');
+      if (badgesOutlineContainer) {
+        badgesOutlineContainer.innerHTML = '';
+        Object.keys(TeaColorPalette).forEach(category => {
+          const badge = TeaAtoms.createBadge(category, category, {
+            outline: true
+          });
+          badgesOutlineContainer.appendChild(badge);
+        });
+      }
+    }
+    
+    // Create chips demo
+    function createChipsDemo() {
+      // Standard chips
+      const chipsContainer = document.getElementById('chips-demo');
+      if (chipsContainer) {
+        chipsContainer.innerHTML = '';
+        ['Floral', 'Nutty', 'Sweet', 'Vegetal', 'Earthy'].forEach(flavor => {
+          const chip = TeaAtoms.createChip(flavor, {
+            category: currentCategory
+          });
+          chipsContainer.appendChild(chip);
+        });
+      }
+      
+      // Active chips
+      const chipsActiveContainer = document.getElementById('chips-active-demo');
+      if (chipsActiveContainer) {
+        chipsActiveContainer.innerHTML = '';
+        ['Floral', 'Nutty', 'Sweet', 'Vegetal', 'Earthy'].forEach((flavor, index) => {
+          const chip = TeaAtoms.createChip(flavor, {
+            category: currentCategory,
+            active: index === 1 || index === 3 // Make a couple of them active
+          });
+          chipsActiveContainer.appendChild(chip);
+        });
+      }
+      
+      // Closable chips
+      const chipsClosableContainer = document.getElementById('chips-closable-demo');
+      if (chipsClosableContainer) {
+        chipsClosableContainer.innerHTML = '';
+        ['Floral', 'Nutty', 'Sweet', 'Vegetal', 'Earthy'].forEach(flavor => {
+          const chip = TeaAtoms.createChip(flavor, {
+            category: currentCategory,
+            closable: true,
+            onClose: (text) => {
+              chip.remove(); // Remove the chip when closed
+            }
+          });
+          chipsClosableContainer.appendChild(chip);
+        });
+      }
+    }
+    
+    // Create buttons demo
+    function createButtonsDemo() {
+      // Button variants
+      const buttonsContainer = document.getElementById('buttons-demo');
+      if (buttonsContainer) {
+        buttonsContainer.innerHTML = '';
+        
+        const primaryBtn = TeaAtoms.createButton('Primary', {
+          variant: 'primary',
+          category: currentCategory
+        });
+        
+        const secondaryBtn = TeaAtoms.createButton('Secondary', {
+          variant: 'secondary',
+          category: currentCategory
+        });
+        
+        const outlineBtn = TeaAtoms.createButton('Outline', {
+          variant: 'outline',
+          category: currentCategory
+        });
+        
+        const textBtn = TeaAtoms.createButton('Text', {
+          variant: 'text',
+          category: currentCategory
+        });
+        
+        buttonsContainer.appendChild(primaryBtn);
+        buttonsContainer.appendChild(secondaryBtn);
+        buttonsContainer.appendChild(outlineBtn);
+        buttonsContainer.appendChild(textBtn);
+      }
+      
+      // Button sizes
+      const buttonsSizeContainer = document.getElementById('buttons-size-demo');
+      if (buttonsSizeContainer) {
+        buttonsSizeContainer.innerHTML = '';
+        
+        const smallBtn = TeaAtoms.createButton('Small', {
+          variant: 'primary',
+          size: 'small',
+          category: currentCategory
+        });
+        
+        const mediumBtn = TeaAtoms.createButton('Medium', {
+          variant: 'primary',
+          size: 'medium',
+          category: currentCategory
+        });
+        
+        const largeBtn = TeaAtoms.createButton('Large', {
+          variant: 'primary',
+          size: 'large',
+          category: currentCategory
+        });
+        
+        buttonsSizeContainer.appendChild(smallBtn);
+        buttonsSizeContainer.appendChild(mediumBtn);
+        buttonsSizeContainer.appendChild(largeBtn);
+      }
+      
+      // Buttons on dark background
+      const buttonsDarkContainer = document.getElementById('buttons-dark-demo');
+      if (buttonsDarkContainer) {
+        buttonsDarkContainer.innerHTML = '';
+        
+        const primaryBtn = TeaAtoms.createButton('Primary', {
+          variant: 'primary',
+          category: currentCategory,
+          parentBackground: '#333'
+        });
+        
+        const secondaryBtn = TeaAtoms.createButton('Secondary', {
+          variant: 'secondary',
+          category: currentCategory,
+          parentBackground: '#333'
+        });
+        
+        const outlineBtn = TeaAtoms.createButton('Outline', {
+          variant: 'outline',
+          category: currentCategory,
+          parentBackground: '#333'
+        });
+        
+        const textBtn = TeaAtoms.createButton('Text', {
+          variant: 'text',
+          category: currentCategory,
+          parentBackground: '#333'
+        });
+        
+        buttonsDarkContainer.appendChild(primaryBtn);
+        buttonsDarkContainer.appendChild(secondaryBtn);
+        buttonsDarkContainer.appendChild(outlineBtn);
+        buttonsDarkContainer.appendChild(textBtn);
+      }
+    }
+    
+    // Create toggle demo
+    function createToggleDemo() {
+      const togglesContainer = document.getElementById('toggles-demo');
+      if (togglesContainer) {
+        togglesContainer.innerHTML = '';
+        
+        // Standard toggle
+        const toggle1 = TeaAtoms.createToggle({
+          label: 'Standard Toggle',
+          category: currentCategory
+        });
+        
+        // Checked toggle
+        const toggle2 = TeaAtoms.createToggle({
+          label: 'Checked Toggle',
+          checked: true,
+          category: currentCategory
+        });
+        
+        // Disabled toggle
+        const toggle3 = TeaAtoms.createToggle({
+          label: 'Disabled Toggle',
+          disabled: true,
+          category: currentCategory
+        });
+        
+        togglesContainer.appendChild(toggle1);
+        togglesContainer.appendChild(document.createElement('br'));
+        togglesContainer.appendChild(toggle2);
+        togglesContainer.appendChild(document.createElement('br'));
+        togglesContainer.appendChild(toggle3);
+      }
+    }
+    
+    // Create search input demo
+    function createSearchDemo() {
+      const searchContainer = document.getElementById('search-demo');
+      if (searchContainer) {
+        searchContainer.innerHTML = '';
+        
+        // Standard search
+        const search = TeaAtoms.createSearchInput({
+          placeholder: 'Search teas...',
+          category: currentCategory,
+          width: '250px'
+        });
+        
+        // Search with value
+        const searchWithValue = TeaAtoms.createSearchInput({
+          placeholder: 'Search teas...',
+          value: 'Dragon Well',
+          category: currentCategory,
+          width: '250px'
+        });
+        
+        searchContainer.appendChild(search);
+        searchContainer.appendChild(searchWithValue);
+      }
+    }
+    
+    // Create progress bar demo
+    function createProgressDemo() {
+      const progressContainer = document.getElementById('progress-demo');
+      if (progressContainer) {
+        progressContainer.innerHTML = '';
+        
+        // Create divs for each progress demo
+        const progress1 = document.createElement('div');
+        progress1.style.marginBottom = '1rem';
+        
+        const progress2 = document.createElement('div');
+        progress2.style.marginBottom = '1rem';
+        
+        const progress3 = document.createElement('div');
+        progress3.style.marginBottom = '1rem';
+        
+        // Create progress bars
+        const bar1 = TeaAtoms.createProgressBar(25, {
+          category: currentCategory
+        });
+        
+        const bar2 = TeaAtoms.createProgressBar(50, {
+          category: currentCategory,
+          showPercentage: true
+        });
+        
+        const bar3 = TeaAtoms.createProgressBar(75, {
+          category: currentCategory,
+          height: '12px',
+          rounded: true
+        });
+        
+        progress1.appendChild(bar1);
+        progress2.appendChild(bar2);
+        progress3.appendChild(bar3);
+        
+        progressContainer.appendChild(progress1);
+        progressContainer.appendChild(progress2);
+        progressContainer.appendChild(progress3);
+      }
+      
+      // Progress on dark background
+      const progressDarkContainer = document.getElementById('progress-dark-demo');
+      if (progressDarkContainer) {
+        progressDarkContainer.innerHTML = '';
+        
+        const progressBar = TeaAtoms.createProgressBar(60, {
+          category: currentCategory,
+          parentBackground: '#333',
+          showPercentage: true
+        });
+        
+        progressDarkContainer.appendChild(progressBar);
+      }
+    }
+    
+    // Create cards demo
+    function createCardsDemo() {
+      const cardsContainer = document.getElementById('cards-demo');
+      if (cardsContainer) {
+        cardsContainer.innerHTML = '';
+        
+        // Standard card
+        const card1 = TeaAtoms.createCard({
+          title: 'Standard Card',
+          content: 'This is a standard card with title and content.',
+          category: currentCategory
+        });
+        
+        // Card with footer
+        const footerContent = document.createElement('div');
+        const footerButton = TeaAtoms.createButton('Action', {
+          variant: 'primary',
+          size: 'small',
+          category: currentCategory
+        });
+        footerContent.appendChild(footerButton);
+        
+        const card2 = TeaAtoms.createCard({
+          title: 'Card with Footer',
+          content: 'This card includes a footer with actions.',
+          footer: footerContent,
+          category: currentCategory
+        });
+        
+        // Flat card with accent
+        const card3 = TeaAtoms.createCard({
+          title: 'Flat Card with Accent',
+          content: 'This is a flat card with an accent border on the left.',
+          flat: true,
+          accent: true,
+          category: currentCategory
+        });
+        
+        // High elevation card
+        const card4 = TeaAtoms.createCard({
+          title: 'High Elevation Card',
+          content: 'This card has higher elevation with stronger shadow.',
+          elevation: 'high',
+          category: currentCategory
+        });
+        
+        cardsContainer.appendChild(card1);
+        cardsContainer.appendChild(card2);
+        cardsContainer.appendChild(card3);
+        cardsContainer.appendChild(card4);
+      }
+    }
+    
+    // Setup tea detail example
+    function setupDetailExample() {
+      const showButton = document.getElementById('show-detail-button');
+      const detailComponent = document.getElementById('demo-detail');
+      
+      if (showButton && detailComponent) {
+        showButton.addEventListener('click', () => {
+          // Create a copy of the tea data with the current category
+          const updatedTeaData = {
+            ...teaData,
+            category: currentCategory
+          };
+          
+          // Show the detail component
+          detailComponent.open(updatedTeaData);
+        });
+        
+        // Style the button
+        showButton.style.cssText = `
+          padding: 12px 24px;
+          background-color: var(--tea-primary-color);
+          color: var(--tea-text-on-primary);
+          border: none;
+          border-radius: 8px;
+          font-size: 1rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        `;
+        
+        showButton.addEventListener('mouseenter', () => {
+          showButton.style.transform = 'translateY(-2px)';
+          showButton.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+        });
+        
+        showButton.addEventListener('mouseleave', () => {
+          showButton.style.transform = 'translateY(0)';
+          showButton.style.boxShadow = 'none';
+        });
+      }
+    }
+    
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', initDemo);
+  </script>
+</body>
+</html>

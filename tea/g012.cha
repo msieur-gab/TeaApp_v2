@@ -1,0 +1,29 @@
+{
+  "name": "Lu'an Gua Pian",
+  "category": "Green",
+  "origin": "Lu'an, Anhui, China",
+  "description": "Lu'an Gua Pian (Lu'an Melon Seed) is one of China's ten famous teas, distinguished by its unique processing method that uses only the second leaf of the tea plant with no buds or stems. The leaves are shaped like melon seeds—flat and oval with pointed ends—and have a distinctive glossy appearance with a emerald green color.",
+  "brewTime": "3:00",
+  "temperature": "85°C",
+  "notes": "Unlike most Chinese green teas, Lu'an Gua Pian undergoes three separate firings, creating its distinctive flavor profile. The leaves are picked, de-veined, pan-fired, shaped, and then fired over charcoal. This produces a tea with remarkable depth, a toasty aroma, and sweet, full-bodied taste without bitterness.",
+  "tags": ["sweet", "toasty", "orchid", "distinctive", "historic"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "De-veined, triple fired (pan-fired and charcoal-finished)",
+  "flavorProfile": ["sweet corn", "toasted nuts", "orchid", "mellow", "complex"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light and moisture. Maintains flavor well relative to other green teas.",
+  "elevation": "500-800 meters",
+  "harvest": "Second leaf only, no buds or stems",
+  "form": "Flat, oval leaves resembling melon seeds",
+  "historicalNote": "Recorded in the Ming Dynasty's 'Compendium of Materia Medica' and has been produced for over 2,000 years",
+  "uniqueFeature": "One of the only famous Chinese green teas made without buds"
+}

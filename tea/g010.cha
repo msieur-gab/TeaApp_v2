@@ -1,0 +1,27 @@
+{
+  "name": "Genmaicha",
+  "category": "Green",
+  "origin": "Japan",
+  "description": "Genmaicha is a Japanese green tea blended with roasted brown rice, some of which pops during roasting to resemble popcorn. Originally consumed by poor Japanese who used rice as a filler to reduce the cost of tea, it has gained widespread popularity for its unique toasty flavor and comforting character.",
+  "brewTime": "2:00",
+  "temperature": "85°C",
+  "notes": "The combination of grassy bancha or sencha with toasted rice creates a warming, nutty flavor profile that is less astringent than pure green tea. Often called 'popcorn tea' due to the appearance of the popped rice grains, genmaicha offers a savory aroma reminiscent of freshly baked bread.",
+  "tags": ["toasty", "nutty", "savory", "comforting", "japanese"],
+  
+  "westernBrewTime": "2:00",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "30",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "6g per 100ml",
+  
+  "harvestDate": "Various",
+  "processingMethod": "Steamed green tea (usually bancha or sencha) blended with roasted brown rice",
+  "flavorProfile": ["toasted grain", "nutty", "grassy", "savory", "sweet"],
+  "caffeineLevel": "Low to Medium",
+  "storageInstructions": "Store in airtight container away from light and moisture. The toasted rice extends shelf life compared to pure green teas.",
+  "form": "Loose leaf green tea mixed with roasted rice grains",
+  "variants": "Matcha-iri genmaicha is a premium version with added matcha powder for more umami and color",
+  "steepingTips": "Can handle slightly higher temperatures than delicate green teas due to the rice component"
+}
