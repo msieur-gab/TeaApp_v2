@@ -607,14 +607,14 @@ class TeaDetail extends HTMLElement {
         max-height: calc(90vh - 64px); /* Adjust max height to account for nav */
         background-color: var(--detail-primary-color);
         color: var(--detail-text-color);
-        border-top-left-radius: 16px;
-        border-top-right-radius: 16px;
+        // border-top-left-radius: 16px;
+        // border-top-right-radius: 16px;
         transform: translateY(100%);
         transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        // box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
       }
       
       .detail-panel.open {
@@ -663,8 +663,10 @@ class TeaDetail extends HTMLElement {
         overflow-y: auto;
         padding: 16px;
         color: #333;
-        background-color: white;
-      }
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+          overscroll-behavior: contain; /* Prevent scroll chaining */
+          max-height: calc(80vh - 60px); /* Subtract header height from max height */
+        }
       
       .tea-image {
         width: 80px;
@@ -726,7 +728,7 @@ class TeaDetail extends HTMLElement {
       }
       
       .brewing-section {
-        background-color: #f9f9f9;
+        // background-color: #f9f9f9;
         padding: 16px;
         border-radius: 8px;
       }

@@ -1,10 +1,20 @@
 // js/services/event-manager.js
-// A simple event management service for centralized event handling
+// Enhanced event management service with improved debugging and source tracking
 
 class EventManager {
   constructor() {
     // Map to store event listeners
     this._listeners = new Map();
+    
+    // Enable debug mode for development (set to false in production)
+    this._debug = false;
+    
+    // Track last event to help prevent loops
+    this._lastEvent = {
+      type: null,
+      source: null,
+      timestamp: 0
+    };
     
     // Instance is created once
     if (EventManager._instance) {
@@ -12,6 +22,14 @@ class EventManager {
     }
     
     EventManager._instance = this;
+  }
+  
+  /**
+   * Enable or disable debug logging
+   * @param {boolean} enabled - Whether debug logging is enabled
+   */
+  setDebugMode(enabled) {
+    this._debug = enabled;
   }
   
   /**
@@ -33,6 +51,10 @@ class EventManager {
     };
     
     this._listeners.get(event).push(handler);
+    
+    if (this._debug) {
+      console.log(`Event listener added for: ${event}`);
+    }
     
     // Return an object with a remove method
     return {
@@ -59,6 +81,10 @@ class EventManager {
     } else {
       this._listeners.delete(event);
     }
+    
+    if (this._debug) {
+      console.log(`Event listener removed for: ${event}`);
+    }
   }
   
   /**
@@ -68,6 +94,29 @@ class EventManager {
    */
   emit(event, data = {}) {
     if (!this._listeners.has(event)) return;
+    
+    // Check for duplicate events that could cause loops (same event+source within 50ms)
+    const now = Date.now();
+    if (this._lastEvent.type === event && 
+        this._lastEvent.source === data.source && 
+        now - this._lastEvent.timestamp < 50) {
+      if (this._debug) {
+        console.warn(`Potential event loop detected for ${event} from ${data.source}`);
+      }
+      // Continue anyway, but log the warning
+    }
+    
+    // Update last event
+    this._lastEvent = {
+      type: event,
+      source: data.source,
+      timestamp: now
+    };
+    
+    // Debug log
+    if (this._debug) {
+      console.log(`Emitting event: ${event}`, data);
+    }
     
     // Create a copy of the listeners before triggering to avoid issues
     // if a listener is removed during execution
@@ -107,8 +156,14 @@ class EventManager {
   clear(event = null) {
     if (event) {
       this._listeners.delete(event);
+      if (this._debug) {
+        console.log(`Cleared all listeners for event: ${event}`);
+      }
     } else {
       this._listeners.clear();
+      if (this._debug) {
+        console.log('Cleared all event listeners');
+      }
     }
   }
   
@@ -132,6 +187,9 @@ class EventManager {
 
 // Create a singleton instance
 const teaEvents = new EventManager();
+
+// Enable debug mode during development (comment out in production)
+teaEvents.setDebugMode(true);
 
 // Common tea app event types
 const TeaEventTypes = {

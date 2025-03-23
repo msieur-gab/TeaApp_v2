@@ -71,14 +71,21 @@ class TeaApp {
   }
   
   setupEventListeners() {
-    // Category selection
+    // Category selection with source attribution
     this.categoryPills.forEach(pill => {
       pill.addEventListener('click', event => {
         const category = event.target.dataset.category;
-        this.changeCategory(category);
+        
+        // Only proceed if this is not already the active category
+        if (category !== this.currentCategory) {
+          console.log(`Category pill clicked: ${category}`);
+          
+          // Change category with source='category-pill'
+          this.changeCategory(category, 'category-pill');
+        }
       });
     });
-    
+
     // Add tea button
     if (this.addTeaButton) {
       this.addTeaButton.addEventListener('click', () => {
@@ -113,7 +120,8 @@ class TeaApp {
     teaEvents.on(TeaEventTypes.TIMER_COMPLETED, this.handleTimerComplete.bind(this));
     teaEvents.on(TeaEventTypes.TEA_ADDED, this.handleTeaAdded.bind(this));
     teaEvents.on(TeaEventTypes.CATEGORY_CHANGED, this.handleCategoryChange.bind(this));
-    
+
+
     // Listen for theme changes
     document.addEventListener('tea-theme-changed', this.handleThemeChange.bind(this));
     
@@ -152,17 +160,13 @@ class TeaApp {
     }
   }
   
-  changeCategory(category) {
+  changeCategory(category, source = 'app') {
     if (category === this.currentCategory) return;
     
-    // Update active pill with new theming approach
-    this.categoryPills.forEach(pill => {
-      if (pill.dataset.category === category) {
-        pill.classList.add('active');
-      } else {
-        pill.classList.remove('active');
-      }
-    });
+    console.log(`Changing category to ${category} from source: ${source}`);
+    
+    // Update active pill - regardless of source
+    this.updateActivePill(category);
     
     // Apply theme based on category
     TeaTheme.setTheme(category);
@@ -175,18 +179,41 @@ class TeaApp {
     // Update state
     this.currentCategory = category;
     
-    // Dispatch event via event manager
-    teaEvents.emit(TeaEventTypes.CATEGORY_CHANGED, { 
-      category,
-      source: 'app'
+    // Only emit event if we're the source (to prevent loops)
+    // Other components already emitted their own events
+    if (source === 'app') {
+      console.log(`App emitting category change: ${category}`);
+      teaEvents.emit(TeaEventTypes.CATEGORY_CHANGED, { 
+        category,
+        source: 'app'
+      });
+    }
+  }
+
+  // Update active pill UI
+  updateActivePill(category) {
+    console.log(`Updating active pill to: ${category}`);
+    this.categoryPills.forEach(pill => {
+      if (pill.dataset.category === category) {
+        pill.classList.add('active');
+        // Use TeaTheme to apply the appropriate styling
+        TeaTheme.applyTheme(pill, category, { useBackground: true });
+      } else {
+        pill.classList.remove('active');
+        pill.style.backgroundColor = '';
+        pill.style.color = '';
+      }
     });
   }
   
   // Event handlers
   handleCategoryChange(event) {
+    console.log(`App received category change: ${event.category} from: ${event.source}`);
+    
     // Only respond if it wasn't triggered by app itself
     if (event.source !== 'app') {
-      this.changeCategory(event.category);
+      // Change the category but don't re-emit the event
+      this.changeCategory(event.category, event.source);
     }
   }
   
