@@ -26,9 +26,15 @@ body {
   position: relative;
 }
 
+:root {
+  --current-category-color: #7B9070; /* Default to Green Tea */
+  --current-category-color-light: rgba(123, 144, 112, 0.2); /* 20% opacity */
+}
 /* Header */
 .app-header {
   background-color: #fff;
+  /* background-color: var(--current-category-color); */
+
   border-bottom: 1px solid #eee;
   position: sticky;
   top: 0;
@@ -96,7 +102,7 @@ body {
 
 /* Main Content */
 main {
-  padding: 1rem;
+  /* padding: 1rem; */
 }
 
 /* Loader */
