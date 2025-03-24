@@ -205,8 +205,29 @@ class TeaApp {
   }
   
   async handleQrScan(event) {
-    // This can actually use the same handler as NFC scanning since the data format is the same
-    return this.handleNfcScan(event);
+    try {
+      this.showLoader();
+      // Extract the tea URL from the QR code
+      const teaUrl = event.detail.url;
+      
+      // Fetch the tea data
+      const response = await fetch(teaUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to load tea data from QR code: ${response.status}`);
+      }
+      
+      const teaData = await response.json();
+      
+      // Add the tea to the collection
+      await this.handleTeaLoaded(teaData);
+      
+      this.hideLoader();
+      this.showNotification(`Added ${teaData.name} to your collection!`, 3000);
+    } catch (error) {
+      console.error('Error processing QR code:', error);
+      this.hideLoader();
+      this.showNotification('Tea not found. Please ensure you\'re scanning a valid tea QR code.', 3000);
+    }
   }
 
   // Handle NFC scan event from the tea-add-modal
