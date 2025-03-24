@@ -49,51 +49,10 @@
   <tea-nav></tea-nav>
   
   <!-- Add Tea Button -->
-  <button class="add-tea-button" id="addTeaButton">+</button>
+  <button id="addTeaButton" class="add-tea-button" aria-label="Add Tea">+</button>
   
   <!-- Add Tea Form Modal -->
-  <div class="modal" id="addTeaModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Add Tea</h2>
-        <button class="modal-close" id="closeModalButton">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="addTeaForm">
-          <div class="form-group">
-            <label for="teaId">Tea ID</label>
-            <input type="text" id="teaId" placeholder="Enter tea ID (e.g., 000, 010)">
-          </div>
-          <div class="form-group">
-            <label>Or enter tea name and details manually:</label>
-          </div>
-          <div class="form-group">
-            <label for="teaName">Tea Name</label>
-            <input type="text" id="teaName" placeholder="e.g., Dragon Well">
-          </div>
-          <div class="form-group">
-            <label for="teaCategory">Category</label>
-            <select id="teaCategory">
-              <option value="Green">Green</option>
-              <option value="Black">Black</option>
-              <option value="Oolong">Oolong</option>
-              <option value="White">White</option>
-              <option value="Pu-erh">Pu-erh</option>
-              <option value="Yellow">Yellow</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="teaOrigin">Origin</label>
-            <input type="text" id="teaOrigin" placeholder="e.g., Hangzhou, China">
-          </div>
-          <div class="form-actions">
-            <button type="button" class="form-button form-button-secondary" id="cancelAddTeaButton">Cancel</button>
-            <button type="submit" class="form-button form-button-primary">Add Tea</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+  <tea-add-modal></tea-add-modal>
   
   <!-- Tea Detail Component -->
   <tea-detail></tea-detail>
@@ -122,7 +81,7 @@
   <script type="module" src="./js/services/event-manager.js"></script>
   <script type="module" src="./js/services/tea-database.js"></script>
   <script type="module" src="./js/services/tea-collection-levels.js"></script>
-
+  <script type="module" src="./js/services/nfc-handler.js"></script>
   
   <!-- Load components -->
   <script type="module" src="./js/components/tea-circle.js"></script>
@@ -131,6 +90,7 @@
   <script type="module" src="./js/components/tea-nav.js"></script>
   <script type="module" src="./js/components/progress-modal.js"></script>
   <script type="module" src="./js/components/swipe-navigation.js"></script>
+  <script type="module" src="./js/components/tea-add-modal.js"></script>
   
   <!-- Load main app logic -->
   <script type="module" src="./js/app.js"></script>

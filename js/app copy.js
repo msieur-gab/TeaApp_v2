@@ -1,17 +1,16 @@
-// app.js - Main application logic with integrated theming and NFC support
+// app.js - Main application logic with integrated theming
 
 // Import Services
 import TeaDatabase from './services/tea-database.js';
 import TeaCollectionLevels from './services/tea-collection-levels.js';
 import { teaEvents, TeaEventTypes } from './services/event-manager.js';
-import nfcHandler from './services/nfc-handler.js';
 
 // Import Theme Utilities
 import TeaTheme from './utils/tea-theme.js';
 import { TeaThemeGenerator } from './utils/theme-generator.js';
 
 // App version constants
-const APP_VERSION = 'v1.2.0'; // Updated version with NFC support
+const APP_VERSION = 'v1.1.0'; // Updated version with theme support
 const APP_BUILD_DATE = '2025-03-24';
 
 class TeaApp {
@@ -25,7 +24,10 @@ class TeaApp {
     this.loader = document.getElementById('loader');
     this.notification = document.getElementById('notification');
     this.addTeaButton = document.getElementById('addTeaButton');
-    this.teaAddModal = document.querySelector('tea-add-modal');
+    this.addTeaModal = document.getElementById('addTeaModal');
+    this.addTeaForm = document.getElementById('addTeaForm');
+    this.closeModalButton = document.getElementById('closeModalButton');
+    this.cancelAddTeaButton = document.getElementById('cancelAddTeaButton');
     
     // Tea file path settings
     this.teaFolder = 'tea/';
@@ -36,7 +38,7 @@ class TeaApp {
     // Initialize
     this.init();
   }
-
+  
   async init() {
     this.showLoader();
     
@@ -87,26 +89,29 @@ class TeaApp {
     // Add tea button
     if (this.addTeaButton) {
       this.addTeaButton.addEventListener('click', () => {
-        if (this.teaAddModal) {
-          this.teaAddModal.style.display = 'block';
-          teaEvents.emit(TeaEventTypes.MODAL_OPENED, { id: 'addTeaModal' });
-        }
+        this.addTeaModal.classList.add('visible');
+        teaEvents.emit(TeaEventTypes.MODAL_OPENED, { id: 'addTeaModal' });
       });
     }
     
-    // Handle tea-add-modal events
-    if (this.teaAddModal) {
-      // Handle form submission
-      this.teaAddModal.addEventListener('tea-add-submit', this.handleAddTeaSubmit.bind(this));
-      
-      // Handle NFC scan
-      this.teaAddModal.addEventListener('tea-nfc-scanned', this.handleNfcScan.bind(this));
-      
-      // Handle modal close
-      this.teaAddModal.addEventListener('tea-add-close', () => {
-        this.teaAddModal.style.display = 'none';
+    // Close modal buttons
+    if (this.closeModalButton) {
+      this.closeModalButton.addEventListener('click', () => {
+        this.addTeaModal.classList.remove('visible');
         teaEvents.emit(TeaEventTypes.MODAL_CLOSED, { id: 'addTeaModal' });
       });
+    }
+    
+    if (this.cancelAddTeaButton) {
+      this.cancelAddTeaButton.addEventListener('click', () => {
+        this.addTeaModal.classList.remove('visible');
+        teaEvents.emit(TeaEventTypes.MODAL_CLOSED, { id: 'addTeaModal' });
+      });
+    }
+    
+    // Add tea form submission
+    if (this.addTeaForm) {
+      this.addTeaForm.addEventListener('submit', this.handleAddTeaSubmit.bind(this));
     }
     
     // Setup global event listeners via the event manager
@@ -115,6 +120,7 @@ class TeaApp {
     teaEvents.on(TeaEventTypes.TIMER_COMPLETED, this.handleTimerComplete.bind(this));
     teaEvents.on(TeaEventTypes.TEA_ADDED, this.handleTeaAdded.bind(this));
     teaEvents.on(TeaEventTypes.CATEGORY_CHANGED, this.handleCategoryChange.bind(this));
+
 
     // Listen for theme changes
     document.addEventListener('tea-theme-changed', this.handleThemeChange.bind(this));
@@ -153,7 +159,7 @@ class TeaApp {
       // You could implement demo data loading here if desired
     }
   }
-
+  
   changeCategory(category, source = 'app') {
     if (category === this.currentCategory) return;
     
@@ -199,34 +205,9 @@ class TeaApp {
       }
     });
   }
-  
-  // Handle NFC scan event from the tea-add-modal
-  async handleNfcScan(event) {
-    try {
-      this.showLoader();
-      // Extract the tea URL from the NFC tag
-      const teaUrl = event.detail.url;
-      
-      // Fetch the tea data
-      const response = await fetch(teaUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to load tea data from NFC tag: ${response.status}`);
-      }
-      
-      const teaData = await response.json();
-      
-      // Add the tea to the collection
-      await this.handleTeaLoaded(teaData);
-      
-      this.hideLoader();
-      this.showNotification(`Added ${teaData.name} to your collection!`, 3000);
-    } catch (error) {
-      console.error('Error processing NFC tag:', error);
-      this.hideLoader();
-      this.showNotification('Failed to load tea data from NFC tag', 3000);
-    }
-  }
 
+  
+  
   // Event handlers
   handleCategoryChange(event) {
     console.log(`App received category change: ${event.category} from: ${event.source}`);
@@ -258,8 +239,21 @@ class TeaApp {
   }
   
   async handleAddTeaSubmit(event) {
-    // Extract data from the custom event
-    const { teaId, teaName, teaCategory, teaOrigin } = event.detail;
+    event.preventDefault();
+    
+    const teaIdInput = document.getElementById('teaId');
+    const teaNameInput = document.getElementById('teaName');
+    const teaCategoryInput = document.getElementById('teaCategory');
+    const teaOriginInput = document.getElementById('teaOrigin');
+    
+    const teaId = teaIdInput.value.trim();
+    const teaName = teaNameInput.value.trim();
+    const teaCategory = teaCategoryInput.value;
+    const teaOrigin = teaOriginInput.value.trim();
+    
+    // Close the modal
+    this.addTeaModal.classList.remove('visible');
+    teaEvents.emit(TeaEventTypes.MODAL_CLOSED, { id: 'addTeaModal' });
     
     // Show loader
     this.showLoader();
@@ -276,13 +270,19 @@ class TeaApp {
         this.hideLoader();
         return;
       }
+      
+      // Reset form
+      teaIdInput.value = '';
+      teaNameInput.value = '';
+      teaOriginInput.value = '';
+      
     } catch (error) {
       console.error('Error adding tea:', error);
       this.showNotification('Failed to add tea. Please try again.', 3000);
       this.hideLoader();
     }
   }
-
+  
   async loadTeaFromId(teaId) {
     try {
       // Try with .cha extension by default
@@ -324,82 +324,79 @@ class TeaApp {
         throw new Error(`Tea with ID ${teaId} not found.`);
       }
       
-      return await this.handleTeaLoaded(teaData);
+      // Get previous count for this category
+      const previousCount = await TeaDatabase.getCategoryTeaCount(teaData.category);
       
+      // Add tea to database
+      const id = await TeaDatabase.addTea(teaData);
+      
+      // Get new count
+      const newCount = await TeaDatabase.getCategoryTeaCount(teaData.category);
+      
+      // Check for level-up
+      const levelUp = TeaCollectionLevels.checkLevelUp(teaData.category, previousCount, newCount);
+      
+      // Get category progress information
+      const progressInfo = TeaCollectionLevels.getCollectionProgress(teaData.category, newCount);
+      
+      // Use progress modal to show success!
+      this.hideLoader();
+      
+      // Always show progress modal, but with different content based on whether level-up occurred
+      if (this.progressModal) {
+        if (levelUp) {
+          // Level-up occurred - show with badges and level-up message
+          this.progressModal.show(
+            teaData,
+            levelUp.message,
+            progressInfo.isCollectionComplete,
+            levelUp.badges,
+            true, // is level up
+            progressInfo
+          );
+          
+          // Emit level-up event
+          teaEvents.emit(TeaEventTypes.LEVEL_UP, {
+            tea: teaData,
+            levelUp,
+            progressInfo
+          });
+        } else {
+          // No level-up - show regular progress update
+          this.progressModal.show(
+            teaData,
+            `Added ${teaData.name} to your collection!`,
+            progressInfo.isCollectionComplete,
+            [], // No new badges
+            false, // not a level up
+            progressInfo
+          );
+        }
+      } else {
+        // Fallback to notification if modal not available
+        this.showNotification(`Added ${teaData.name} to your collection!`, 3000);
+      }
+      
+      // Update category if needed
+      if (teaData.category !== this.currentCategory) {
+        this.changeCategory(teaData.category);
+      } else {
+        // Just refresh the current category
+        if (this.teaCollection) {
+          this.teaCollection.category = this.currentCategory;
+        }
+      }
+      
+      // Emit tea added event
+      teaEvents.emit(TeaEventTypes.TEA_ADDED, { tea: teaData });
+      
+      return id;
     } catch (error) {
       console.error('Error loading tea from ID:', error);
       this.showNotification(`Failed to load tea data: ${error.message}`, 3000);
       this.hideLoader();
       throw error;
     }
-  }
-  
-  async handleTeaLoaded(teaData) {
-    // Get previous count for this category
-    const previousCount = await TeaDatabase.getCategoryTeaCount(teaData.category);
-    
-    // Add tea to database
-    const id = await TeaDatabase.addTea(teaData);
-    
-    // Get new count
-    const newCount = await TeaDatabase.getCategoryTeaCount(teaData.category);
-    
-    // Check for level-up
-    const levelUp = TeaCollectionLevels.checkLevelUp(teaData.category, previousCount, newCount);
-    
-    // Get category progress information
-    const progressInfo = TeaCollectionLevels.getCollectionProgress(teaData.category, newCount);
-    
-    // Hide loader since we're about to show the modal
-    this.hideLoader();
-    
-    // Use progress modal to show success!
-    if (this.progressModal) {
-      if (levelUp) {
-        // Level-up occurred - show with badges and level-up message
-        this.progressModal.show(
-          teaData,
-          levelUp.message,
-          progressInfo.isCollectionComplete,
-          levelUp.badges,
-          true, // is level up
-          progressInfo
-        );
-        
-        // Emit level-up event
-        teaEvents.emit(TeaEventTypes.LEVEL_UP, {
-          tea: teaData,
-          levelUp,
-          progressInfo
-        });
-      } else {
-        // No level-up - show regular progress update
-        this.progressModal.show(
-          teaData,
-          `Added ${teaData.name} to your collection!`,
-          progressInfo.isCollectionComplete,
-          [], // No new badges
-          false, // not a level up
-          progressInfo
-        );
-      }
-    } else {
-      // Fallback to notification if modal not available
-      this.showNotification(`Added ${teaData.name} to your collection!`, 3000);
-    }
-    
-    // Update category if needed
-    if (teaData.category !== this.currentCategory) {
-      this.changeCategory(teaData.category);
-    } else if (this.teaCollection) {
-      // Just refresh the current category
-      this.teaCollection.category = this.currentCategory;
-    }
-    
-    // Emit tea added event
-    teaEvents.emit(TeaEventTypes.TEA_ADDED, { tea: teaData });
-    
-    return id;
   }
   
   async addManualTea(name, category, origin) {
@@ -415,8 +412,73 @@ class TeaApp {
         tags: [category.toLowerCase()]
       };
       
-      return await this.handleTeaLoaded(teaData);
+      // Get previous count for this category
+      const previousCount = await TeaDatabase.getCategoryTeaCount(category);
       
+      // Add tea to database
+      const id = await TeaDatabase.addTea(teaData);
+      
+      // Get new count
+      const newCount = await TeaDatabase.getCategoryTeaCount(category);
+      
+      // Check for level-up
+      const levelUp = TeaCollectionLevels.checkLevelUp(category, previousCount, newCount);
+      
+      // Get category progress information
+      const progressInfo = TeaCollectionLevels.getCollectionProgress(category, newCount);
+      
+      // Hide the loader
+      this.hideLoader();
+      
+      // Use progress modal to show success!
+      if (this.progressModal) {
+        if (levelUp) {
+          // Level-up occurred - show with badges and level-up message
+          this.progressModal.show(
+            teaData,
+            levelUp.message,
+            progressInfo.isCollectionComplete,
+            levelUp.badges,
+            true, // is level up
+            progressInfo
+          );
+          
+          // Emit level-up event
+          teaEvents.emit(TeaEventTypes.LEVEL_UP, {
+            tea: teaData,
+            levelUp,
+            progressInfo
+          });
+        } else {
+          // No level-up - show regular progress update
+          this.progressModal.show(
+            teaData,
+            `Added ${name} to your collection!`,
+            progressInfo.isCollectionComplete,
+            [], // No new badges
+            false, // not a level up
+            progressInfo
+          );
+        }
+      } else {
+        // Fallback to notification
+        this.showNotification(`Added ${name} to your collection!`, 3000);
+      }
+      
+      // Update category if needed
+      if (category !== this.currentCategory) {
+        this.changeCategory(category);
+      } else {
+        // Just refresh the current category
+        if (this.teaCollection) {
+          this.teaCollection.category = this.currentCategory;
+        }
+      }
+      
+      // Emit tea added event
+      teaEvents.emit(TeaEventTypes.TEA_ADDED, { tea: teaData });
+      
+      return id;
     } catch (error) {
       console.error('Error adding manual tea:', error);
       this.showNotification('Failed to add tea', 3000);
@@ -424,7 +486,7 @@ class TeaApp {
       throw error;
     }
   }
-
+  
   handleTeaSelect(data) {
     // Get the tea data from the event
     const teaData = data;
@@ -473,7 +535,7 @@ class TeaApp {
       this.teaCollection.category = this.currentCategory;
     }
   }
-
+  
   parseBrewTime(brewTime) {
     if (!brewTime) return 180; // Default 3 minutes
     
@@ -494,8 +556,7 @@ class TeaApp {
       'Oolong': '3:15',
       'White': '3:00',
       'Pu-erh': '4:00',
-      'Yellow': '2:45',
-      'Herbal': '5:00'
+      'Yellow': '2:45'
     };
     
     return defaults[category] || '3:00';
@@ -508,8 +569,7 @@ class TeaApp {
       'Oolong': '90°C',
       'White': '80°C',
       'Pu-erh': '95°C',
-      'Yellow': '80°C',
-      'Herbal': '100°C'
+      'Yellow': '80°C'
     };
     
     return defaults[category] || '85°C';
@@ -645,6 +705,5 @@ window.TeaEvents = teaEvents;
 window.TeaEventTypes = TeaEventTypes;
 window.TeaTheme = TeaTheme;
 window.TeaThemeGenerator = TeaThemeGenerator;
-window.nfcHandler = nfcHandler;
 
 export default TeaApp;
