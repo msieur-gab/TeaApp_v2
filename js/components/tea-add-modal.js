@@ -1,6 +1,7 @@
 // js/components/tea-add-modal.js
 
 import nfcHandler from '../services/nfc-handler.js';
+import qrScannerHandler from '../services/qr-scanner-handler.js';
 
 class TeaAddModal extends HTMLElement {
   constructor() {
@@ -12,6 +13,7 @@ class TeaAddModal extends HTMLElement {
     this._handleSubmit = this._handleSubmit.bind(this);
     this._handleClose = this._handleClose.bind(this);
     this._handleScanNfc = this._handleScanNfc.bind(this);
+    this._handleScanQr = this._handleScanQr.bind(this);
   }
   
   connectedCallback() {
@@ -21,9 +23,10 @@ class TeaAddModal extends HTMLElement {
   
   disconnectedCallback() {
     this._removeEventListeners();
-    // Make sure to stop NFC scanner if active
+    // Make sure to stop scanners if active
     if (this.isScanning) {
       nfcHandler.stopNFCScanner();
+      qrScannerHandler.stopScanner();
       this.isScanning = false;
     }
   }
@@ -32,7 +35,8 @@ class TeaAddModal extends HTMLElement {
     const form = this.shadowRoot.querySelector('#add-tea-form');
     const closeButton = this.shadowRoot.querySelector('.modal-close');
     const cancelButton = this.shadowRoot.querySelector('#cancel-button');
-    const scanButton = this.shadowRoot.querySelector('#scan-nfc-button');
+    const scanNfcButton = this.shadowRoot.querySelector('#scan-nfc-button');
+    const scanQrButton = this.shadowRoot.querySelector('#scan-qr-button');
     
     if (form) {
       form.addEventListener('submit', this._handleSubmit);
@@ -46,8 +50,12 @@ class TeaAddModal extends HTMLElement {
       cancelButton.addEventListener('click', this._handleClose);
     }
     
-    if (scanButton) {
-      scanButton.addEventListener('click', this._handleScanNfc);
+    if (scanNfcButton) {
+      scanNfcButton.addEventListener('click', this._handleScanNfc);
+    }
+    
+    if (scanQrButton) {
+      scanQrButton.addEventListener('click', this._handleScanQr);
     }
   }
   
@@ -55,7 +63,8 @@ class TeaAddModal extends HTMLElement {
     const form = this.shadowRoot.querySelector('#add-tea-form');
     const closeButton = this.shadowRoot.querySelector('.modal-close');
     const cancelButton = this.shadowRoot.querySelector('#cancel-button');
-    const scanButton = this.shadowRoot.querySelector('#scan-nfc-button');
+    const scanNfcButton = this.shadowRoot.querySelector('#scan-nfc-button');
+    const scanQrButton = this.shadowRoot.querySelector('#scan-qr-button');
     
     if (form) {
       form.removeEventListener('submit', this._handleSubmit);
@@ -69,8 +78,93 @@ class TeaAddModal extends HTMLElement {
       cancelButton.removeEventListener('click', this._handleClose);
     }
     
-    if (scanButton) {
-      scanButton.removeEventListener('click', this._handleScanNfc);
+    if (scanNfcButton) {
+      scanNfcButton.removeEventListener('click', this._handleScanNfc);
+    }
+    
+    if (scanQrButton) {
+      scanQrButton.removeEventListener('click', this._handleScanQr);
+    }
+  }
+  
+  async _handleScanQr() {
+    if (this.isScanning) {
+      return;
+    }
+    
+    this.isScanning = true;
+    
+    // Update UI to show scanning state
+    const scanQrButton = this.shadowRoot.querySelector('#scan-qr-button');
+    const scanStatus = this.shadowRoot.querySelector('#scan-status');
+    const videoElement = this.shadowRoot.querySelector('#qr-video');
+    
+    if (scanQrButton) {
+      scanQrButton.textContent = 'Scanning...';
+      scanQrButton.disabled = true;
+    }
+    
+    if (scanStatus) {
+      scanStatus.textContent = 'Point your camera at a QR code...';
+      scanStatus.style.display = 'block';
+    }
+    
+    if (videoElement) {
+      videoElement.style.display = 'block';
+    }
+    
+    try {
+      const result = await qrScannerHandler.startScanner(videoElement);
+      
+      if (result.success) {
+        // Successfully read a QR code
+        if (scanStatus) {
+          scanStatus.textContent = 'QR code detected! Processing...';
+        }
+        
+        // Emit event with the tea URL
+        this.dispatchEvent(new CustomEvent('tea-qr-scanned', {
+          bubbles: true,
+          composed: true,
+          detail: { url: result.url }
+        }));
+        
+        // Close the modal
+        this._handleClose();
+      } else {
+        // Failed to read QR code
+        if (scanStatus) {
+          scanStatus.textContent = `Error: ${result.error || 'Failed to read QR code'}`;
+          scanStatus.style.color = 'red';
+        }
+      }
+    } catch (error) {
+      console.error('Error scanning QR code:', error);
+      
+      if (scanStatus) {
+        scanStatus.textContent = `Error: ${error.message || 'Unknown error scanning QR code'}`;
+        scanStatus.style.color = 'red';
+      }
+    } finally {
+      this.isScanning = false;
+      
+      if (scanQrButton) {
+        scanQrButton.textContent = 'Scan QR Code';
+        scanQrButton.disabled = false;
+      }
+      
+      if (videoElement) {
+        videoElement.style.display = 'none';
+        // Stop the video stream
+        if (videoElement.srcObject) {
+          const tracks = videoElement.srcObject.getTracks();
+          tracks.forEach(track => track.stop());
+          videoElement.srcObject = null;
+        }
+      }
+      
+      // Stop the scanner
+      qrScannerHandler.stopScanner();
     }
   }
   
@@ -172,10 +266,19 @@ class TeaAddModal extends HTMLElement {
   }
   
   _handleClose() {
-    // Stop NFC scanner if active
+    // Stop scanners if active
     if (this.isScanning) {
       nfcHandler.stopNFCScanner();
+      qrScannerHandler.stopScanner();
       this.isScanning = false;
+    }
+    
+    // Stop video if active
+    const videoElement = this.shadowRoot.querySelector('#qr-video');
+    if (videoElement && videoElement.srcObject) {
+      const tracks = videoElement.srcObject.getTracks();
+      tracks.forEach(track => track.stop());
+      videoElement.srcObject = null;
     }
     
     // Dispatch close event
@@ -199,10 +302,21 @@ class TeaAddModal extends HTMLElement {
     }
     
     // Reset scan button
-    const scanButton = this.shadowRoot.querySelector('#scan-nfc-button');
-    if (scanButton) {
-      scanButton.textContent = 'Scan NFC Tag';
-      scanButton.disabled = false;
+    const scanNfcButton = this.shadowRoot.querySelector('#scan-nfc-button');
+    if (scanNfcButton) {
+      scanNfcButton.textContent = 'Scan NFC Tag';
+      scanNfcButton.disabled = false;
+    }
+    
+    const scanQrButton = this.shadowRoot.querySelector('#scan-qr-button');
+    if (scanQrButton) {
+      scanQrButton.textContent = 'Scan QR Code';
+      scanQrButton.disabled = false;
+    }
+    
+    // Hide video element
+    if (videoElement) {
+      videoElement.style.display = 'none';
     }
   }
   
@@ -221,10 +335,11 @@ class TeaAddModal extends HTMLElement {
   
   render() {
     const isNfcSupported = nfcHandler.isNfcSupported();
+    const isQrSupported = qrScannerHandler?.isSupported() || false;
     
     const styles = `
       :host {
-        display: none;
+        display: none; /* Hidden by default */
       }
       
       .modal-backdrop {
@@ -321,13 +436,27 @@ class TeaAddModal extends HTMLElement {
         color: #666;
       }
       
+      .scan-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      
       .nfc-section {
         margin-bottom: 20px;
         text-align: center;
         ${isNfcSupported ? '' : 'display: none;'}
       }
       
-      .nfc-button {
+      .qr-section {
+        margin-bottom: 20px;
+        text-align: center;
+        ${isQrSupported ? '' : 'display: none;'}
+      }
+      
+      .scan-button {
         background-color: #4a90e2;
         color: white;
         border: none;
@@ -339,11 +468,11 @@ class TeaAddModal extends HTMLElement {
         transition: background-color 0.2s ease;
       }
       
-      .nfc-button:hover {
+      .scan-button:hover {
         background-color: #3a80d2;
       }
       
-      .nfc-button:disabled {
+      .scan-button:disabled {
         background-color: #ccc;
         cursor: not-allowed;
       }
@@ -355,14 +484,24 @@ class TeaAddModal extends HTMLElement {
         display: none;
       }
       
-      .nfc-not-supported {
+      #qr-video {
+        display: none;
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        margin: 10px auto;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+      }
+      
+      .scan-not-supported {
         margin-bottom: 20px;
         padding: 10px;
         background-color: #f8f8f8;
         border-radius: 4px;
         color: #666;
         text-align: center;
-        ${isNfcSupported ? 'display: none;' : ''}
+        ${isNfcSupported || isQrSupported ? 'display: none;' : ''}
       }
       
       .form-actions {
@@ -421,17 +560,25 @@ class TeaAddModal extends HTMLElement {
           <div class="modal-body">
             <div id="form-error"></div>
             
-            <div class="nfc-section">
-              <button id="scan-nfc-button" class="nfc-button">Scan NFC Tag</button>
-              <div id="scan-status" class="scan-status"></div>
+            <div class="scan-section">
+              <div class="qr-section">
+                <button id="scan-qr-button" class="scan-button">Scan QR Code</button>
+              </div>
+              
+              <div class="nfc-section">
+                <button id="scan-nfc-button" class="scan-button">Scan NFC Tag</button>
+              </div>
             </div>
             
-            <div class="nfc-not-supported">
-              <p>NFC is not supported in this browser or device.</p>
+            <video id="qr-video" muted playsinline></video>
+            <div id="scan-status" class="scan-status"></div>
+            
+            <div class="scan-not-supported">
+              <p>Camera and NFC scanning are not supported in this browser or device.</p>
             </div>
             
             <div class="form-divider">
-              <span class="form-divider-text">OR</span>
+              <span class="form-divider-text">OR ENTER MANUALLY</span>
             </div>
             
             <form id="add-tea-form">

@@ -5,6 +5,8 @@ import TeaDatabase from './services/tea-database.js';
 import TeaCollectionLevels from './services/tea-collection-levels.js';
 import { teaEvents, TeaEventTypes } from './services/event-manager.js';
 import nfcHandler from './services/nfc-handler.js';
+import qrScannerHandler from './services/qr-scanner-handler.js';
+
 
 // Import Theme Utilities
 import TeaTheme from './utils/tea-theme.js';
@@ -101,7 +103,9 @@ class TeaApp {
       
       // Handle NFC scan
       this.teaAddModal.addEventListener('tea-nfc-scanned', this.handleNfcScan.bind(this));
-      
+      // Handle QR scan
+      this.teaAddModal.addEventListener('tea-qr-scanned', this.handleQrScan.bind(this));
+
       // Handle modal close
       this.teaAddModal.addEventListener('tea-add-close', () => {
         this.teaAddModal.style.display = 'none';
@@ -200,6 +204,11 @@ class TeaApp {
     });
   }
   
+  async handleQrScan(event) {
+    // This can actually use the same handler as NFC scanning since the data format is the same
+    return this.handleNfcScan(event);
+  }
+
   // Handle NFC scan event from the tea-add-modal
   async handleNfcScan(event) {
     try {
@@ -646,5 +655,7 @@ window.TeaEventTypes = TeaEventTypes;
 window.TeaTheme = TeaTheme;
 window.TeaThemeGenerator = TeaThemeGenerator;
 window.nfcHandler = nfcHandler;
+window.qrScannerHandler = qrScannerHandler;
+
 
 export default TeaApp;
