@@ -134,7 +134,7 @@ class TeaAddModal extends HTMLElement {
       } else {
         // Failed to read QR code
         if (scanStatus) {
-          scanStatus.textContent = `Error: ${result.error || 'Failed to read QR code'}`;
+          scanStatus.textContent = `No QR code detected. Please try again with good lighting.`;
           scanStatus.style.color = 'red';
         }
       }
@@ -142,7 +142,7 @@ class TeaAddModal extends HTMLElement {
       console.error('Error scanning QR code:', error);
       
       if (scanStatus) {
-        scanStatus.textContent = `Error: ${error.message || 'Unknown error scanning QR code'}`;
+        scanStatus.textContent = `Unable to read QR code. Please ensure the code is clearly visible.`;
         scanStatus.style.color = 'red';
       }
     } finally {
@@ -210,7 +210,7 @@ class TeaAddModal extends HTMLElement {
       } else {
         // Failed to read NFC tag
         if (scanStatus) {
-          scanStatus.textContent = `Error: ${result.error || 'Failed to read NFC tag'}`;
+          scanStatus.textContent = `No tag detected. Please try again or check if your device supports NFC.`;
           scanStatus.style.color = 'red';
         }
       }
@@ -218,7 +218,7 @@ class TeaAddModal extends HTMLElement {
       console.error('Error scanning NFC tag:', error);
       
       if (scanStatus) {
-        scanStatus.textContent = `Error: ${error.message || 'Unknown error scanning NFC tag'}`;
+        scanStatus.textContent = `Unable to read NFC tag. Please try again or use a different method.`;
         scanStatus.style.color = 'red';
       }
     } finally {
@@ -239,13 +239,10 @@ class TeaAddModal extends HTMLElement {
     
     // Get form data
     const teaId = this.shadowRoot.querySelector('#tea-id')?.value.trim();
-    const teaName = this.shadowRoot.querySelector('#tea-name')?.value.trim();
-    const teaCategory = this.shadowRoot.querySelector('#tea-category')?.value;
-    const teaOrigin = this.shadowRoot.querySelector('#tea-origin')?.value.trim();
     
-    // Validate inputs
-    if (!teaId && !teaName) {
-      this._showError('Please enter either a Tea ID or Tea Name');
+    // Validate input
+    if (!teaId) {
+      this._showError('Please enter a Tea ID');
       return;
     }
     
@@ -254,10 +251,7 @@ class TeaAddModal extends HTMLElement {
       bubbles: true,
       composed: true,
       detail: {
-        teaId,
-        teaName,
-        teaCategory,
-        teaOrigin
+        teaId
       }
     }));
     
@@ -578,40 +572,13 @@ class TeaAddModal extends HTMLElement {
             </div>
             
             <div class="form-divider">
-              <span class="form-divider-text">OR ENTER MANUALLY</span>
+              <span class="form-divider-text">OR ENTER TEA ID</span>
             </div>
             
             <form id="add-tea-form">
               <div class="form-group">
                 <label for="tea-id">Tea ID</label>
-                <input type="text" id="tea-id" placeholder="Enter tea ID (e.g., 000, 010)">
-              </div>
-              
-              <div class="form-divider">
-                <span class="form-divider-text">OR</span>
-              </div>
-              
-              <div class="form-group">
-                <label for="tea-name">Tea Name</label>
-                <input type="text" id="tea-name" placeholder="e.g., Dragon Well">
-              </div>
-              
-              <div class="form-group">
-                <label for="tea-category">Category</label>
-                <select id="tea-category">
-                  <option value="Green">Green</option>
-                  <option value="Black">Black</option>
-                  <option value="Oolong">Oolong</option>
-                  <option value="White">White</option>
-                  <option value="Pu-erh">Pu-erh</option>
-                  <option value="Yellow">Yellow</option>
-                  <option value="Herbal">Herbal</option>
-                </select>
-              </div>
-              
-              <div class="form-group">
-                <label for="tea-origin">Origin</label>
-                <input type="text" id="tea-origin" placeholder="e.g., Hangzhou, China">
+                <input type="text" id="tea-id" placeholder="Enter tea ID (e.g., 000, 010)" required>
               </div>
               
               <div class="form-actions">

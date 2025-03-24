@@ -267,21 +267,18 @@ class TeaApp {
   }
   
   async handleAddTeaSubmit(event) {
-    // Extract data from the custom event
-    const { teaId, teaName, teaCategory, teaOrigin } = event.detail;
+    // Extract data from the custom event - now only contains teaId
+    const { teaId } = event.detail;
     
     // Show loader
     this.showLoader();
     
     try {
       if (teaId) {
-        // If tea ID is provided, try to load from file
+        // Load tea from file using the ID
         await this.loadTeaFromId(teaId);
-      } else if (teaName) {
-        // If manual entry, create and add tea
-        await this.addManualTea(teaName, teaCategory, teaOrigin);
       } else {
-        this.showNotification('Please enter either a Tea ID or Tea Name', 3000);
+        this.showNotification('Please enter a Tea ID', 3000);
         this.hideLoader();
         return;
       }
@@ -411,28 +408,6 @@ class TeaApp {
     return id;
   }
   
-  async addManualTea(name, category, origin) {
-    try {
-      // Create basic tea object
-      const teaData = {
-        name,
-        category,
-        origin: origin || 'Unknown',
-        brewTime: this.getDefaultBrewTime(category),
-        temperature: this.getDefaultTemperature(category),
-        description: `A ${category.toLowerCase()} tea from ${origin || 'unknown origin'}.`,
-        tags: [category.toLowerCase()]
-      };
-      
-      return await this.handleTeaLoaded(teaData);
-      
-    } catch (error) {
-      console.error('Error adding manual tea:', error);
-      this.showNotification('Failed to add tea', 3000);
-      this.hideLoader();
-      throw error;
-    }
-  }
 
   handleTeaSelect(data) {
     // Get the tea data from the event
