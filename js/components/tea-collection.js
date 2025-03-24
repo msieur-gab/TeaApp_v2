@@ -1,17 +1,19 @@
 // components/tea-collection.js
-// Enhanced version with fixes for tea circle handling
+// Enhanced tea collection with improved header and theme-based styling
 
 import { teaEvents, TeaEventTypes } from '../services/event-manager.js';
 import TeaTheme from '../utils/tea-theme.js';
 import TeaDatabase from '../services/tea-database.js';
 import TeaCollectionLevels from '../services/tea-collection-levels.js';
+import ColorUtility from '../utils/color-utility.js';
+import { TeaThemeGenerator } from '../utils/theme-generator.js';
 
 class TeaCollection extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     
-    // Improved state management
+    // State management
     this._state = {
       category: 'Green',
       collectedTeas: [],
@@ -21,32 +23,53 @@ class TeaCollection extends HTMLElement {
       renderAttempts: 0
     };
     
+    // Theme colors
+    this._themeColors = {
+      primary: '#7B9070', // Default to Green tea
+      text: '#FFFFFF',
+      light: '#9db293',
+      dark: '#5d6e54'
+    };
+    
     // Bind methods
     this._handleCategoryChange = this._handleCategoryChange.bind(this);
     this._handleTeaAdded = this._handleTeaAdded.bind(this);
     this._handleTeaSelect = this._handleTeaSelect.bind(this);
+    this._handleThemeChange = this._handleThemeChange.bind(this);
   }
 
   connectedCallback() {
     // Get initial category from attribute or default to 'Green'
     this._state.category = this.getAttribute('category') || 'Green';
     
+    // Update theme colors based on category
+    this._updateThemeColors(this._state.category);
+    
     // Initial render
     this.render();
     
-    // Listen for events using the event manager
+    // Listen for events
     teaEvents.on(TeaEventTypes.TEA_ADDED, this._handleTeaAdded);
     teaEvents.on(TeaEventTypes.CATEGORY_CHANGED, this._handleCategoryChange);
     teaEvents.on(TeaEventTypes.TEA_SELECTED, this._handleTeaSelect);
+    teaEvents.on(TeaEventTypes.THEME_CHANGED, this._handleThemeChange);
     
-    // Also listen for the legacy event
+    // Listen specifically for category changes to update pills
+    document.addEventListener('category-changed', () => {
+      // Only update header colors, not the entire component
+      setTimeout(() => this._applyThemeToAppHeader(), 10);
+    });
+    
+    // Legacy event listener for backward compatibility
     this.addEventListener('tea-select', (event) => {
-      // Convert it to use the event manager
       teaEvents.emit(TeaEventTypes.TEA_SELECTED, event.detail);
     });
     
     // Load initial data
     this._loadCategoryData();
+    
+    // Apply theme to app header
+    this._applyThemeToAppHeader();
   }
   
   disconnectedCallback() {
@@ -54,7 +77,9 @@ class TeaCollection extends HTMLElement {
     teaEvents.off(TeaEventTypes.TEA_ADDED, this._handleTeaAdded);
     teaEvents.off(TeaEventTypes.CATEGORY_CHANGED, this._handleCategoryChange);
     teaEvents.off(TeaEventTypes.TEA_SELECTED, this._handleTeaSelect);
+    teaEvents.off(TeaEventTypes.THEME_CHANGED, this._handleThemeChange);
     
+    document.removeEventListener('category-changed', null);
     this.removeEventListener('tea-select', null);
   }
   
@@ -65,7 +90,9 @@ class TeaCollection extends HTMLElement {
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'category' && oldValue !== newValue) {
       this._state.category = newValue;
+      this._updateThemeColors(newValue);
       this._loadCategoryData();
+      this._applyThemeToAppHeader();
     }
   }
   
@@ -78,12 +105,65 @@ class TeaCollection extends HTMLElement {
     if (this._state.category !== value) {
       this._state.category = value;
       this.setAttribute('category', value);
+      this._updateThemeColors(value);
       this._loadCategoryData();
+      this._applyThemeToAppHeader();
       
       // Dispatch category change event via event manager
       teaEvents.emit(TeaEventTypes.CATEGORY_CHANGED, { 
         category: value,
         source: 'tea-collection' 
+      });
+      
+      // Also trigger DOM event for broader compatibility
+      const event = new CustomEvent('category-changed', { 
+        bubbles: true,
+        detail: { category: value }
+      });
+      this.dispatchEvent(event);
+    }
+  }
+  
+  // Update theme colors based on category
+  _updateThemeColors(category) {
+    const baseColor = TeaThemeGenerator.getTeaColor(category);
+    this._themeColors = {
+      primary: baseColor,
+      text: ColorUtility.getOptimalTextColor(baseColor),
+      light: ColorUtility.lightenColor(baseColor, 20),
+      dark: ColorUtility.darkenColor(baseColor, 20)
+    };
+  }
+  
+  // Apply theme to app header
+  _applyThemeToAppHeader() {
+    // Get app header
+    const appHeader = document.querySelector('.app-header');
+    if (appHeader) {
+      // Set background color to match current category
+      appHeader.style.backgroundColor = this._themeColors.primary;
+      appHeader.style.color = this._themeColors.text;
+      
+      // First, get the current category base color
+      const currentCategoryColor = this._themeColors.primary;
+      const darkerColor = ColorUtility.darkenColor(currentCategoryColor, 20);
+      const lighterColor = ColorUtility.lightenColor(currentCategoryColor, 20);
+      
+      // Update category pills
+      const pills = appHeader.querySelectorAll('.category-pill');
+      pills.forEach(pill => {
+        const pillCategory = pill.dataset.category;
+        const isActive = pillCategory === this._state.category;
+        
+        if (isActive) {
+          // Active pill gets darker color
+          pill.style.backgroundColor = darkerColor;
+          pill.style.color = ColorUtility.getOptimalTextColor(darkerColor);
+        } else {
+          // Inactive pills get lighter color of the CURRENT category
+          pill.style.backgroundColor = lighterColor;
+          pill.style.color = ColorUtility.getOptimalTextColor(lighterColor);
+        }
       });
     }
   }
@@ -109,10 +189,26 @@ class TeaCollection extends HTMLElement {
   }
   
   _handleTeaSelect(event) {
-    // Handle tea selection - intentionally not doing anything that would
-    // remove tea circles from the DOM. The tea-detail component will
-    // handle showing the details.
+    // Handle tea selection
     console.log('Tea selected in collection:', event);
+  }
+  
+  _handleThemeChange(event) {
+    // Update theme colors based on the event
+    const { category, colors } = event.detail;
+    
+    this._themeColors = {
+      primary: colors['--tea-primary-color'],
+      text: colors['--tea-text-on-primary'],
+      light: colors['--tea-primary-light'],
+      dark: colors['--tea-primary-dark']
+    };
+    
+    // Re-render with new colors if already open
+    if (this._isOpen) {
+      this.render();
+      this._setupEventListeners();
+    }
   }
   
   async _loadCategoryData() {
@@ -230,15 +326,19 @@ class TeaCollection extends HTMLElement {
   }
   
   render() {
-    this._state.renderAttempts++;
+    // Use a fixed pixel height for the header that doesn't change on scroll
+    const headerHeight = `${Math.round(window.innerHeight * 0.6)}px`;
     
-    // Get theme color for progress bar
-    const categoryColor = TeaTheme.getColor(this._state.category);
-    
+    // Generate styles with dynamic header height and theme colors
     const styles = `
       :host {
         display: block;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        --header-height: ${headerHeight};
+        --primary-color: ${this._themeColors.primary};
+        --text-color: ${this._themeColors.text};
+        --light-color: ${this._themeColors.light};
+        --dark-color: ${this._themeColors.dark};
       }
       
       .collection-container {
@@ -246,104 +346,198 @@ class TeaCollection extends HTMLElement {
       }
       
       .collection-header {
-        margin-bottom: 1.5rem;
+        height: var(--header-height);
+        background-color: var(--primary-color);
+        color: var(--text-color);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Changed to space-between for top/bottom justification */
+        padding: 2rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      
+      .header-bg-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.1;
+        background-image: radial-gradient(circle at 20% 80%, var(--light-color) 0%, transparent 60%),
+                          radial-gradient(circle at 80% 20%, var(--light-color) 0%, transparent 60%);
+      }
+      
+      .header-top-content,
+      .header-bottom-content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
       }
       
       .collection-title {
-        font-size: 0.75rem;
+        font-size: 0.9rem;
         text-transform: uppercase;
-        color: #666;
+        letter-spacing: 1px;
         margin-bottom: 0.5rem;
+        position: relative;
+        font-weight: 600;
       }
       
       .collection-counter {
         display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        padding: 1rem 0;
-        border-top: 1px solid #eee;
-        border-bottom: 1px solid #eee;
+        align-items: flex-start;
+        margin-top: 1rem;
+        margin-bottom: 0;
+        position: relative;
       }
       
       .counter-value {
-        font-size: 2.5rem;
-        font-weight: 300;
-        color: #333;
+        font-size: 5rem;
+        font-weight: 200;
+        line-height: 1;
+        margin-right: 1rem;
       }
       
       .counter-details {
-        font-size: 0.9rem;
-        color: #666;
-        line-height: 1.4;
+        font-size: 1.1rem;
+        opacity: 0.9;
+        line-height: 1.5;
+        padding-top: 0.5rem;
       }
       
       .level-info {
-        margin-top: 1rem;
-        font-size: 0.9rem;
-        color: #555;
-        padding: 0.75rem;
-        background: #f5f8fa;
-        border-radius: 6px;
+        background-color: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+        position: relative;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
       }
       
       .progress-bar-container {
         height: 8px;
-        background-color: #eee;
+        background-color: rgba(255, 255, 255, 0.2);
         border-radius: 4px;
         overflow: hidden;
-        margin: 0.5rem 0;
+        margin: 1rem 0;
       }
       
       .progress-bar {
         height: 100%;
-        background-color: ${categoryColor};
+        background-color: var(--text-color);
         border-radius: 4px;
         transition: width 0.5s ease;
       }
       
+      .progress-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.875rem;
+        opacity: 0.9;
+      }
+      
       .progress-message {
-        margin-top: 0.5rem;
+        margin-top: 1rem;
         font-style: italic;
+        font-size: 0.9rem;
+      }
+      
+      .tea-grid-container {
+        padding: 2rem 1rem;
+        background-color: #f9f9f9;
+        min-height: 100vh;
       }
       
       .tea-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(4, 1fr); /* Always 4 columns as requested */
         gap: 16px;
-        padding: 16px;
         justify-items: center;
         align-items: center;
       }
       
       .loading {
         text-align: center;
-        padding: 2rem;
+        padding: 4rem 0;
         color: #666;
+        font-style: italic;
+      }
+      
+      .scroll-indicator {
+        align-self: center; /* Center in flex container */
+        color: var(--text-color);
+        opacity: 0.7;
+        font-size: 0.9rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        animation: bounce 2s infinite;
+        margin-bottom: 10px;
+      }
+      
+      .scroll-indicator svg {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 8px;
+      }
+      
+      @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-10px);
+        }
+        60% {
+          transform: translateY(-5px);
+        }
       }
       
       @media (min-width: 768px) {
         .tea-grid {
-          grid-template-columns: repeat(5, 1fr);
+          grid-template-columns: repeat(4, 1fr); /* Keep 4 columns on all screen sizes */
+          gap: 24px;
+        }
+        
+        .counter-value {
+          font-size: 7rem;
+        }
+        
+        .counter-details {
+          font-size: 1.3rem;
         }
       }
       
       @media (min-width: 1024px) {
         .tea-grid {
-          grid-template-columns: repeat(6, 1fr);
+          grid-template-columns: repeat(4, 1fr); /* Keep 4 columns on all screen sizes */
+          gap: 32px;
         }
       }
       
-      /* Fix for tea-circle child components */
-      ::slotted(tea-circle),
-      tea-circle {
-        display: block !important;
-        pointer-events: auto !important;
+      @media (max-width: 480px) {
+        .collection-header {
+          padding: 1.5rem;
+        }
+        
+        .counter-value {
+          font-size: 4rem;
+        }
+        
+        .counter-details {
+          font-size: 1rem;
+        }
+        
+        /* Keep 4 columns even on mobile */
+        .tea-grid {
+          grid-template-columns: repeat(4, 1fr);
+          gap: 10px; /* Slightly smaller gap on mobile */
+        }
       }
     `;
-    
-    // Get total count and collected count
-    const totalCount = this._state.totalTeas;
-    const collectedCount = this._state.collectedTeas.filter(t => t.collected).length;
     
     // Calculate progress percentage for next level
     let progressPercentage = 0;
@@ -351,6 +545,10 @@ class TeaCollection extends HTMLElement {
     let nextThreshold = 0;
     
     if (this._state.levelInfo) {
+      // Get total count and collected count
+      const totalCount = this._state.totalTeas;
+      const collectedCount = this._state.collectedTeas.filter(t => t.collected).length;
+      
       if (this._state.levelInfo.nextLevel) {
         // If there is a next level, calculate progress towards it
         currentThreshold = this._state.levelInfo.currentLevel.threshold || 0;
@@ -370,35 +568,60 @@ class TeaCollection extends HTMLElement {
       <style>${styles}</style>
       <section class="collection-container">
         <header class="collection-header">
-          <p class="collection-title">You have collected</p>
-          <div class="collection-counter">
-            <div class="counter-value">${collectedCount}</div>
-            <div class="counter-details">
-              out of the available ${totalCount}<br>
-              ${this._state.category} teas<br>
-              from our collection
+          <div class="header-bg-pattern"></div>
+          
+          <div class="header-top-content">
+            <p class="collection-title">YOUR ${this._state.category.toUpperCase()} TEA COLLECTION</p>
+            
+            <div class="collection-counter">
+              <div class="counter-value">${this._state.collectedTeas.filter(t => t.collected).length}</div>
+              <div class="counter-details">
+                out of the available ${this._state.totalTeas}<br>
+                ${this._state.category} teas<br>
+                from our collection
+              </div>
             </div>
           </div>
-          ${this._state.levelInfo ? `
-            <div class="level-info">
-              <div><strong>Current Level:</strong> ${this._state.levelInfo.currentLevel.title}</div>
-              <div><strong>Next Level:</strong> ${this._state.levelInfo.nextLevel?.title || 'Collection Complete!'}</div>
-              
-              <div class="progress-bar-container">
-                <div class="progress-bar" style="width: ${progressPercentage}%"></div>
+          
+          <div class="header-bottom-content">
+            ${this._state.levelInfo ? `
+              <div class="level-info">
+                <div><strong>Current Level:</strong> ${this._state.levelInfo.currentLevel.title}</div>
+                <div><strong>Next Level:</strong> ${this._state.levelInfo.nextLevel?.title || 'Collection Complete!'}</div>
+                
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: ${progressPercentage}%"></div>
+                </div>
+                
+                <div class="progress-labels">
+                  <span class="progress-label">${this._state.levelInfo.currentLevel.title}</span>
+                  <span class="progress-count">
+                    ${this._state.collectedTeas.filter(t => t.collected).length}/${this._state.levelInfo.nextLevel?.threshold || this._state.totalTeas}
+                  </span>
+                </div>
+                
+                <div class="progress-message">${this._state.levelInfo.progressMessage}</div>
               </div>
-              
-              <div class="progress-message">${this._state.levelInfo.progressMessage}</div>
+            ` : ''}
+            
+            <div class="scroll-indicator">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+              <span>Scroll to explore</span>
             </div>
-          ` : ''}
+          </div>
         </header>
         
-        ${this._renderTeas()}
+        <div class="tea-grid-container">
+          ${this._renderTeas()}
+        </div>
       </section>
     `;
   }
 }
 
+// This is the same class name as before - no renaming
 customElements.define('tea-collection', TeaCollection);
 
 export default TeaCollection;

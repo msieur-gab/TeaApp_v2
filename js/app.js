@@ -205,6 +205,8 @@ class TeaApp {
       }
     });
   }
+
+  
   
   // Event handlers
   handleCategoryChange(event) {

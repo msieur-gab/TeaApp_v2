@@ -27,6 +27,9 @@ class ProgressModal extends HTMLElement {
   connectedCallback() {
     this.render();
     this._addEventListeners();
+    
+    // Listen for theme changes
+    document.addEventListener('tea-theme-changed', this._handleThemeChange);
   }
   
   disconnectedCallback() {
