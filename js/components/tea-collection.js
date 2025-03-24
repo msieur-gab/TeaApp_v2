@@ -35,6 +35,7 @@ class TeaCollection extends HTMLElement {
     this._handleCategoryChange = this._handleCategoryChange.bind(this);
     this._handleTeaAdded = this._handleTeaAdded.bind(this);
     this._handleTeaSelect = this._handleTeaSelect.bind(this);
+    this._handleThemeChange = this._handleThemeChange.bind(this);
   }
 
   connectedCallback() {
@@ -51,6 +52,7 @@ class TeaCollection extends HTMLElement {
     teaEvents.on(TeaEventTypes.TEA_ADDED, this._handleTeaAdded);
     teaEvents.on(TeaEventTypes.CATEGORY_CHANGED, this._handleCategoryChange);
     teaEvents.on(TeaEventTypes.TEA_SELECTED, this._handleTeaSelect);
+    teaEvents.on(TeaEventTypes.THEME_CHANGED, this._handleThemeChange);
     
     // Listen specifically for category changes to update pills
     document.addEventListener('category-changed', () => {
@@ -75,6 +77,7 @@ class TeaCollection extends HTMLElement {
     teaEvents.off(TeaEventTypes.TEA_ADDED, this._handleTeaAdded);
     teaEvents.off(TeaEventTypes.CATEGORY_CHANGED, this._handleCategoryChange);
     teaEvents.off(TeaEventTypes.TEA_SELECTED, this._handleTeaSelect);
+    teaEvents.off(TeaEventTypes.THEME_CHANGED, this._handleThemeChange);
     
     document.removeEventListener('category-changed', null);
     this.removeEventListener('tea-select', null);
@@ -188,6 +191,24 @@ class TeaCollection extends HTMLElement {
   _handleTeaSelect(event) {
     // Handle tea selection
     console.log('Tea selected in collection:', event);
+  }
+  
+  _handleThemeChange(event) {
+    // Update theme colors based on the event
+    const { category, colors } = event.detail;
+    
+    this._themeColors = {
+      primary: colors['--tea-primary-color'],
+      text: colors['--tea-text-on-primary'],
+      light: colors['--tea-primary-light'],
+      dark: colors['--tea-primary-dark']
+    };
+    
+    // Re-render with new colors if already open
+    if (this._isOpen) {
+      this.render();
+      this._setupEventListeners();
+    }
   }
   
   async _loadCategoryData() {

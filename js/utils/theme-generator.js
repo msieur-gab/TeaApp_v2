@@ -75,7 +75,7 @@ class TeaThemeGenerator {
             '--tea-bg-light': ColorUtility.lightenColor(baseColor, 35),
             '--tea-bg-subtle': ColorUtility.lightenColor(baseColor, 40),
             
-            // Add legacy color variables for backward compatibility
+            // Legacy variables for backward compatibility
             '--primary-color': baseColor,
             '--background-color': baseColor,
             '--text-color': textColor,
