@@ -1,0 +1,60 @@
+/* css/swipe-nav-styles.css */
+
+/* Optimize animations with hardware acceleration */
+tea-collection {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  /* Allow smooth transitions when not being swiped */
+  transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1.0);
+}
+
+/* Make sure the main content can handle positioned children */
+main {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden; /* Prevent horizontal scroll during animations */
+  background-color: inherit; /* Ensure it inherits the body background */
+}
+
+/* Ensure tea-collection fills the main container */
+tea-collection {
+  width: 100%;
+  min-height: 100vh;
+  background-color: inherit; /* Inherit background to prevent gaps */
+}
+
+/* Reduce motion option for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  tea-collection {
+    transition-duration: 0.1s;
+  }
+  
+  .swipe-hint {
+    display: none !important;
+  }
+}
+
+/* Enhanced touch handling for better swipe detection */
+html, body {
+  touch-action: pan-y; /* Allow vertical scrolling but improve horizontal detection */
+  overscroll-behavior-x: none; /* Prevent horizontal overscroll effects */
+}
+
+/* Fix for potential Safari issues */
+@supports (-webkit-touch-callout: none) {
+  tea-collection {
+    /* Safari-specific optimizations */
+    -webkit-transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+  }
+}
+
+/* Ensure collections are positioned properly when animated */
+tea-collection.animating {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
