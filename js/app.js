@@ -204,58 +204,98 @@ class TeaApp {
     });
   }
   
+  async _processTeaScan(url, sourceType) {
+    try {
+      this.showLoader();
+      
+      // Fetch the tea data
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to load tea data from ${sourceType}: ${response.status}`);
+      }
+      
+      const teaData = await response.json();
+      
+      // Add the tea to the collection
+      await this.handleTeaLoaded(teaData);
+      
+      this.hideLoader();
+      this.showNotification(`Added ${teaData.name} to your collection!`, 3000);
+      return true;
+    } catch (error) {
+      console.error(`Error processing ${sourceType}:`, error);
+      this.hideLoader();
+      
+      // Customize error message based on source type
+      if (sourceType === 'QR code') {
+        this.showNotification('Tea not found. Please ensure you\'re scanning a valid tea QR code.', 3000);
+      } else {
+        this.showNotification('Tea not found. Please ensure you\'re scanning a valid tea tag.', 3000);
+      }
+      return false;
+    }
+  }
+  
   async handleQrScan(event) {
-    try {
-      this.showLoader();
-      // Extract the tea URL from the QR code
-      const teaUrl = event.detail.url;
-      
-      // Fetch the tea data
-      const response = await fetch(teaUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to load tea data from QR code: ${response.status}`);
-      }
-      
-      const teaData = await response.json();
-      
-      // Add the tea to the collection
-      await this.handleTeaLoaded(teaData);
-      
-      this.hideLoader();
-      this.showNotification(`Added ${teaData.name} to your collection!`, 3000);
-    } catch (error) {
-      console.error('Error processing QR code:', error);
-      this.hideLoader();
-      this.showNotification('Tea not found. Please ensure you\'re scanning a valid tea QR code.', 3000);
-    }
+    return this._processTeaScan(event.detail.url, 'QR code');
   }
-
-  // Handle NFC scan event from the tea-add-modal
+  
   async handleNfcScan(event) {
-    try {
-      this.showLoader();
-      // Extract the tea URL from the NFC tag
-      const teaUrl = event.detail.url;
-      
-      // Fetch the tea data
-      const response = await fetch(teaUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to load tea data from NFC tag: ${response.status}`);
-      }
-      
-      const teaData = await response.json();
-      
-      // Add the tea to the collection
-      await this.handleTeaLoaded(teaData);
-      
-      this.hideLoader();
-      this.showNotification(`Added ${teaData.name} to your collection!`, 3000);
-    } catch (error) {
-      console.error('Error processing NFC tag:', error);
-      this.hideLoader();
-      this.showNotification('Failed to load tea data from NFC tag', 3000);
-    }
+    return this._processTeaScan(event.detail.url, 'NFC tag');
   }
+  
+  // async handleQrScan(event) {
+  //   try {
+  //     this.showLoader();
+  //     // Extract the tea URL from the QR code
+  //     const teaUrl = event.detail.url;
+      
+  //     // Fetch the tea data
+  //     const response = await fetch(teaUrl);
+  //     if (!response.ok) {
+  //       throw new Error(`Failed to load tea data from QR code: ${response.status}`);
+  //     }
+      
+  //     const teaData = await response.json();
+      
+  //     // Add the tea to the collection
+  //     await this.handleTeaLoaded(teaData);
+      
+  //     this.hideLoader();
+  //     this.showNotification(`Added ${teaData.name} to your collection!`, 3000);
+  //   } catch (error) {
+  //     console.error('Error processing QR code:', error);
+  //     this.hideLoader();
+  //     this.showNotification('Tea not found. Please ensure you\'re scanning a valid tea QR code.', 3000);
+  //   }
+  // }
+
+  // // Handle NFC scan event from the tea-add-modal
+  // async handleNfcScan(event) {
+  //   try {
+  //     this.showLoader();
+  //     // Extract the tea URL from the NFC tag
+  //     const teaUrl = event.detail.url;
+      
+  //     // Fetch the tea data
+  //     const response = await fetch(teaUrl);
+  //     if (!response.ok) {
+  //       throw new Error(`Failed to load tea data from NFC tag: ${response.status}`);
+  //     }
+      
+  //     const teaData = await response.json();
+      
+  //     // Add the tea to the collection
+  //     await this.handleTeaLoaded(teaData);
+      
+  //     this.hideLoader();
+  //     this.showNotification(`Added ${teaData.name} to your collection!`, 3000);
+  //   } catch (error) {
+  //     console.error('Error processing NFC tag:', error);
+  //     this.hideLoader();
+  //     this.showNotification('Failed to load tea data from NFC tag', 3000);
+  //   }
+  // }
 
   // Event handlers
   handleCategoryChange(event) {
