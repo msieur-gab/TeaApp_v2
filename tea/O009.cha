@@ -1,0 +1,29 @@
+{
+  "name": "Li Shan",
+  "category": "Oolong",
+  "origin": "Li Shan (Pear Mountain), Taiwan",
+  "description": "Li Shan is one of Taiwan's most prestigious high mountain oolongs, grown at elevations above 2000 meters. The extreme altitude, cool climate, and frequent mist create ideal growing conditions that produce a tea of exceptional complexity and refinement.",
+  "brewTime": "3:00",
+  "temperature": "85°C",
+  "notes": "Prized for its delicate sweetness, pronounced floral character, and buttery mouthfeel. The high elevation contributes to its complex flavor profile and remarkable clarity. Each infusion reveals new layers of flavor with a long, sweet finish.",
+  "tags": ["high mountain", "premium", "floral", "sweet", "gaoshan"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring/Winter",
+  "processingMethod": "Withered, bruised, lightly oxidized, minimal roast",
+  "flavorProfile": ["orchid", "butter", "vanilla", "pear", "alpine flowers"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within a year of harvest.",
+  "elevation": "2000-2600 meters",
+  "oxidationLevel": "Light (15-25%)",
+  "roastLevel": "Very Light",
+  "classification": "Gaoshan (High Mountain) Oolong",
+  "harvestFrequency": "Limited to 1-2 harvests per year due to extreme elevation"
+} 

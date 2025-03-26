@@ -1,0 +1,29 @@
+{
+  "name": "Aged White Tea",
+  "category": "White",
+  "origin": "Fujian Province, China",
+  "description": "Aged white tea is a traditional Chinese treasure that has been carefully stored for several years. As white tea ages, it develops deeper, more complex flavors while retaining its smooth character. This particular tea has been aged for 5+ years.",
+  "brewTime": "5:30",
+  "temperature": "90°C",
+  "notes": "Aging transforms white tea into a deeper, more complex experience. This aged white tea offers notes of dark honey, dried fruits, wood, and a pleasant medicinal quality. The liquor is amber to reddish with a smooth, sweet finish.",
+  "tags": ["aged", "complex", "medicinal", "sweet", "warming"],
+  
+  "westernBrewTime": "5:30",
+  "westernTemperature": "90°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "30",
+  "gongfuTemperature": "95°C",
+  "gongfuLeafRatio": "6g per 100ml",
+  
+  "harvestDate": "Aged 5+ years",
+  "processingMethod": "Withered and air-dried, naturally aged",
+  "flavorProfile": ["dark honey", "dried dates", "wood", "medicinal herbs", "spice"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Continue storing in airtight container away from light, moisture, and strong odors.",
+  "elevation": "Various",
+  "oxidationLevel": "Medium (naturally oxidized through aging)",
+  "alternativeNames": "Lao Bai Cha",
+  "uniqueFeature": "Naturally aged for 5+ years, developing medicinal properties valued in traditional Chinese medicine",
+  "chineseProverb": "One year tea, three years medicine, seven years treasure"
+} 

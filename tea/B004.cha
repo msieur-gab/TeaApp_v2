@@ -1,0 +1,29 @@
+{
+  "name": "Dian Hong",
+  "category": "Black",
+  "origin": "Yunnan Province, China",
+  "description": "Dian Hong (Yunnan Black) is a distinctive black tea from Yunnan province, made from the same broad-leaf tea varietal used for puer. First created in the 1930s, it's known for its rich, malty character with abundant golden tips. The large leaf size and unique terroir create a black tea unlike any other.",
+  "brewTime": "3:30",
+  "temperature": "95°C",
+  "notes": "A robust black tea with a distinctive character derived from Yunnan's unique terroir. Offers a perfect balance of rich malty notes with honey sweetness and subtle peppery, cocoa undertones. The liquor is deep red-amber with a smooth, thick texture and lingering sweet finish.",
+  "tags": ["yunnan", "golden tips", "malty", "honey", "peppery"],
+  
+  "westernBrewTime": "3:30",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "6g per 100ml",
+  
+  "harvestDate": "Spring/Summer",
+  "processingMethod": "Traditional black tea processing adapted for large-leaf varietal",
+  "flavorProfile": ["malt", "honey", "cocoa", "black pepper", "sweet potato"],
+  "caffeineLevel": "Medium-High",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 1-2 years.",
+  "elevation": "1200-2000 meters",
+  "oxidationLevel": "Fully oxidized",
+  "uniqueFeature": "Made from the same broad-leaf varietal (Camellia sinensis var. assamica) used for puer tea",
+  "alternativeNames": "Yunnan Black, Yunnan Gold",
+  "varieties": "Includes Golden Needle, Golden Bud, and other grades based on tip content"
+} 

@@ -1,0 +1,28 @@
+{
+  "name": "Da Ye Qing",
+  "category": "Yellow",
+  "origin": "Guangxi Province, China",
+  "description": "Da Ye Qing (Big Leaf Green) is a yellow tea from Guangxi Province that, despite its name, undergoes the traditional yellowing process. Made from a large-leaf cultivar, this tea offers a unique character that showcases regional processing techniques.",
+  "brewTime": "3:30",
+  "temperature": "85°C",
+  "notes": "A robust yellow tea with a fuller body than most others in this category. The large leaves create a complex infusion with good depth. Offers notes of toasted grains, sweet potato, and light honey with a smooth, satisfying finish.",
+  "tags": ["large leaf", "robust", "sweet", "complex", "regional"],
+  
+  "westernBrewTime": "3:30",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["toasted grains", "sweet potato", "honey", "chestnut", "dried fruit"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "400-800 meters",
+  "oxidationLevel": "Light with moderate yellowing",
+  "uniqueFeature": "Made from a large-leaf cultivar, creating a more robust yellow tea",
+  "processingNote": "Traditional yellowing process adapted for larger leaves"
+} 

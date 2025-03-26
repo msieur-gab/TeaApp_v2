@@ -1,0 +1,30 @@
+{
+  "name": "Yiwu Gushu Sheng",
+  "category": "Puer",
+  "origin": "Yiwu Mountain, Yunnan, China",
+  "description": "Yiwu is one of the six famous tea mountains and historically the most renowned area for puer production. This sheng (raw) puer comes from ancient trees (gushu) and exemplifies the classic Yiwu character prized for its refined sweetness and elegant aging.",
+  "brewTime": "10-20",
+  "temperature": "95°C",
+  "notes": "Renowned for its elegant character with a perfect balance of sweetness and subtle bitterness. Offers a distinctive honey-orchid aroma with notes of apricot, wildflowers, and a gentle, lingering sweetness. The mouthfeel is smooth and refined with excellent huigan (returning sweetness).",
+  "tags": ["sheng", "ancient tree", "sweet", "elegant", "classic"],
+  
+  "westernBrewTime": "2:30",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "10",
+  "gongfuTemperature": "95°C",
+  "gongfuLeafRatio": "7g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Sun-dried, non-fermented (sheng/raw)",
+  "flavorProfile": ["honey", "apricot", "orchid", "wildflowers", "sugarcane"],
+  "caffeineLevel": "Medium-High",
+  "storageInstructions": "Store in breathable container away from strong odors. Humidity 60-70% ideal for aging.",
+  "elevation": "1200-1600 meters",
+  "fermentationLevel": "None (raw/sheng)",
+  "agingPotential": "Excellent, known for graceful aging with increasing sweetness and complexity",
+  "treeAge": "100-400 years (gushu/ancient trees)",
+  "compression": "Cake (bing)",
+  "uniqueFeature": "Historically the most prestigious of the six famous tea mountains, known for elegant sweetness"
+} 

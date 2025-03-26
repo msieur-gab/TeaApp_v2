@@ -1,0 +1,28 @@
+{
+  "name": "Huo Shan Huang Ya",
+  "category": "Yellow",
+  "origin": "Huoshan County, Anhui Province, China",
+  "description": "Huo Shan Huang Ya is a traditional yellow tea from the Dabie Mountains in Anhui Province. This tea consists of early spring buds and young leaves that undergo a careful yellowing process to develop its characteristic flavor.",
+  "brewTime": "3:15",
+  "temperature": "80°C",
+  "notes": "A balanced yellow tea with a smooth, clean taste. The yellowing process creates a distinctive mellow sweetness with reduced grassiness. Offers notes of toasted grains, sweet corn, and light florals with a refreshing finish.",
+  "tags": ["traditional", "sweet", "mellow", "refreshing", "spring"],
+  
+  "westernBrewTime": "3:15",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Early Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["toasted grains", "sweet corn", "chestnut", "light floral", "honey"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "500-800 meters",
+  "oxidationLevel": "Very Light with slight yellowing",
+  "uniqueFeature": "Grown in the misty Dabie Mountains, creating a distinctive terroir",
+  "processingNote": "Traditional yellowing process requires precise skill and timing"
+} 

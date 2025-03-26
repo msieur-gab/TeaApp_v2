@@ -1,0 +1,29 @@
+{
+  "name": "Moonlight White",
+  "category": "White",
+  "origin": "Yunnan Province, China",
+  "description": "Moonlight White (Yue Guang Bai) is a unique white tea from Yunnan, made from the same large-leaf varietal used for puerh tea. The processing creates a tea with white tea's gentle character but with some of the depth and complexity associated with Yunnan teas.",
+  "brewTime": "4:30",
+  "temperature": "85°C",
+  "notes": "A fascinating fusion of white tea delicacy with Yunnan character. The leaves show a distinctive pattern of silver and dark brown, resembling moonlight. Offers notes of honey, wildflowers, and forest fruits with a smooth, sweet finish.",
+  "tags": ["yunnan", "sweet", "complex", "unique", "honey"],
+  
+  "westernBrewTime": "4:30",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "6g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered in sunlight and moonlight, air-dried",
+  "flavorProfile": ["honey", "wildflowers", "forest fruits", "sugarcane", "subtle spice"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Ages well like puerh.",
+  "elevation": "1200-1800 meters",
+  "oxidationLevel": "Light (10-15%)",
+  "alternativeNames": "Yue Guang Bai",
+  "uniqueFeature": "Made from large-leaf assamica varietal typically used for puerh tea",
+  "agingPotential": "Excellent candidate for aging, developing deeper honey and fruit notes"
+} 

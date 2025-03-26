@@ -1,0 +1,29 @@
+{
+  "name": "Lapsang Souchong",
+  "category": "Black",
+  "origin": "Wuyi Mountains, Fujian Province, China",
+  "description": "Lapsang Souchong is China's first black tea, with a history dating back to the late 16th century. The traditional version is famous for its distinctive smoky character, created by drying the leaves over pinewood fires. Authentic Zheng Shan (True Mountain) Lapsang Souchong is more subtle than its heavily smoked export counterparts.",
+  "brewTime": "3:30",
+  "temperature": "95°C",
+  "notes": "The original smoked tea with a character ranging from subtly pine-influenced to intensely smoky depending on the producer. Traditional versions offer complex notes of longan fruit, pine, and dark chocolate beneath the smoke. The liquor is deep red-amber with a smooth, clean finish.",
+  "tags": ["smoked", "pine", "wuyi", "historic", "distinctive"],
+  
+  "westernBrewTime": "3:30",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring/Summer",
+  "processingMethod": "Withered, rolled, oxidized, then dried over pinewood fires",
+  "flavorProfile": ["pine smoke", "longan fruit", "dark chocolate", "caramel", "resin"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light and moisture. Note that the smoke aroma may transfer to other teas stored nearby.",
+  "elevation": "800-1200 meters",
+  "oxidationLevel": "Fully oxidized",
+  "uniqueFeature": "Dried over pinewood fires, creating its distinctive smoky character",
+  "alternativeNames": "Zheng Shan Xiao Zhong",
+  "historicalSignificance": "China's first black tea, created during the late Ming Dynasty when armies passing through delayed the traditional production of green tea"
+} 

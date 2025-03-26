@@ -1,0 +1,28 @@
+{
+  "name": "Gunpowder",
+  "category": "Green",
+  "origin": "Zhejiang Province, China",
+  "description": "Gunpowder tea is one of China's oldest and most exported green teas, named for its distinctive appearance of tightly rolled pellets resembling old-fashioned gunpowder. This rolling technique helps preserve freshness and creates a strong, robust flavor profile unusual for green tea.",
+  "brewTime": "2:30",
+  "temperature": "80°C",
+  "notes": "A bold, robust green tea with a stronger character than most of its counterparts. The tightly rolled leaves unfurl dramatically when brewed, releasing smoky, grassy flavors with a pleasant astringency. The liquor is clear and pale golden with a clean, slightly mineral finish.",
+  "tags": ["rolled", "strong", "smoky", "bold", "traditional"],
+  
+  "westernBrewTime": "2:30",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring/Summer",
+  "processingMethod": "Withered, steamed, rolled, dried",
+  "flavorProfile": ["smoky", "grassy", "mineral", "slightly bitter", "toasted"],
+  "caffeineLevel": "Medium-High",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Keeps well due to tight rolling.",
+  "elevation": "Various",
+  "uniqueFeature": "Tightly rolled into small pellets that dramatically unfurl when brewed",
+  "alternativeNames": "Zhu Cha (Pearl tea)",
+  "historicalSignificance": "One of the first Chinese teas exported to the West in significant quantities"
+} 

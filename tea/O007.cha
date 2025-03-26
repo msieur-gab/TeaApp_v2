@@ -1,0 +1,28 @@
+{
+  "name": "Rougui",
+  "category": "Oolong",
+  "origin": "Wuyi Mountains, Fujian, China",
+  "description": "Rougui (Cinnamon) is a classic Wuyi rock oolong known for its distinctive cinnamon-like aroma and taste. This tea combines the characteristic mineral notes of Wuyi yancha with a unique spicy sweetness.",
+  "brewTime": "4:00",
+  "temperature": "95°C",
+  "notes": "The name refers to the cinnamon-like quality in its complex profile. Good Rougui balances mineral notes with a warming spice character and sweet fruit undertones. The tea offers a distinctive 'yan yun' (rock rhyme) and lingering finish.",
+  "tags": ["wuyi", "rock tea", "spicy", "mineral", "yan cha"],
+  
+  "westernBrewTime": "4:00",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "100°C",
+  "gongfuLeafRatio": "7g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered, bruised, partially oxidized, roasted",
+  "flavorProfile": ["cinnamon", "mineral", "dark fruits", "caramel", "roasted grains"],
+  "caffeineLevel": "Medium-High",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "500-800 meters",
+  "oxidationLevel": "Medium-Heavy (50-70%)",
+  "roastLevel": "Medium to Heavy",
+  "alternativeNames": "Cassia Rock"
+} 

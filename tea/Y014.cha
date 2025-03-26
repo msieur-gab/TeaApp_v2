@@ -1,0 +1,28 @@
+{
+  "name": "Huang Da Cha",
+  "category": "Yellow",
+  "origin": "Guangxi Province, China",
+  "description": "Huang Da Cha (Yellow Big Tea) is a traditional yellow tea from Guangxi Province. Made from larger leaves than most yellow teas, it undergoes the classic yellowing process to create a robust yet smooth flavor profile.",
+  "brewTime": "3:45",
+  "temperature": "85°C",
+  "notes": "A fuller-bodied yellow tea with good depth and complexity. The larger leaves create a more robust infusion while maintaining the characteristic smoothness of yellow tea. Offers notes of toasted grains, sweet potato, and light honey.",
+  "tags": ["robust", "smooth", "sweet", "toasty", "regional"],
+  
+  "westernBrewTime": "3:45",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["toasted grains", "sweet potato", "honey", "walnut", "dried fruit"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "400-700 meters",
+  "oxidationLevel": "Light with moderate yellowing",
+  "uniqueFeature": "Made from larger leaves than typical yellow teas",
+  "processingNote": "Traditional yellowing process adapted for larger leaves"
+} 

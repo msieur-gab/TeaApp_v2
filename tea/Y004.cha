@@ -1,0 +1,28 @@
+{
+  "name": "Mo Gan Huang Ya",
+  "category": "Yellow",
+  "origin": "Moganshan, Zhejiang Province, China",
+  "description": "Mo Gan Huang Ya is a yellow tea from the Mogan Mountains in Zhejiang Province. This tea consists of early spring buds that undergo a careful yellowing process, creating a unique flavor profile that bridges green and yellow tea characteristics.",
+  "brewTime": "3:00",
+  "temperature": "80°C",
+  "notes": "A delicate yellow tea with a fresh, clean character. The careful processing creates a smooth, sweet cup with minimal astringency. Offers notes of fresh vegetables, sweet corn, and light florals with a refreshing finish.",
+  "tags": ["delicate", "sweet", "fresh", "spring", "buds"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Early Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["sweet corn", "fresh vegetables", "orchid", "honey", "bamboo"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "300-700 meters",
+  "oxidationLevel": "Very Light with slight yellowing",
+  "uniqueFeature": "Grown in the scenic Mogan Mountains, known for their biodiversity",
+  "appearance": "Small, uniform buds with a distinctive yellow-green hue"
+} 

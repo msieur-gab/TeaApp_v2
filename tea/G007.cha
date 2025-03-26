@@ -1,0 +1,28 @@
+{
+  "name": "Genmaicha",
+  "category": "Green",
+  "origin": "Japan",
+  "description": "Genmaicha is a Japanese green tea blended with roasted brown rice, some of which pops during roasting to resemble popcorn. Originally consumed by the poor to extend tea supplies, it has become popular worldwide for its unique toasty flavor and comforting character.",
+  "brewTime": "2:00",
+  "temperature": "85°C",
+  "notes": "A satisfying blend of green tea and roasted rice with a distinctive toasty character. The sencha base provides fresh, grassy notes while the roasted rice adds warmth with popcorn and nutty flavors. The liquor is light yellow-green with a clean finish and gentle sweetness.",
+  "tags": ["toasty", "rice", "comforting", "everyday", "accessible"],
+  
+  "westernBrewTime": "2:00",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "30",
+  "gongfuTemperature": "80°C",
+  "gongfuLeafRatio": "6g per 100ml",
+  
+  "harvestDate": "Various",
+  "processingMethod": "Sencha blended with roasted brown rice",
+  "flavorProfile": ["toasted rice", "popcorn", "fresh grass", "nuts", "subtle sweetness"],
+  "caffeineLevel": "Low-Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 1 year.",
+  "elevation": "Various",
+  "uniqueFeature": "Contains roasted brown rice, some of which pops during roasting to resemble popcorn",
+  "alternativeNames": "Popcorn tea",
+  "culturalSignificance": "Originally a peasant's drink to extend tea supplies, now enjoyed for its distinctive flavor"
+} 

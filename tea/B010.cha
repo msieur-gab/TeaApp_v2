@@ -1,0 +1,29 @@
+{
+  "name": "Zhengshan Xiaozhong Unsmoked",
+  "category": "Black",
+  "origin": "Wuyi Mountains, Fujian Province, China",
+  "description": "Unsmoked Zhengshan Xiaozhong is the original form of Lapsang Souchong without the pine smoke influence. This traditional version showcases the natural character of the tea from the Wuyi Mountains, with a complex fruity-sweet profile that reveals why this was one of China's first and most celebrated black teas.",
+  "brewTime": "3:00",
+  "temperature": "90°C",
+  "notes": "The original form of Lapsang Souchong without smoke, revealing its true character. Offers a remarkably complex profile with notes of longan fruit, dark honey, orchid, and pine forest. The liquor is bright amber-red with a smooth texture and lingering sweet finish.",
+  "tags": ["wuyi", "unsmoked", "fruity", "complex", "traditional"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "90°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "15",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Traditional black tea processing without the smoking step",
+  "flavorProfile": ["longan fruit", "dark honey", "orchid", "pine forest", "cacao"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 1-2 years.",
+  "elevation": "800-1200 meters",
+  "oxidationLevel": "Fully oxidized",
+  "uniqueFeature": "The original form of Lapsang Souchong without the pine smoke influence",
+  "alternativeNames": "Unsmoked Lapsang Souchong, Original Zhengshan Xiaozhong",
+  "historicalSignificance": "Represents the original character of one of China's first black teas before export versions became heavily smoked"
+} 

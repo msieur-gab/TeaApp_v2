@@ -1,0 +1,28 @@
+{
+  "name": "Bi Luo Chun",
+  "category": "Green",
+  "origin": "Dongting Mountain, Jiangsu Province, China",
+  "description": "Bi Luo Chun ('Green Snail Spring') is one of China's most famous green teas, known for its tiny, spiral-shaped leaves covered in fine white down. Traditionally grown alongside fruit trees, the tea absorbs the fragrance of the fruit blossoms, contributing to its distinctive aroma.",
+  "brewTime": "2:00",
+  "temperature": "80°C",
+  "notes": "Renowned for its intense fragrance despite its delicate appearance. The tiny leaves unfurl to release a complex bouquet of floral and fruity notes with a sweet, vegetal base. The liquor is pale yellow with a fresh, clean finish and remarkable depth of flavor.",
+  "tags": ["aromatic", "delicate", "fruity", "premium", "downy"],
+  
+  "westernBrewTime": "2:00",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "15",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "4g per 100ml",
+  
+  "harvestDate": "Early spring",
+  "processingMethod": "Hand-picked, withered, pan-fired, rolled",
+  "flavorProfile": ["orchid", "peach", "sweet grass", "chestnut", "fresh vegetables"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 6-12 months of harvest.",
+  "elevation": "100-500 meters",
+  "uniqueFeature": "Traditionally grown alongside fruit trees (peach, apricot, plum) which impart subtle fruity notes",
+  "alternativeNames": "Green Snail Spring",
+  "harvestingStandard": "Only the bud and first leaf are picked, yielding approximately 20,000 leaf sets to make one kilogram"
+} 

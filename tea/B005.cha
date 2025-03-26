@@ -1,0 +1,29 @@
+{
+  "name": "Zheng He Hong Cha",
+  "category": "Black",
+  "origin": "Zheng He County, Fujian Province, China",
+  "description": "Zheng He Hong Cha is a distinctive black tea from Fujian province, named after the famous Ming Dynasty admiral and explorer. This tea combines the rich, malty character typical of Chinese black teas with unique fruity notes and a natural sweetness that sets it apart from other Fujian black teas.",
+  "brewTime": "3:00",
+  "temperature": "95°C",
+  "notes": "A well-balanced black tea with a distinctive fruity character. Offers a smooth, full body with prominent notes of longan fruit, jujube (Chinese date), and brown sugar. The liquor is bright amber with excellent clarity and a clean, sweet finish with minimal astringency.",
+  "tags": ["fujian", "fruity", "sweet", "smooth", "balanced"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Traditional black tea processing with careful oxidation",
+  "flavorProfile": ["longan fruit", "jujube", "brown sugar", "malt", "cinnamon"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 1-2 years.",
+  "elevation": "500-800 meters",
+  "oxidationLevel": "Fully oxidized",
+  "uniqueFeature": "Named after Admiral Zheng He, the famous Ming Dynasty explorer",
+  "alternativeNames": "Zheng He Black Tea",
+  "culturalSignificance": "Represents the maritime history of Fujian province, a major center of tea trade"
+} 

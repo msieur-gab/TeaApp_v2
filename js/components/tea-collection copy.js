@@ -7,7 +7,6 @@ import TeaDatabase from '../services/tea-database.js';
 import TeaCollectionLevels from '../services/tea-collection-levels.js';
 import ColorUtility from '../utils/color-utility.js';
 import { TeaThemeGenerator } from '../utils/theme-generator.js';
-import '../components/tea-progress.js';
 
 class TeaCollection extends HTMLElement {
   constructor() {
@@ -228,11 +227,6 @@ class TeaCollection extends HTMLElement {
       
       // Update the DOM
       this.render();
-
-      const progressComponent = this.shadowRoot.querySelector('tea-progress');
-if (progressComponent) {
-  progressComponent.updateProgress(this._state.collectedTeas.filter(t => t.collected).length, this._state.totalTeas);
-}
       
       // Trigger animation after render
       setTimeout(() => {
@@ -589,13 +583,26 @@ if (progressComponent) {
             </div>
           </div>
           
-       
-
-          <tea-progress 
-        category="${this._state.category}" 
-        current="${this._state.collectedTeas.filter(t => t.collected).length}" 
-        total="${this._state.totalTeas}">
-      </tea-progress>
+          <div class="header-bottom-content">
+            ${this._state.levelInfo ? `
+              <div class="level-info">
+                <div><strong>Current Level:</strong> ${this._state.levelInfo.currentLevel.title}</div>
+                <div><strong>Next Level:</strong> ${this._state.levelInfo.nextLevel?.title || 'Collection Complete!'}</div>
+                
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: ${progressPercentage}%"></div>
+                </div>
+                
+                <div class="progress-labels">
+                  <span class="progress-label">${this._state.levelInfo.currentLevel.title}</span>
+                  <span class="progress-count">
+                    ${this._state.collectedTeas.filter(t => t.collected).length}/${this._state.levelInfo.nextLevel?.threshold || this._state.totalTeas}
+                  </span>
+                </div>
+                
+                <div class="progress-message">${this._state.levelInfo.progressMessage}</div>
+              </div>
+            ` : ''}
             
             <div class="scroll-indicator">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

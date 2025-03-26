@@ -1,0 +1,30 @@
+{
+  "name": "Bulang Mountain Sheng",
+  "category": "Puer",
+  "origin": "Bulang Mountain, Yunnan, China",
+  "description": "Bulang Mountain is known for producing some of the most powerful and bitter sheng (raw) puer teas. The indigenous Bulang ethnic group has a long history of tea cultivation, and their teas are prized for their intense character and exceptional aging potential.",
+  "brewTime": "10-15",
+  "temperature": "95°C",
+  "notes": "Renowned for its powerful bitterness and strength. Offers intense kuwei (pleasant bitterness) that transforms into a long-lasting huigan (returning sweetness). Notes of bitter herbs, wildflower honey, and tropical fruits with a distinctive cooling sensation and exceptional energy (cha qi).",
+  "tags": ["sheng", "bitter", "powerful", "complex", "strong cha qi"],
+  
+  "westernBrewTime": "2:30",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "10",
+  "gongfuTemperature": "95°C",
+  "gongfuLeafRatio": "7g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Sun-dried, non-fermented (sheng/raw)",
+  "flavorProfile": ["intense bitterness", "wildflower honey", "bitter herbs", "tropical fruit", "camphor"],
+  "caffeineLevel": "High",
+  "storageInstructions": "Store in breathable container away from strong odors. Humidity 60-70% ideal for aging.",
+  "elevation": "1200-1600 meters",
+  "fermentationLevel": "None (raw/sheng)",
+  "agingPotential": "Exceptional, designed for long-term aging (20+ years)",
+  "treeAge": "Varies from plantation to ancient trees",
+  "compression": "Cake (bing)",
+  "uniqueFeature": "Indigenous Bulang ethnic group has cultivated tea here for centuries"
+} 

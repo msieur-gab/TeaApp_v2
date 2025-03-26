@@ -1,0 +1,28 @@
+{
+  "name": "African White",
+  "category": "White",
+  "origin": "Kenya",
+  "description": "African white tea represents a newer tradition of white tea production outside China. Kenyan white teas are produced from the Camellia sinensis var. assamica plant, resulting in a more robust flavor profile while maintaining the delicate processing of white tea.",
+  "brewTime": "4:00",
+  "temperature": "85°C",
+  "notes": "Bolder than Chinese white teas with a distinctive character. Offers bright, clean flavors with notes of honey, citrus, and a subtle malty quality. The liquor is golden with excellent clarity and a refreshing finish.",
+  "tags": ["african", "bright", "honey", "innovative", "robust"],
+  
+  "westernBrewTime": "4:00",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "30",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Year-round (primarily during dry seasons)",
+  "processingMethod": "Withered and air-dried, minimal oxidation",
+  "flavorProfile": ["honey", "citrus", "malt", "tropical fruit", "clean mineral"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "1500-2200 meters",
+  "oxidationLevel": "Light (10-15%)",
+  "uniqueFeature": "Made from assamica variety, creating a more robust white tea experience",
+  "sustainability": "Often produced on sustainable, fair-trade certified estates"
+} 

@@ -418,6 +418,64 @@ class TeaDatabaseService {
       throw error;
     }
   }
+  
+  // Enhanced tea retrieval helper that tries multiple approaches
+  async getFullTeaDetails(teaData) {
+    if (!this.initialized) await this.init();
+    
+    if (!teaData) return null;
+    
+    try {
+      // Try various methods to find the tea
+      
+      // Method 1: Try by direct ID
+      if (teaData.id) {
+        const tea = await this.getTeaById(teaData.id);
+        if (tea) {
+          console.log(`Found tea by ID: ${teaData.id}`);
+          return tea;
+        }
+        
+        // Try with numeric conversion if it's a string with numbers
+        if (typeof teaData.id === 'string' && /^\d+$/.test(teaData.id)) {
+          const numericId = parseInt(teaData.id, 10);
+          const teaByNumericId = await this.getTeaById(numericId);
+          if (teaByNumericId) {
+            console.log(`Found tea by numeric ID: ${numericId}`);
+            return teaByNumericId;
+          }
+        }
+      }
+      
+      // Method 2: Try by name and category
+      if (teaData.name && teaData.category) {
+        const teas = await this.getTeasByNameAndCategory(teaData.name, teaData.category);
+        if (teas && teas.length > 0) {
+          console.log(`Found tea by name and category: ${teaData.name}, ${teaData.category}`);
+          return teas[0];
+        }
+      }
+      
+      // Method 3: Try by name alone
+      if (teaData.name) {
+        const allTeas = await this.getAllTeas();
+        const matchingTeas = allTeas.filter(tea => 
+          tea.name.toLowerCase() === teaData.name.toLowerCase());
+        
+        if (matchingTeas.length > 0) {
+          console.log(`Found tea by name: ${teaData.name}`);
+          return matchingTeas[0];
+        }
+      }
+      
+      // If all fails, return the original data
+      console.warn(`Could not find complete data for tea: ${teaData.name || 'Unknown Tea'}`);
+      return teaData;
+    } catch (error) {
+      console.error('Error in getFullTeaDetails:', error);
+      return teaData;
+    }
+  }
 }
 
 // Create singleton instance

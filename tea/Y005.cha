@@ -1,0 +1,28 @@
+{
+  "name": "Bei Gang Huang Tang",
+  "category": "Yellow",
+  "origin": "Sichuan Province, China",
+  "description": "Bei Gang Huang Tang is a traditional yellow tea from Sichuan Province. Less well-known than other yellow teas, it represents the regional variation in yellow tea production techniques and offers a unique flavor profile.",
+  "brewTime": "3:30",
+  "temperature": "85°C",
+  "notes": "A robust yellow tea with a fuller body than most others in this category. The careful yellowing process creates a smooth, sweet cup with a distinctive nutty character. Offers notes of toasted grains, sweet potato, and light honey.",
+  "tags": ["traditional", "nutty", "robust", "sweet", "regional"],
+  
+  "westernBrewTime": "3:30",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["toasted grains", "sweet potato", "honey", "walnut", "dried fruit"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "500-900 meters",
+  "oxidationLevel": "Light with moderate yellowing",
+  "uniqueFeature": "Regional variation of yellow tea with distinctive processing methods",
+  "rarity": "Less commonly found outside of China, representing traditional local techniques"
+} 

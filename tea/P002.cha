@@ -1,0 +1,30 @@
+{
+  "name": "Menghai 7572",
+  "category": "Puer",
+  "origin": "Menghai Tea Factory, Yunnan, China",
+  "description": "Menghai 7572 is a classic recipe shou (ripe) puer first created in 1975. The numbers indicate the year of recipe creation (75), the grade of leaves (7), and the factory (2 for Menghai). This benchmark ripe puer has defined the category for decades.",
+  "brewTime": "10-60",
+  "temperature": "100°C",
+  "notes": "A classic 'wodui' (wet-pile fermented) puer with a smooth, earthy character. Early steeps offer deep forest floor notes that gradually reveal dark chocolate, wood, and dried fruit sweetness. Clean fermentation with minimal wodui character in aged examples.",
+  "tags": ["shou", "classic", "earthy", "smooth", "benchmark"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "100°C",
+  "westernLeafRatio": "5g per 200ml",
+  
+  "gongfuBrewTime": "10",
+  "gongfuTemperature": "100°C",
+  "gongfuLeafRatio": "8g per 100ml",
+  
+  "harvestDate": "Various (blended material)",
+  "processingMethod": "Wet-pile fermented (shou/ripe)",
+  "flavorProfile": ["earth", "dark chocolate", "wood", "dried dates", "petrichor"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in breathable container away from strong odors. Can be aged further but already artificially fermented.",
+  "elevation": "Various",
+  "fermentationLevel": "Heavy (ripe/shou)",
+  "agingPotential": "Good, continues to mellow and develop complexity for 10-20+ years",
+  "recipeNumber": "7572",
+  "compression": "Cake (bing)",
+  "uniqueFeature": "Industry benchmark recipe that defines the classic shou puer profile"
+} 

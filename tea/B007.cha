@@ -1,0 +1,29 @@
+{
+  "name": "Jiu Qu Hong Mei",
+  "category": "Black",
+  "origin": "Zhejiang Province, China",
+  "description": "Jiu Qu Hong Mei ('Nine Curves Red Plum') is a distinctive black tea from Zhejiang province, an area better known for its green teas. Named after the winding mountain paths where it's grown, this tea combines the refined character of eastern China's terroir with full black tea processing to create a unique flavor profile.",
+  "brewTime": "3:00",
+  "temperature": "95°C",
+  "notes": "A distinctive black tea with a character that bridges green and black tea profiles. Offers a bright, clean flavor with prominent notes of plum, rose, and honey. The liquor is clear amber-red with a smooth texture and refreshing, sweet finish.",
+  "tags": ["zhejiang", "floral", "fruity", "refined", "unique"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Traditional black tea processing with careful oxidation",
+  "flavorProfile": ["plum", "rose", "honey", "malt", "cinnamon"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 1-2 years.",
+  "elevation": "500-800 meters",
+  "oxidationLevel": "Fully oxidized",
+  "uniqueFeature": "Produced in a region primarily known for green tea, creating a unique character",
+  "alternativeNames": "Nine Curves Red Plum",
+  "nameOrigin": "Named after the nine bends in the mountain path where the tea is grown"
+} 

@@ -1,0 +1,30 @@
+{
+  "name": "Menghai 7542",
+  "category": "Puer",
+  "origin": "Menghai Tea Factory, Yunnan, China",
+  "description": "Menghai 7542 is perhaps the most famous sheng (raw) puer recipe, first created in 1975. The numbers indicate the year of recipe creation (75), the grade of leaves (4), and the factory (2 for Menghai). This benchmark recipe has defined classic sheng puer for decades.",
+  "brewTime": "10-20",
+  "temperature": "95°C",
+  "notes": "The archetypal sheng puer recipe that balances bitterness, sweetness, and astringency. Young examples display vibrant bitterness and astringency that transform with age into complex sweetness, depth, and smoothness. Offers excellent structure for aging.",
+  "tags": ["sheng", "classic", "benchmark", "aging", "balanced"],
+  
+  "westernBrewTime": "2:30",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "10",
+  "gongfuTemperature": "95°C",
+  "gongfuLeafRatio": "7g per 100ml",
+  
+  "harvestDate": "Various (blended material)",
+  "processingMethod": "Sun-dried, non-fermented (sheng/raw)",
+  "flavorProfile": ["apricot", "bitter herbs", "honey", "wood", "camphor"],
+  "caffeineLevel": "Medium-High",
+  "storageInstructions": "Store in breathable container away from strong odors. Humidity 60-70% ideal for aging.",
+  "elevation": "Various",
+  "fermentationLevel": "None (raw/sheng)",
+  "agingPotential": "Excellent, designed specifically for long-term aging (20+ years)",
+  "recipeNumber": "7542",
+  "compression": "Cake (bing)",
+  "uniqueFeature": "Industry benchmark recipe that defines the classic sheng puer profile"
+} 

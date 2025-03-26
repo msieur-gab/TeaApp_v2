@@ -1,0 +1,29 @@
+{
+  "name": "Gong Mei",
+  "category": "White",
+  "origin": "Fujian Province, China",
+  "description": "Gong Mei (Tribute Eyebrow) is a traditional white tea that sits between White Peony and Shou Mei in the white tea hierarchy. Made from slightly more mature leaves than White Peony, it offers a fuller flavor while maintaining the characteristic gentleness of white tea.",
+  "brewTime": "4:45",
+  "temperature": "85°C",
+  "notes": "A balanced white tea with more body than Silver Needle or White Peony. Offers a smooth, sweet flavor with notes of dried fruits, honey, and subtle spice. The liquor is amber-colored with a satisfying, rounded finish.",
+  "tags": ["traditional", "balanced", "sweet", "fruity", "affordable"],
+  
+  "westernBrewTime": "4:45",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "30",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "6g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered and air-dried, minimal oxidation",
+  "flavorProfile": ["dried apricot", "honey", "subtle spice", "sweet hay", "walnut"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Good candidate for aging.",
+  "elevation": "500-1000 meters",
+  "oxidationLevel": "Light-Medium (15-20%)",
+  "alternativeNames": "Tribute Eyebrow",
+  "uniqueFeature": "Historically offered as tribute to the imperial court, though of lower grade than Silver Needle",
+  "agingPotential": "Develops deeper, more complex flavors with proper aging of 3-7+ years"
+} 

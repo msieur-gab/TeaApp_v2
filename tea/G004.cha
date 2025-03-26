@@ -1,0 +1,28 @@
+{
+  "name": "Sencha",
+  "category": "Green",
+  "origin": "Shizuoka Prefecture, Japan",
+  "description": "Sencha is Japan's most popular green tea, representing about 80% of the country's tea production. This everyday tea is distinguished by its needle-shaped leaves, created through the characteristic Japanese steaming and rolling process that preserves the vibrant green color and fresh flavor.",
+  "brewTime": "1:30",
+  "temperature": "75°C",
+  "notes": "The quintessential Japanese green tea with a bright, grassy character. Offers a refreshing balance of sweet and savory notes with a pleasant astringency. The liquor is vibrant yellow-green with a clean, crisp finish and distinctive vegetal freshness.",
+  "tags": ["steamed", "everyday", "grassy", "refreshing", "japanese"],
+  
+  "westernBrewTime": "1:30",
+  "westernTemperature": "75°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "30",
+  "gongfuTemperature": "70°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "First flush (spring)",
+  "processingMethod": "Steamed, rolled, dried",
+  "flavorProfile": ["fresh grass", "seaweed", "spinach", "umami", "sweet nuts"],
+  "caffeineLevel": "Medium-High",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 6-12 months of harvest.",
+  "elevation": "Various",
+  "steamingLevel": "Standard (asamushi)",
+  "uniqueFeature": "Steamed rather than pan-fired, preserving bright green color and fresh flavor",
+  "cultivar": "Yabukita (most common)"
+} 

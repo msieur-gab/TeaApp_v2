@@ -1,0 +1,29 @@
+{
+  "name": "Ying De Hong Cha",
+  "category": "Black",
+  "origin": "Yingde, Guangdong Province, China",
+  "description": "Ying De Hong Cha (Yingde Black Tea) is a renowned black tea from Guangdong province in southern China. First produced in the 1950s, it has quickly established itself as one of China's major black teas. Grown in a subtropical climate, it offers a distinctive character that balances strength with natural sweetness.",
+  "brewTime": "3:30",
+  "temperature": "95°C",
+  "notes": "A robust black tea with a bold yet balanced character. Offers a full body with notes of malt, dark chocolate, and tropical fruit with a distinctive peppery finish. The liquor is deep red with a thick texture and lingering sweet-spicy finish.",
+  "tags": ["guangdong", "robust", "malty", "peppery", "tropical"],
+  
+  "westernBrewTime": "3:30",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "6g per 100ml",
+  
+  "harvestDate": "Spring/Summer",
+  "processingMethod": "Traditional black tea processing with rolling and full oxidation",
+  "flavorProfile": ["malt", "dark chocolate", "tropical fruit", "black pepper", "molasses"],
+  "caffeineLevel": "Medium-High",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 1-2 years.",
+  "elevation": "300-600 meters",
+  "oxidationLevel": "Fully oxidized",
+  "uniqueFeature": "Grown in a subtropical climate, creating a unique flavor profile with tropical notes",
+  "alternativeNames": "Yingde Black",
+  "historicalSignificance": "Though relatively new (1950s), it has quickly become one of China's major black teas"
+} 

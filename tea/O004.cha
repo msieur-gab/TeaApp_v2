@@ -1,0 +1,28 @@
+{
+  "name": "Dong Ding",
+  "category": "Oolong",
+  "origin": "Dong Ding Mountain, Nantou, Taiwan",
+  "description": "Dong Ding (Frozen Summit) is a partially oxidized oolong from central Taiwan with a smooth, rich body. Traditional processing includes a slow roasting that brings out nutty, caramelized flavors.",
+  "brewTime": "3:30",
+  "temperature": "93°C",
+  "notes": "Classic Taiwanese oolong with a moderate roast. Exhibits a perfect balance between creamy floral notes and warm roasted characteristics. Good for 4-5 infusions.",
+  "tags": ["taiwanese", "roasted", "nutty", "caramel", "traditional"],
+  
+  "westernBrewTime": "3:30",
+  "westernTemperature": "93°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "95°C",
+  "gongfuLeafRatio": "6g per 100ml",
+  
+  "harvestDate": "Spring/Winter",
+  "processingMethod": "Withered, bruised, partially oxidized, medium roast",
+  "flavorProfile": ["roasted nuts", "honey", "caramel", "stone fruit", "toasted grain"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "700-1000 meters",
+  "oxidationLevel": "Medium (30-40%)",
+  "roastLevel": "Medium",
+  "alternativeNames": "Tung Ting"
+} 

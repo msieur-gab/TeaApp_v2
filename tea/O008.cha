@@ -1,0 +1,28 @@
+{
+  "name": "Shui Xian",
+  "category": "Oolong",
+  "origin": "Wuyi Mountains, Fujian, China",
+  "description": "Shui Xian (Water Sprite or Narcissus) is a classic Wuyi rock oolong with a long history. It offers a perfect introduction to the yan cha (rock tea) category with its approachable profile that balances roasted notes with floral undertones.",
+  "brewTime": "4:00",
+  "temperature": "95°C",
+  "notes": "A versatile rock oolong that can range from lightly roasted to heavily roasted styles. This medium-roast version offers a balanced profile with prominent mineral notes, a smooth body, and a sweet, lingering finish.",
+  "tags": ["wuyi", "rock tea", "floral", "mineral", "yan cha"],
+  
+  "westernBrewTime": "4:00",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "100°C",
+  "gongfuLeafRatio": "6g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered, bruised, partially oxidized, roasted",
+  "flavorProfile": ["mineral", "orchid", "toasted grains", "honey", "stone fruit"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "500-800 meters",
+  "oxidationLevel": "Medium (40-60%)",
+  "roastLevel": "Medium",
+  "alternativeNames": "Water Fairy, Narcissus"
+} 

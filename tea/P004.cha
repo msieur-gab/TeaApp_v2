@@ -1,0 +1,29 @@
+{
+  "name": "Xiaguan Tuo Cha",
+  "category": "Puer",
+  "origin": "Xiaguan Tea Factory, Dali, Yunnan, China",
+  "description": "Xiaguan Tuo Cha is a classic sheng (raw) puer compressed into a distinctive bowl shape. Xiaguan Factory is known for their tight compression and smoky character. This traditional recipe has been produced since the 1950s and is designed for long-term aging.",
+  "brewTime": "15-30",
+  "temperature": "100°C",
+  "notes": "Famous for its potent character and tight compression. Young examples display intense smokiness, tobacco, and powerful bitterness. With age, develops complexity with notes of dried fruits, Chinese herbs, and incense. Requires careful brewing to manage its strength.",
+  "tags": ["sheng", "smoky", "traditional", "powerful", "tuo shape"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "100°C",
+  "westernLeafRatio": "5g per 200ml",
+  
+  "gongfuBrewTime": "15",
+  "gongfuTemperature": "100°C",
+  "gongfuLeafRatio": "8g per 100ml",
+  
+  "harvestDate": "Various (blended material)",
+  "processingMethod": "Sun-dried, non-fermented (sheng/raw), smoke-influenced",
+  "flavorProfile": ["smoke", "tobacco", "bitter herbs", "dried fruit", "camphor"],
+  "caffeineLevel": "High",
+  "storageInstructions": "Store in breathable container away from strong odors. Humidity 60-70% ideal for aging.",
+  "elevation": "Various",
+  "fermentationLevel": "None (raw/sheng)",
+  "agingPotential": "Excellent, designed specifically for long-term aging (20+ years)",
+  "compression": "Tuo (bowl shape)",
+  "uniqueFeature": "Exceptionally tight compression requiring careful breaking apart, distinctive smoky character"
+} 

@@ -1,0 +1,28 @@
+{
+  "name": "Huang Hua Cha",
+  "category": "Yellow",
+  "origin": "Zhejiang Province, China",
+  "description": "Huang Hua Cha (Yellow Flower Tea) is a specialty yellow tea from Zhejiang Province. This tea is named for its distinctive floral character that develops during the traditional yellowing process.",
+  "brewTime": "3:00",
+  "temperature": "80°C",
+  "notes": "A delicate yellow tea with a pronounced floral character. The careful processing creates a smooth, sweet cup with minimal astringency. Offers notes of fresh flowers, sweet corn, and light honey with a clean, refreshing finish.",
+  "tags": ["floral", "sweet", "delicate", "aromatic", "refreshing"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Early Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["jasmine", "sweet corn", "honey", "lily", "fresh hay"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "300-700 meters",
+  "oxidationLevel": "Very Light with slight yellowing",
+  "uniqueFeature": "Named for its naturally floral character that develops during processing",
+  "appearance": "Small, uniform leaves with a bright yellow-green color"
+} 

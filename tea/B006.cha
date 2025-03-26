@@ -1,0 +1,29 @@
+{
+  "name": "Bai Lin Gong Fu",
+  "category": "Black",
+  "origin": "Fuding, Fujian Province, China",
+  "description": "Bai Lin Gong Fu ('Skillfully Crafted from Bai Lin') is a premium black tea from the same region famous for white tea production. Made from the same cultivar used for white tea, it's distinguished by its high concentration of golden tips and unique processing that creates a remarkably sweet, fruity character unusual for black tea.",
+  "brewTime": "3:00",
+  "temperature": "90°C",
+  "notes": "A refined black tea with an exceptional concentration of golden tips. Offers a naturally sweet profile with distinctive notes of honey, longan fruit, and pine. The liquor is bright amber with a smooth, velvety texture and lingering sweet finish with no astringency.",
+  "tags": ["golden tips", "sweet", "fruity", "elegant", "premium"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "90°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "15",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Careful oxidation with specialized techniques to preserve tip character",
+  "flavorProfile": ["honey", "longan fruit", "pine", "orchid", "sweet potato"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 1-2 years.",
+  "elevation": "500-800 meters",
+  "oxidationLevel": "Fully oxidized",
+  "uniqueFeature": "Made from the same cultivar used for white tea, creating a uniquely sweet character",
+  "alternativeNames": "Bai Lin Kung Fu, Pai Lin Gong Fu",
+  "historicalSignificance": "One of China's earliest black teas exported to Europe in significant quantities"
+} 

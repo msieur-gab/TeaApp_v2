@@ -1,0 +1,27 @@
+{
+  "name": "Tie Guan Yin",
+  "category": "Oolong",
+  "origin": "Anxi County, Fujian, China",
+  "description": "Tie Guan Yin (Iron Goddess of Mercy) is one of China's most celebrated oolongs. Modern styles are typically lightly oxidized with a fresh, bright character, while traditional versions undergo longer oxidation and roasting.",
+  "brewTime": "3:15",
+  "temperature": "90°C",
+  "notes": "This is a modern, greener style with prominent orchid and lilac notes. The liquor has a smooth, silky texture with a lingering sweetness and subtle mineral finish.",
+  "tags": ["anxi", "floral", "creamy", "mineral", "classic"],
+  
+  "westernBrewTime": "3:15",
+  "westernTemperature": "90°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "95°C",
+  "gongfuLeafRatio": "6g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered, bruised, partially oxidized, light roast",
+  "flavorProfile": ["orchid", "lilac", "honey", "cream", "mineral"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "500-1000 meters",
+  "oxidationLevel": "Light to Medium (20-40%)",
+  "roastLevel": "Light"
+} 

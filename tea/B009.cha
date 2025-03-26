@@ -1,0 +1,29 @@
+{
+  "name": "Tanyang Gong Fu",
+  "category": "Black",
+  "origin": "Tanyang, Fujian Province, China",
+  "description": "Tanyang Gong Fu is a premium black tea from the Tanyang area of Fujian province. Part of the 'Three Famous Fujian Gong Fu Black Teas' alongside Zheng He and Bai Lin, it's known for its distinctive 'longan fruit' aroma and taste, with a perfect balance of natural sweetness and complexity.",
+  "brewTime": "3:00",
+  "temperature": "90°C",
+  "notes": "A refined black tea with a distinctive fruity-sweet character. Offers prominent notes of longan fruit, honey, and orchid with a subtle pine undertone. The liquor is bright amber with a smooth, silky texture and clean, sweet finish with remarkable complexity.",
+  "tags": ["fujian", "fruity", "sweet", "complex", "refined"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "90°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "15",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Traditional gong fu black tea processing with careful oxidation",
+  "flavorProfile": ["longan fruit", "honey", "orchid", "pine", "cinnamon"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 1-2 years.",
+  "elevation": "600-900 meters",
+  "oxidationLevel": "Fully oxidized",
+  "uniqueFeature": "Known for its distinctive 'longan fruit' aroma and taste",
+  "alternativeNames": "Tan Yang Kung Fu",
+  "historicalSignificance": "One of the 'Three Famous Fujian Gong Fu Black Teas' with a long history of export"
+} 

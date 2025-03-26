@@ -1,0 +1,28 @@
+{
+  "name": "Darjeeling White",
+  "category": "White",
+  "origin": "Darjeeling, India",
+  "description": "Darjeeling white tea is a delicate offering from the foothills of the Himalayas. Produced in limited quantities, it combines the characteristic muscatel notes of Darjeeling with the subtle sweetness of white tea processing.",
+  "brewTime": "4:00",
+  "temperature": "80°C",
+  "notes": "A unique fusion of traditional Chinese white tea processing with distinctive Darjeeling terroir. Offers delicate muscatel grape notes with hints of flowers and fresh hay. The liquor is pale golden with a clean, refreshing finish.",
+  "tags": ["darjeeling", "muscatel", "floral", "delicate", "himalayan"],
+  
+  "westernBrewTime": "4:00",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "30",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "First Flush (Spring)",
+  "processingMethod": "Withered and air-dried, minimal oxidation",
+  "flavorProfile": ["muscatel grape", "wildflower honey", "fresh hay", "apricot", "light spice"],
+  "caffeineLevel": "Low-Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "1000-2000 meters",
+  "oxidationLevel": "Very Light (5-10%)",
+  "uniqueFeature": "Combines Chinese processing methods with distinctive Darjeeling terroir",
+  "production": "Limited seasonal production from select Darjeeling estates"
+} 

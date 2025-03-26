@@ -1,0 +1,30 @@
+{
+  "name": "Aged Sheng Puer",
+  "category": "Puer",
+  "origin": "Yunnan, China",
+  "description": "This aged sheng (raw) puer has been carefully stored for 15+ years, allowing it to naturally transform through slow oxidation and microbial activity. Properly aged sheng puer develops unique characteristics that cannot be replicated through any other process.",
+  "brewTime": "10-30",
+  "temperature": "95°C",
+  "notes": "A testament to the magic of time and proper storage. The initial bitterness and astringency have transformed into deep sweetness and complexity. Offers notes of dried fruits, Chinese herbs, aged wood, incense, and forest floor with a smooth, thick texture and exceptional huigan (returning sweetness).",
+  "tags": ["sheng", "aged", "complex", "sweet", "smooth"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "15",
+  "gongfuTemperature": "95°C",
+  "gongfuLeafRatio": "7g per 100ml",
+  
+  "harvestDate": "15+ years aged",
+  "processingMethod": "Sun-dried, non-fermented (sheng/raw), naturally aged",
+  "flavorProfile": ["dried fruits", "Chinese herbs", "aged wood", "incense", "forest floor"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Continue storing in breathable container. Maintain consistent humidity and temperature.",
+  "elevation": "Various",
+  "fermentationLevel": "Naturally developed through aging",
+  "agingPotential": "Already significantly aged, will continue to develop for decades",
+  "compression": "Cake (bing)",
+  "uniqueFeature": "Natural transformation through 15+ years of proper storage",
+  "storageType": "Traditional Hong Kong storage with controlled humidity"
+} 

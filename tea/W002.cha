@@ -1,0 +1,28 @@
+{
+  "name": "Bai Mu Dan",
+  "category": "White",
+  "origin": "Fujian Province, China",
+  "description": "Bai Mu Dan (White Peony) is a classic white tea made from the unopened tea buds and the two adjacent young leaves. The leaves have a silvery appearance with some darker leaves, resembling a white peony flower.",
+  "brewTime": "4:30",
+  "temperature": "85°C",
+  "notes": "More robust than Silver Needle but still delicate. Offers a fuller body with notes of sweet hay, mild fruitiness, and subtle floral undertones. The liquor is pale golden with a refreshing, clean finish.",
+  "tags": ["white peony", "classic", "fruity", "floral", "refreshing"],
+  
+  "westernBrewTime": "4:30",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "30",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered and air-dried, minimal oxidation",
+  "flavorProfile": ["sweet hay", "peach", "honey", "light floral", "fresh herbs"],
+  "caffeineLevel": "Low-Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Ages well for 2-5 years.",
+  "elevation": "500-1200 meters",
+  "oxidationLevel": "Light (10-15%)",
+  "alternativeNames": "White Peony, Pai Mu Tan",
+  "uniqueFeature": "Contains a mix of buds and young leaves, creating a balanced flavor profile"
+} 

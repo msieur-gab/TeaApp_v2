@@ -1,0 +1,29 @@
+{
+  "name": "Oriental Beauty",
+  "category": "Oolong",
+  "origin": "Hsinchu/Miaoli counties, Taiwan",
+  "description": "Oriental Beauty (Dongfang Meiren, also known as Bai Hao) is a heavily oxidized oolong tea with a unique production process. The leaves are bitten by leafhoppers, triggering the plant to produce defensive compounds that create its signature honey flavor.",
+  "brewTime": "4:15",
+  "temperature": "90°C",
+  "notes": "Distinguished by its natural honey and fruit notes. The brewed tea offers a complex bouquet of peach, honey, wood, and muscat grape flavors with no astringency and a remarkably smooth finish.",
+  "tags": ["bai hao", "honey", "fruity", "bug-bitten", "taiwanese"],
+  
+  "westernBrewTime": "4:15",
+  "westernTemperature": "90°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "30",
+  "gongfuTemperature": "95°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Summer",
+  "processingMethod": "Withered, bug-bitten, heavily oxidized, light roast",
+  "flavorProfile": ["honey", "muscat grape", "peach", "cinnamon", "wood"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "300-800 meters",
+  "oxidationLevel": "Heavy (60-70%)",
+  "roastLevel": "Light",
+  "alternativeNames": "Dongfang Meiren, Bai Hao, Champagne Oolong",
+  "uniqueFeature": "Requires leafhopper insect bites for characteristic flavor"
+} 

@@ -1,0 +1,28 @@
+{
+  "name": "New Craft White",
+  "category": "White",
+  "origin": "Fujian Province, China",
+  "description": "New Craft White represents modern innovation in white tea processing. While respecting traditional methods, producers have refined techniques to create white teas with enhanced aromatics and flavor clarity while maintaining the tea's delicate character.",
+  "brewTime": "4:00",
+  "temperature": "85°C",
+  "notes": "A contemporary expression of white tea with enhanced aromatics. Offers exceptional clarity with prominent notes of fresh flowers, sweet grass, and tropical fruits. The liquor is pale gold with a silky texture and clean, bright finish.",
+  "tags": ["modern", "aromatic", "floral", "refined", "innovative"],
+  
+  "westernBrewTime": "4:00",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Precision withering and temperature-controlled drying",
+  "flavorProfile": ["jasmine", "sweet grass", "lychee", "melon", "vanilla"],
+  "caffeineLevel": "Low-Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed fresh within 1-2 years.",
+  "elevation": "800-1500 meters",
+  "oxidationLevel": "Very Light (5-10%)",
+  "uniqueFeature": "Employs modern temperature and humidity control during processing for enhanced aromatics",
+  "production": "Limited seasonal production using refined modern techniques"
+} 

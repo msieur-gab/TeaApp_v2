@@ -1,0 +1,28 @@
+{
+  "name": "Wen Shan Huang Ya",
+  "category": "Yellow",
+  "origin": "Wenshan County, Yunnan Province, China",
+  "description": "Wen Shan Huang Ya is a yellow tea from the mountainous region of Wenshan in Yunnan Province. This tea combines the characteristic processing of yellow tea with the unique terroir of Yunnan, creating a distinctive flavor profile.",
+  "brewTime": "3:30",
+  "temperature": "85°C",
+  "notes": "A unique yellow tea with some characteristics reminiscent of Yunnan green teas. The yellowing process softens the profile while maintaining complexity. Offers notes of sweet corn, wildflower honey, and a subtle fruity quality with minimal astringency.",
+  "tags": ["yunnan", "sweet", "complex", "honey", "regional"],
+  
+  "westernBrewTime": "3:30",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["sweet corn", "wildflower honey", "apricot", "chestnut", "fresh herbs"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "1200-1800 meters",
+  "oxidationLevel": "Light with moderate yellowing",
+  "uniqueFeature": "Combines traditional yellow tea processing with distinctive Yunnan terroir",
+  "appearance": "Slender buds with a distinctive yellow-green hue"
+} 

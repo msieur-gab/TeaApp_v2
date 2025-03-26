@@ -271,27 +271,21 @@ class TeaCircle extends HTMLElement {
     
     // Only proceed if collected
     if (this._state.collected) {
-      // Use event manager instead of direct dispatch
+      // IMPORTANT FIX: Ensure we pass the correct ID format
+      // Get the ID from the data-tea-id attribute of the circle element
+      const teaId = circle ? circle.getAttribute('data-tea-id') : null;
+      
+      // Log debugging info
+      console.log(`Tea circle clicked: ${this._state.name} with ID: ${teaId}`);
+      
+      // CRITICAL FIX: Add a source identifier to prevent event loops
       teaEvents.emit(TeaEventTypes.TEA_SELECTED, {
         name: this._state.name,
         category: this._state.category,
-        id: this._state.teaId || this.id,
-        collected: this._state.collected
+        id: teaId || this._state.teaId || this.id,
+        collected: this._state.collected,
+        source: 'tea-circle' // Add source to identify origin
       });
-      
-      // For backward compatibility also dispatch the DOM event
-      const teaSelectEvent = new CustomEvent('tea-select', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          name: this._state.name,
-          category: this._state.category,
-          id: this._state.teaId || this.id,
-          collected: this._state.collected
-        }
-      });
-      
-      this.dispatchEvent(teaSelectEvent);
     }
   }
   

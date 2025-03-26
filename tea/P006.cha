@@ -1,0 +1,30 @@
+{
+  "name": "Liu Bao Hei Cha",
+  "category": "Puer",
+  "origin": "Guangxi Province, China",
+  "description": "Liu Bao is a dark tea from Guangxi province that shares many similarities with puer. While technically a separate category of hei cha (dark tea), it undergoes a similar fermentation process to shou puer and is often discussed alongside puer teas in Western markets.",
+  "brewTime": "10-60",
+  "temperature": "100°C",
+  "notes": "A unique dark tea with a distinctive character that bridges shou puer and aged sheng. Offers deep notes of aged wood, forest floor, Chinese herbs, and dark fruits. The liquor is typically dark red to black with a smooth, thick texture and clean finish.",
+  "tags": ["hei cha", "earthy", "woody", "medicinal", "aged"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "100°C",
+  "westernLeafRatio": "5g per 200ml",
+  
+  "gongfuBrewTime": "10",
+  "gongfuTemperature": "100°C",
+  "gongfuLeafRatio": "8g per 100ml",
+  
+  "harvestDate": "Various",
+  "processingMethod": "Pile-fermented and aged in bamboo baskets",
+  "flavorProfile": ["aged wood", "Chinese herbs", "dark fruits", "forest floor", "moss"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in breathable container. Traditionally aged in bamboo baskets in humid conditions.",
+  "elevation": "Various",
+  "fermentationLevel": "Heavy (similar to shou puer)",
+  "agingPotential": "Excellent, traditionally aged for decades before consumption",
+  "compression": "Loose or basket-compressed",
+  "uniqueFeature": "Traditionally aged in distinctive bamboo baskets, creating unique aging environment",
+  "alternativeCategory": "Technically classified as hei cha (dark tea) rather than puer"
+} 

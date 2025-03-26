@@ -1,0 +1,28 @@
+{
+  "name": "Jin Xuan",
+  "category": "Oolong",
+  "origin": "Taiwan",
+  "description": "Jin Xuan (TTES #12) is a cultivar developed in Taiwan in the 1980s. This lightly oxidized oolong is famously known as 'Milk Oolong' due to its naturally creamy flavor profile and silky texture.",
+  "brewTime": "3:00",
+  "temperature": "85°C",
+  "notes": "Naturally milky and buttery without additives. Authentic Jin Xuan offers a subtle creamy mouthfeel with notes of fresh flowers, sweet greens, and a delicate milky aroma that intensifies on later infusions.",
+  "tags": ["milk oolong", "creamy", "taiwanese", "floral", "buttery"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring/Summer",
+  "processingMethod": "Withered, bruised, partially oxidized, light roast",
+  "flavorProfile": ["cream", "butter", "vanilla", "sweet flowers", "tropical fruit"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "800-1200 meters",
+  "oxidationLevel": "Light (15-25%)",
+  "roastLevel": "Very Light",
+  "cultivar": "TTES #12 (Jin Xuan)"
+} 

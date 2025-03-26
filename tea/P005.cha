@@ -1,0 +1,30 @@
+{
+  "name": "Jingmai Mountain Sheng",
+  "category": "Puer",
+  "origin": "Jingmai Mountain, Yunnan, China",
+  "description": "Jingmai Mountain is home to some of the oldest tea gardens in the world, with a 1800+ year history of tea cultivation. This area is known for producing sheng (raw) puer with a distinctive floral character and accessible sweetness even when young.",
+  "brewTime": "10-15",
+  "temperature": "95°C",
+  "notes": "Distinguished by its pronounced floral character and natural sweetness. Offers an accessible profile with minimal bitterness, prominent notes of orchid, honey, tropical fruits, and a clean, refreshing finish. The mouthfeel is smooth with a pleasant thickness.",
+  "tags": ["sheng", "floral", "sweet", "accessible", "ancient garden"],
+  
+  "westernBrewTime": "2:30",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "10",
+  "gongfuTemperature": "95°C",
+  "gongfuLeafRatio": "7g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Sun-dried, non-fermented (sheng/raw)",
+  "flavorProfile": ["orchid", "honey", "mango", "sugarcane", "vanilla"],
+  "caffeineLevel": "Medium-High",
+  "storageInstructions": "Store in breathable container away from strong odors. Humidity 60-70% ideal for aging.",
+  "elevation": "1200-1600 meters",
+  "fermentationLevel": "None (raw/sheng)",
+  "agingPotential": "Good, though often consumed young due to its accessible character",
+  "treeAge": "Mixed (ancient gardens with trees of various ages)",
+  "compression": "Cake (bing)",
+  "uniqueFeature": "One of the oldest tea cultivation areas in the world with 1800+ year history"
+} 

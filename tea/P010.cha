@@ -1,0 +1,30 @@
+{
+  "name": "Gong Ting Shou",
+  "category": "Puer",
+  "origin": "Yunnan, China",
+  "description": "Gong Ting (Imperial Court) is the highest grade of shou (ripe) puer, made exclusively from tender buds and tips. This premium ripe puer undergoes careful fermentation to create a smooth, refined experience without the rougher characteristics sometimes found in lower grades.",
+  "brewTime": "10-60",
+  "temperature": "100°C",
+  "notes": "The most refined expression of shou puer. Offers exceptional smoothness and clarity with notes of dark chocolate, red dates, caramel, and aged wood. The liquor is deep burgundy with remarkable clarity and a clean, sweet finish without any mustiness.",
+  "tags": ["shou", "premium", "smooth", "sweet", "buds only"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "100°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "10",
+  "gongfuTemperature": "100°C",
+  "gongfuLeafRatio": "7g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Carefully wet-pile fermented (shou/ripe) using only buds",
+  "flavorProfile": ["dark chocolate", "red dates", "caramel", "aged wood", "brown sugar"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in breathable container away from strong odors.",
+  "elevation": "Various",
+  "fermentationLevel": "Heavy (ripe/shou) but clean and refined",
+  "agingPotential": "Good, continues to mellow and develop complexity for 10-20+ years",
+  "leafGrade": "Gong Ting (Imperial Court) - highest grade using only buds",
+  "compression": "Loose or lightly compressed cake",
+  "uniqueFeature": "Made exclusively from golden tips and buds, creating exceptional smoothness"
+} 

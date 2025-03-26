@@ -1,0 +1,28 @@
+{
+  "name": "Huang Jin Hou",
+  "category": "Yellow",
+  "origin": "Hunan Province, China",
+  "description": "Huang Jin Hou (Golden Monkey) is a specialty yellow tea from Hunan Province. This tea features golden-tipped leaves that undergo the traditional yellowing process, creating a unique character that bridges the gap between yellow and black teas.",
+  "brewTime": "3:45",
+  "temperature": "85°C",
+  "notes": "A unique yellow tea with some characteristics reminiscent of golden-tipped black teas. The yellowing process creates a smooth, sweet cup with minimal astringency. Offers notes of honey, dried fruit, and sweet potato with a satisfying finish.",
+  "tags": ["golden tips", "sweet", "smooth", "fruity", "specialty"],
+  
+  "westernBrewTime": "3:45",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["honey", "dried apricot", "sweet potato", "malt", "cinnamon"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "500-900 meters",
+  "oxidationLevel": "Light-Medium with moderate yellowing",
+  "uniqueFeature": "Features golden-tipped leaves similar to some black teas",
+  "appearance": "Twisted leaves with distinctive golden tips"
+} 

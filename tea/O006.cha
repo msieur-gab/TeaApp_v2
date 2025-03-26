@@ -1,0 +1,28 @@
+{
+  "name": "Alishan High Mountain",
+  "category": "Oolong",
+  "origin": "Alishan Mountain, Chiayi County, Taiwan",
+  "description": "Grown at elevations above 1000 meters, Alishan is a lightly oxidized oolong prized for its clean, bright flavor and distinctive floral aroma. The high altitude and misty climate create ideal growing conditions.",
+  "brewTime": "3:00",
+  "temperature": "85°C",
+  "notes": "Delicate yet complex with prominent notes of spring flowers, sweet cream, and fresh vegetation. The mouthfeel is silky and slightly buttery with a clean, sweet finish.",
+  "tags": ["high mountain", "floral", "creamy", "spring", "gaoshan"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring/Winter",
+  "processingMethod": "Withered, bruised, lightly oxidized, minimal roast",
+  "flavorProfile": ["gardenia", "lily", "sweet cream", "sugar cane", "fresh greens"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within a year of harvest.",
+  "elevation": "1000-1600 meters",
+  "oxidationLevel": "Light (15-25%)",
+  "roastLevel": "Very Light",
+  "classification": "Gaoshan (High Mountain) Oolong"
+} 

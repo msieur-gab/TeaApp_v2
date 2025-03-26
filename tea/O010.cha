@@ -1,0 +1,30 @@
+{
+  "name": "Bai Ji Guan",
+  "category": "Oolong",
+  "origin": "Wuyi Mountains, Fujian, China",
+  "description": "Bai Ji Guan (White Cockscomb) is one of the rare 'Four Famous Bushes' of Wuyi rock oolongs. This unique tea is distinguished by its unusually light-colored leaves, which appear almost yellow-white when fresh, and its distinctive fruity-floral character.",
+  "brewTime": "3:45",
+  "temperature": "95°C",
+  "notes": "One of the rarest Wuyi oolongs, with a lighter character than most rock teas. Offers a delicate balance of fruit and floral notes with the characteristic mineral backbone of Wuyi teas. The mouthfeel is smooth with a sweet, lingering finish.",
+  "tags": ["wuyi", "rock tea", "rare", "fruity", "yan cha"],
+  
+  "westernBrewTime": "3:45",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "95°C",
+  "gongfuLeafRatio": "6g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered, bruised, partially oxidized, light-medium roast",
+  "flavorProfile": ["apricot", "orchid", "mineral", "honey", "toasted grain"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "500-800 meters",
+  "oxidationLevel": "Medium (40-50%)",
+  "roastLevel": "Light to Medium",
+  "alternativeNames": "White Cockscomb",
+  "uniqueFeature": "One of the 'Four Famous Bushes' (Si Da Ming Cong) of Wuyi",
+  "rarity": "Very limited production, considered a prestigious and historical tea"
+} 

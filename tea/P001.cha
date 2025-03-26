@@ -1,0 +1,30 @@
+{
+  "name": "Lao Ban Zhang Sheng",
+  "category": "Puer",
+  "origin": "Lao Ban Zhang village, Bulang Mountains, Yunnan, China",
+  "description": "Lao Ban Zhang is considered the king of puer tea villages, producing some of the most sought-after and expensive sheng (raw) puer in the world. The tea is known for its powerful character, intense bitterness that transforms to sweetness, and exceptional aging potential.",
+  "brewTime": "10-15",
+  "temperature": "95°C",
+  "notes": "Exceptionally potent with a commanding bitterness that transforms into a lingering sweetness. Offers intense kuwei (pleasant bitterness) and huigan (returning sweetness) with notes of wildflower honey, tropical fruits, and a distinctive camphor cooling sensation.",
+  "tags": ["sheng", "premium", "bitter-sweet", "powerful", "collectible"],
+  
+  "westernBrewTime": "2:30",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "5g per 200ml",
+  
+  "gongfuBrewTime": "10",
+  "gongfuTemperature": "95°C",
+  "gongfuLeafRatio": "8g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Sun-dried, non-fermented (sheng/raw)",
+  "flavorProfile": ["intense bitterness", "honey sweetness", "tropical fruit", "camphor", "wildflowers"],
+  "caffeineLevel": "High",
+  "storageInstructions": "Store in breathable container away from strong odors. Humidity 60-70% ideal for aging.",
+  "elevation": "1400-1800 meters",
+  "fermentationLevel": "None (raw/sheng)",
+  "agingPotential": "Exceptional, can improve for decades",
+  "treeAge": "100+ years (gushu/ancient trees)",
+  "compression": "Cake (bing)",
+  "uniqueFeature": "Considered the most prestigious puer producing village, with prices to match"
+} 

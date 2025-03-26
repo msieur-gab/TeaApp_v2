@@ -1,0 +1,28 @@
+{
+  "name": "Jun Shan Yin Zhen",
+  "category": "Yellow",
+  "origin": "Junshan Island, Hunan Province, China",
+  "description": "Jun Shan Yin Zhen (Junshan Silver Needle) is one of China's most prestigious yellow teas, historically reserved for imperial tribute. This rare tea consists of carefully selected buds from Junshan Island in Dongting Lake.",
+  "brewTime": "3:30",
+  "temperature": "80°C",
+  "notes": "An exceptionally rare tea with a distinctive 'men huan' (sealed yellowing) process. Offers a smooth, sweet flavor with notes of chestnut, bamboo, and gentle florals. The liquor is clear with a pale yellow hue and lingering sweetness.",
+  "tags": ["rare", "imperial", "premium", "sweet", "buds only"],
+  
+  "westernBrewTime": "3:30",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Early Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["chestnut", "bamboo", "honey", "orchid", "fresh hay"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "100-200 meters",
+  "oxidationLevel": "Very Light with slight yellowing",
+  "uniqueFeature": "Historically reserved for imperial tribute, production limited to Junshan Island",
+  "rarity": "Extremely limited production, considered one of China's ten famous teas"
+} 

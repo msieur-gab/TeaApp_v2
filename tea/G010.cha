@@ -1,0 +1,28 @@
+{
+  "name": "Lu'an Gua Pian",
+  "category": "Green",
+  "origin": "Lu'an, Anhui Province, China",
+  "description": "Lu'an Gua Pian ('Melon Seed') is one of China's famous teas with a unique processing method. Unlike most green teas that include buds, it uses only the second leaf of each shoot with the stems and veins removed, creating its distinctive appearance and flavor profile.",
+  "brewTime": "3:00",
+  "temperature": "85°C",
+  "notes": "A distinctive green tea with a unique processing method yielding a robust yet refined character. Offers a perfect balance of sweet, floral notes with a gentle, toasty undertone from its specialized firing process. The liquor is clear and bright with a refreshing, clean finish.",
+  "tags": ["unique", "toasty", "sweet", "classic", "leaf-only"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Leaf-only picking, veins removed, pan-fired, shaped in bamboo drums",
+  "flavorProfile": ["orchid", "toasted rice", "sweet grass", "chestnut", "clean mineral"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 1 year of harvest.",
+  "elevation": "500-800 meters",
+  "uniqueFeature": "Uses only the second leaf of each shoot with stems and veins removed",
+  "alternativeNames": "Melon Seed tea",
+  "historicalSignificance": "One of China's most famous teas, with a history dating back to the Tang Dynasty"
+} 

@@ -1,0 +1,28 @@
+{
+  "name": "Gyokuro",
+  "category": "Green",
+  "origin": "Yame, Fukuoka Prefecture, Japan",
+  "description": "Gyokuro ('Jade Dew') is Japan's most prestigious green tea, distinguished by its shading process. The tea plants are covered for 20-30 days before harvest, reducing photosynthesis and increasing amino acid content, particularly theanine, which creates its characteristic sweet, umami flavor.",
+  "brewTime": "2:00",
+  "temperature": "60°C",
+  "notes": "The pinnacle of Japanese green tea with an intense, sweet umami character. Brewed at a low temperature to extract maximum sweetness and minimize astringency. Offers a rich, full body with notes of fresh seaweed, sweet grass, and a distinctive marine quality.",
+  "tags": ["shaded", "umami", "premium", "japanese", "high-theanine"],
+  
+  "westernBrewTime": "2:00",
+  "westernTemperature": "60°C",
+  "westernLeafRatio": "4g per 100ml",
+  
+  "gongfuBrewTime": "30",
+  "gongfuTemperature": "55°C",
+  "gongfuLeafRatio": "5g per 50ml",
+  
+  "harvestDate": "First flush (spring)",
+  "processingMethod": "Shaded for 20-30 days, steamed, rolled, dried",
+  "flavorProfile": ["intense umami", "marine", "sweet grass", "seaweed", "buttery"],
+  "caffeineLevel": "Medium-High",
+  "storageInstructions": "Store in airtight container in refrigerator after opening. Best consumed within 6 months of harvest.",
+  "elevation": "200-500 meters",
+  "shadingPeriod": "20-30 days",
+  "uniqueFeature": "Shaded before harvest to increase amino acid content, particularly theanine",
+  "brewingNote": "Benefits from very low temperature brewing to maximize sweetness and umami"
+} 

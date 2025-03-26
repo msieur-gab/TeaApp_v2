@@ -1,0 +1,28 @@
+{
+  "name": "Huang Ya Cha",
+  "category": "Yellow",
+  "origin": "Sichuan Province, China",
+  "description": "Huang Ya Cha (Yellow Bud Tea) is a traditional yellow tea from Sichuan Province. This tea consists primarily of early spring buds that undergo the classic yellowing process to develop its characteristic flavor profile.",
+  "brewTime": "3:00",
+  "temperature": "80°C",
+  "notes": "A delicate yellow tea with a fresh, sweet character. The careful processing creates a smooth cup with minimal astringency. Offers notes of sweet corn, chestnut, and light florals with a clean, refreshing finish.",
+  "tags": ["buds", "sweet", "delicate", "fresh", "traditional"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Early Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["sweet corn", "chestnut", "orchid", "honey", "fresh hay"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "600-1000 meters",
+  "oxidationLevel": "Very Light with slight yellowing",
+  "uniqueFeature": "Made primarily from early spring buds for maximum sweetness",
+  "appearance": "Small, uniform buds with a distinctive yellow-green hue"
+} 

@@ -1,0 +1,29 @@
+{
+  "name": "Shou Mei",
+  "category": "White",
+  "origin": "Fujian Province, China",
+  "description": "Shou Mei (Longevity Eyebrow) is a white tea made from more mature leaves than Silver Needle or White Peony. It consists primarily of larger leaves with fewer buds, creating a fuller-bodied white tea experience.",
+  "brewTime": "5:00",
+  "temperature": "85°C",
+  "notes": "The most robust of the traditional white teas. Offers a deeper, nuttier flavor profile with notes of dried fruits, autumn leaves, and wood. The liquor is amber-colored with a smooth, satisfying finish.",
+  "tags": ["robust", "nutty", "fruity", "affordable", "aging potential"],
+  
+  "westernBrewTime": "5:00",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "30",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "6g per 100ml",
+  
+  "harvestDate": "Spring/Summer",
+  "processingMethod": "Withered and air-dried, minimal oxidation",
+  "flavorProfile": ["dried fruit", "nuts", "autumn leaves", "wood", "honey"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Excellent candidate for aging.",
+  "elevation": "400-1000 meters",
+  "oxidationLevel": "Light-Medium (15-20%)",
+  "alternativeNames": "Longevity Eyebrow, Gong Mei (tribute eyebrow)",
+  "uniqueFeature": "Made from more mature leaves, excellent for aging",
+  "agingPotential": "Develops deeper, more complex flavors with proper aging of 3-10+ years"
+} 

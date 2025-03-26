@@ -1,0 +1,28 @@
+{
+  "name": "Anji Bai Cha",
+  "category": "Green",
+  "origin": "Anji County, Zhejiang Province, China",
+  "description": "Anji Bai Cha ('Anji White Tea') is actually a green tea despite its name, made from a rare tea cultivar with naturally light-colored leaves due to reduced chlorophyll content. This prestigious tea is only harvested for a few weeks each spring when the leaves display their characteristic pale color.",
+  "brewTime": "2:30",
+  "temperature": "80°C",
+  "notes": "A delicate green tea with a distinctive appearance of pale, almost white leaves. Offers an exceptionally smooth, sweet flavor with notes of fresh chestnuts, sweet peas, and orchid. The liquor is very pale green with a silky texture and lingering sweetness.",
+  "tags": ["rare", "sweet", "delicate", "spring", "premium"],
+  
+  "westernBrewTime": "2:30",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Early spring (very brief harvest window)",
+  "processingMethod": "Hand-picked, withered, pan-fired",
+  "flavorProfile": ["sweet chestnut", "orchid", "sweet pea", "vanilla", "fresh greens"],
+  "caffeineLevel": "Low-Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 6 months of harvest.",
+  "elevation": "700-800 meters",
+  "uniqueFeature": "Made from a rare tea cultivar with naturally light-colored leaves due to reduced chlorophyll",
+  "alternativeNames": "White Tea of Anji (despite being processed as a green tea)",
+  "harvestWindow": "Only 2-3 weeks each spring when the leaves display their characteristic pale color"
+} 

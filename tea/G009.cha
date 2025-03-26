@@ -1,0 +1,28 @@
+{
+  "name": "Hojicha",
+  "category": "Green",
+  "origin": "Japan",
+  "description": "Hojicha is a Japanese green tea that undergoes an additional roasting process, giving it a distinctive reddish-brown color and unique toasty flavor. Originally created by roasting bancha (late-harvest tea) over charcoal, this process reduces caffeine and creates a soothing, comforting tea.",
+  "brewTime": "1:30",
+  "temperature": "90°C",
+  "notes": "A soothing, roasted tea with a warm, comforting character. The roasting process transforms the typical grassy green tea notes into rich flavors of caramel, roasted nuts, and barley. The liquor is reddish-brown with a smooth, clean finish and very little astringency.",
+  "tags": ["roasted", "low-caffeine", "toasty", "soothing", "warm"],
+  
+  "westernBrewTime": "1:30",
+  "westernTemperature": "90°C",
+  "westernLeafRatio": "4g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "95°C",
+  "gongfuLeafRatio": "6g per 100ml",
+  
+  "harvestDate": "Various (often later harvest)",
+  "processingMethod": "Steamed, rolled, dried, then roasted over charcoal",
+  "flavorProfile": ["roasted barley", "caramel", "toasted nuts", "coffee-like", "warm wood"],
+  "caffeineLevel": "Low",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 1 year.",
+  "elevation": "Various",
+  "uniqueFeature": "Roasted after standard green tea processing, transforming color, flavor, and reducing caffeine",
+  "culturalNote": "Often served to children and in the evening in Japan due to its low caffeine content",
+  "baseTeaType": "Typically made from bancha (late-harvest tea) or sencha stems"
+} 

@@ -1,0 +1,28 @@
+{
+  "name": "Huang Jin Gui",
+  "category": "Yellow",
+  "origin": "Fujian Province, China",
+  "description": "Huang Jin Gui (Golden Osmanthus) is a specialty yellow tea from Fujian Province. While sharing a name with a famous oolong, this is a true yellow tea that undergoes the traditional men huan (sealed yellowing) process to develop its unique character.",
+  "brewTime": "3:15",
+  "temperature": "80°C",
+  "notes": "A delicate yellow tea with a distinctive floral character. The careful processing creates a smooth, sweet cup with prominent osmanthus-like notes. Offers a silky mouthfeel with notes of sweet flowers, honey, and light fruit.",
+  "tags": ["floral", "sweet", "delicate", "aromatic", "specialty"],
+  
+  "westernBrewTime": "3:15",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["osmanthus", "honey", "apricot", "sweet corn", "light vanilla"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "500-900 meters",
+  "oxidationLevel": "Light with moderate yellowing",
+  "uniqueFeature": "Named for its distinctive osmanthus-like aroma",
+  "processingNote": "Traditional yellowing process that enhances natural floral notes"
+} 

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tea Progress Component Demo</title>
+  <style>
+    :root {
+      --primary-color: #7B9070;
+      --primary-dark: #5d6e54;
+      --background-color: #f4f4f4;
+      --card-color: #ffffff;
+      --text-color: #333333;
+      --border-color: #eeeeee;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 1rem;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.5;
+    }
+    
+    .demo-container {
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+      background-color: var(--card-color);
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--text-color);
+      font-size: 1.5rem;
+    }
+    
+    .section-title {
+      font-size: 1.1rem;
+      margin: 1.5rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      color: #555;
+    }
+    
+    .controls {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      width: 100%;
+    }
+    
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      flex: 1 0 auto;
+      min-width: 120px;
+      transition: background-color 0.2s, transform 0.1s;
+      touch-action: manipulation;
+    }
+    
+    button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    button:active {
+      transform: scale(0.98);
+    }
+    
+    .test-data {
+      margin-top: 15px;
+      font-size: 0.8rem;
+      color: #666;
+      padding: 10px;
+      background-color: rgba(0,0,0,0.03);
+      border-radius: 4px;
+    }
+    
+    /* Mobile optimizations */
+    @media (max-width: 480px) {
+      body {
+        padding: 0.5rem;
+      }
+      
+      .demo-container {
+        padding: 1rem;
+        border-radius: 6px;
+      }
+      
+      h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+      }
+      
+      .section-title {
+        font-size: 1rem;
+        margin: 1.2rem 0 0.8rem;
+      }
+      
+      button {
+        padding: 12px 16px;
+        width: 100%;
+        margin-bottom: 0;
+      }
+    }
+  </style>
+  <!-- Include Dexie.js for IndexedDB -->
+  <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+</head>
+<body>
+  <div class="demo-container">
+    <h2>Tea Collection Progress</h2>
+    
+    <div class="section-title">Green Tea Progress</div>
+    <tea-progress 
+      category="Green" 
+      total="52">
+    </tea-progress>
+    
+    <div class="section-title">Black Tea Progress</div>
+    <tea-progress 
+      category="Black" 
+      total="52">
+    </tea-progress>
+    
+    <div class="section-title">Oolong Tea Progress</div>
+    <tea-progress 
+      category="Oolong" 
+      total="52">
+    </tea-progress>
+    
+    <div class="section-title">White Tea Progress</div>
+    <tea-progress 
+      category="White" 
+      total="52">
+    </tea-progress>
+    
+    <div class="section-title">Yellow Tea Progress</div>
+    <tea-progress 
+      category="Yellow" 
+      total="52">
+    </tea-progress>
+    
+    <div class="section-title">Pu-erh Tea Progress</div>
+    <tea-progress 
+      category="Pu-erh" 
+      total="52">
+    </tea-progress>
+    
+    <div class="controls">
+      <div class="button-group">
+        <button id="add-green">Add Green Tea</button>
+        <button id="add-black">Add Black Tea</button>
+        <button id="add-oolong">Add Oolong Tea</button>
+      </div>
+      
+      <div class="button-group">
+        <button id="add-white">Add White Tea</button>
+        <button id="add-yellow">Add Yellow Tea</button>
+        <button id="add-puerh">Add Pu-erh Tea</button>
+      </div>
+      
+      <button id="reset-db">Reset Database</button>
+      
+      <div class="test-data">
+        <p>Test data will be added to the database when you click the buttons above.</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import TeaProgress from './progress-component.js';
+    import TeaDatabase from './js/services/tea-database.js';
+    
+    // Create a simple event system if not available
+    const eventSystem = {
+      listeners: {},
+      
+      subscribe(event, callback) {
+        if (!this.listeners[event]) {
+          this.listeners[event] = [];
+        }
+        this.listeners[event].push(callback);
+      },
+      
+      unsubscribe(event, callback) {
+        if (!this.listeners[event]) return;
+        this.listeners[event] = this.listeners[event].filter(cb => cb !== callback);
+      },
+      
+      publish(event, data) {
+        if (!this.listeners[event]) return;
+        this.listeners[event].forEach(callback => {
+          try {
+            callback({ detail: data });
+          } catch (error) {
+            console.error(`Error in event listener for ${event}:`, error);
+          }
+        });
+      }
+    };
+    
+    // Define event types if not available
+    const EventTypes = {
+      TEA_ADDED: 'tea-added',
+      TEA_DELETED: 'tea-deleted'
+    };
+    
+    // Make event system globally available
+    window.teaEvents = eventSystem;
+    window.TeaEventTypes = EventTypes;
+    
+    // Initialize database
+    async function initDemo() {
+      try {
+        await TeaDatabase.init();
+        console.log('Database initialized for demo');
+        
+        // Set up event listeners for test buttons
+        document.getElementById('add-green').addEventListener('click', () => addTestTea('Green'));
+        document.getElementById('add-black').addEventListener('click', () => addTestTea('Black'));
+        document.getElementById('add-oolong').addEventListener('click', () => addTestTea('Oolong'));
+        document.getElementById('add-white').addEventListener('click', () => addTestTea('White'));
+        document.getElementById('add-yellow').addEventListener('click', () => addTestTea('Yellow'));
+        document.getElementById('add-puerh').addEventListener('click', () => addTestTea('Pu-erh'));
+        document.getElementById('reset-db').addEventListener('click', resetDatabase);
+        
+        // Add touch feedback for mobile
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+          button.addEventListener('touchstart', () => {
+            button.style.backgroundColor = 'var(--primary-dark)';
+          }, { passive: true });
+          
+          button.addEventListener('touchend', () => {
+            button.style.backgroundColor = 'var(--primary-color)';
+          }, { passive: true });
+        });
+      } catch (error) {
+        console.error('Error initializing demo:', error);
+      }
+    }
+    
+    // Add a test tea to the database
+    async function addTestTea(category) {
+      try {
+        const count = await TeaDatabase.getCategoryTeaCount(category);
+        const teaName = `${category} Tea ${count + 1}`;
+        
+        const teaData = {
+          name: teaName,
+          category: category,
+          origin: 'Test Origin',
+          tags: ['test', 'demo'],
+          addedAt: new Date()
+        };
+        
+        const id = await TeaDatabase.addTea(teaData);
+        console.log(`Added test tea: ${teaName} with ID ${id}`);
+        
+        // Notify about the new tea using our event system
+        window.teaEvents.publish(EventTypes.TEA_ADDED, { tea: teaData });
+        
+        // Provide visual feedback
+        const button = document.getElementById(`add-${category.toLowerCase().replace('-', '')}`);
+        const originalText = button.textContent;
+        button.textContent = `Added ${category} Tea!`;
+        button.style.backgroundColor = '#4a8c4a'; // Success color
+        
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.style.backgroundColor = 'var(--primary-color)';
+        }, 1000);
+      } catch (error) {
+        console.error(`Error adding test ${category} tea:`, error);
+        
+        // Show error feedback
+        const button = document.getElementById(`add-${category.toLowerCase().replace('-', '')}`);
+        button.textContent = 'Error!';
+        button.style.backgroundColor = '#c74a4a'; // Error color
+        
+        setTimeout(() => {
+          button.textContent = `Add ${category} Tea`;
+          button.style.backgroundColor = 'var(--primary-color)';
+        }, 1000);
+      }
+    }
+    
+    // Reset the database
+    async function resetDatabase() {
+      try {
+        await TeaDatabase.clearAllTeas();
+        console.log('Database reset');
+        
+        // Refresh all progress components
+        const progressElements = document.querySelectorAll('tea-progress');
+        for (const element of progressElements) {
+          if (element.refreshData) {
+            await element.refreshData();
+          }
+        }
+        
+        // Provide visual feedback
+        const button = document.getElementById('reset-db');
+        button.textContent = 'Database Reset!';
+        button.style.backgroundColor = '#4a8c4a'; // Success color
+        
+        setTimeout(() => {
+          button.textContent = 'Reset Database';
+          button.style.backgroundColor = 'var(--primary-color)';
+        }, 1000);
+      } catch (error) {
+        console.error('Error resetting database:', error);
+        
+        // Show error feedback
+        const button = document.getElementById('reset-db');
+        button.textContent = 'Error!';
+        button.style.backgroundColor = '#c74a4a'; // Error color
+        
+        setTimeout(() => {
+          button.textContent = 'Reset Database';
+          button.style.backgroundColor = 'var(--primary-color)';
+        }, 1000);
+      }
+    }
+    
+    // Initialize the demo
+    initDemo();
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "Huang Xiao Cha",
+  "category": "Yellow",
+  "origin": "Guangdong Province, China",
+  "description": "Huang Xiao Cha (Yellow Small Tea) is a lesser-known yellow tea from Guangdong Province. This regional specialty undergoes a unique processing method that creates a distinctive character that bridges the gap between green and oolong teas.",
+  "brewTime": "3:00",
+  "temperature": "85°C",
+  "notes": "A unique yellow tea with a character that shows some similarities to light oolongs. The processing creates a smooth, aromatic cup with minimal astringency. Offers notes of orchid, sweet corn, and light honey with a refreshing finish.",
+  "tags": ["regional", "aromatic", "smooth", "floral", "rare"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["orchid", "sweet corn", "honey", "light fruit", "fresh herbs"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "300-600 meters",
+  "oxidationLevel": "Light with moderate yellowing",
+  "uniqueFeature": "Regional specialty from Guangdong with limited production",
+  "rarity": "Rarely found outside of its production region"
+} 

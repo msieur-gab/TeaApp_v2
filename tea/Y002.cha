@@ -1,0 +1,29 @@
+{
+  "name": "Meng Ding Huang Ya",
+  "category": "Yellow",
+  "origin": "Meng Ding Mountain, Sichuan Province, China",
+  "description": "Meng Ding Huang Ya (Yellow Buds) is a historic yellow tea from Meng Ding Mountain, one of the earliest tea cultivation sites in China. This tea consists of early spring buds that undergo the traditional yellowing process.",
+  "brewTime": "3:00",
+  "temperature": "80°C",
+  "notes": "A delicate yellow tea with a distinctive sweet, nutty character. The careful yellowing process removes grassy notes while preserving freshness. Offers a smooth mouthfeel with notes of sweet corn, chestnuts, and subtle florals.",
+  "tags": ["historic", "sweet", "nutty", "spring", "buds"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Early Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["sweet corn", "chestnut", "honey", "orchid", "fresh bread"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "800-1200 meters",
+  "oxidationLevel": "Very Light with slight yellowing",
+  "alternativeNames": "Yellow Buds",
+  "uniqueFeature": "One of China's oldest tea varieties, dating back to the Tang Dynasty",
+  "historicalSignificance": "Once a tribute tea for the imperial court during the Tang Dynasty"
+} 

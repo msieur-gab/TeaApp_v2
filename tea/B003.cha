@@ -1,0 +1,29 @@
+{
+  "name": "Jin Jun Mei",
+  "category": "Black",
+  "origin": "Wuyi Mountains, Fujian Province, China",
+  "description": "Jin Jun Mei ('Golden Beautiful Eyebrow') is a premium black tea created in 2005, made exclusively from the buds of the tea plant harvested in early spring. This labor-intensive tea requires over 50,000 buds to produce a single kilogram, resulting in its distinctive appearance of golden tips and exceptional flavor profile.",
+  "brewTime": "3:00",
+  "temperature": "90°C",
+  "notes": "A luxurious black tea with an extraordinary concentration of golden buds. Offers an exceptionally smooth, sweet character with notes of honey, malt, cocoa, and ripe fruit. The liquor is bright amber-gold with a velvety texture and lingering sweet finish.",
+  "tags": ["premium", "golden tips", "honey", "sweet", "buds only"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "90°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "15",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Early spring",
+  "processingMethod": "Bud-only picking, careful oxidation with specialized techniques",
+  "flavorProfile": ["honey", "malt", "cocoa", "lychee", "caramel"],
+  "caffeineLevel": "Medium-High",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 1-2 years.",
+  "elevation": "1000-1500 meters",
+  "oxidationLevel": "Fully oxidized",
+  "uniqueFeature": "Made exclusively from buds, with approximately 50,000 buds required to produce one kilogram",
+  "creationDate": "First created in 2005, making it a relatively new tea with traditional roots",
+  "pricePoint": "One of China's most expensive black teas due to its labor-intensive production"
+} 

@@ -1,0 +1,29 @@
+{
+  "name": "Keemun",
+  "category": "Black",
+  "origin": "Qimen County, Anhui Province, China",
+  "description": "Keemun (Qimen) is one of China's most famous black teas, first produced in 1875. Known as the 'Burgundy of teas' for its rich, wine-like character, Keemun is prized for its complex flavor profile and distinctive fruity-floral aroma often described as 'orchid fragrance' or 'Keemun fragrance.'",
+  "brewTime": "3:00",
+  "temperature": "95°C",
+  "notes": "A sophisticated black tea with remarkable complexity. Offers a perfect balance of fruity sweetness, malty depth, and subtle smokiness. The distinctive 'Keemun fragrance' presents notes of orchid, rose, and plum with a wine-like quality. The liquor is bright red with a smooth, clean finish.",
+  "tags": ["qimen", "fruity", "wine-like", "classic", "aromatic"],
+  
+  "westernBrewTime": "3:00",
+  "westernTemperature": "95°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Traditional black tea processing with careful oxidation",
+  "flavorProfile": ["orchid", "malt", "dark fruits", "honey", "subtle smoke"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 1-2 years.",
+  "elevation": "300-800 meters",
+  "oxidationLevel": "Fully oxidized",
+  "uniqueFeature": "Known for its distinctive 'Keemun fragrance' (Qimen Xiang) with orchid and rose notes",
+  "alternativeNames": "Qimen Hong Cha",
+  "historicalSignificance": "Created in 1875, quickly became popular in the West and was a favorite in English Breakfast blends"
+} 

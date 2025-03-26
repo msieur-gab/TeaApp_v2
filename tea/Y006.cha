@@ -1,0 +1,28 @@
+{
+  "name": "Huang Tang",
+  "category": "Yellow",
+  "origin": "Anhui Province, China",
+  "description": "Huang Tang (Yellow Soup) is a traditional yellow tea from Anhui Province. This tea represents a regional variation of yellow tea processing that creates a distinctive character between green and more oxidized teas.",
+  "brewTime": "3:15",
+  "temperature": "85°C",
+  "notes": "A balanced yellow tea with a smooth, mellow character. The yellowing process creates a distinctive sweetness with reduced vegetal notes. Offers a pleasant thickness in the mouth with notes of sweet grains, honey, and subtle florals.",
+  "tags": ["traditional", "mellow", "sweet", "smooth", "regional"],
+  
+  "westernBrewTime": "3:15",
+  "westernTemperature": "85°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "25",
+  "gongfuTemperature": "90°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["sweet grains", "honey", "dried flowers", "chestnut", "apricot"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "400-700 meters",
+  "oxidationLevel": "Light with moderate yellowing",
+  "uniqueFeature": "Named for the distinctive golden-yellow color of its infusion",
+  "processingNote": "Traditional yellowing process requires precise skill and timing"
+} 

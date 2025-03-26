@@ -1,0 +1,29 @@
+{
+  "name": "Ceylon White",
+  "category": "White",
+  "origin": "Sri Lanka",
+  "description": "Ceylon White is a premium tea from the highlands of Sri Lanka. Produced in limited quantities, it consists primarily of the silver tips (buds) of the tea plant, carefully handpicked and minimally processed to preserve their delicate character.",
+  "brewTime": "4:00",
+  "temperature": "80°C",
+  "notes": "A delicate yet distinctive white tea with Sri Lanka's characteristic bright profile. Offers notes of honey, pine, light citrus, and subtle vanilla. The liquor is pale golden with excellent clarity and a clean, refreshing finish.",
+  "tags": ["ceylon", "delicate", "honey", "pine", "premium"],
+  
+  "westernBrewTime": "4:00",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "30",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Seasonal (best quality during dry seasons)",
+  "processingMethod": "Withered and sun-dried, minimal oxidation",
+  "flavorProfile": ["honey", "pine", "citrus", "vanilla", "fresh herbs"],
+  "caffeineLevel": "Low-Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "1200-2000 meters",
+  "oxidationLevel": "Very Light (5-10%)",
+  "alternativeNames": "Silver Tips, Virgin White Tea",
+  "uniqueFeature": "Often harvested according to traditional methods where the leaves are not touched by human hands",
+  "production": "Limited production from select high-elevation estates"
+} 

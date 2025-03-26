@@ -1,0 +1,28 @@
+{
+  "name": "Huang Shan Huang Ya",
+  "category": "Yellow",
+  "origin": "Huangshan (Yellow Mountain), Anhui Province, China",
+  "description": "Huang Shan Huang Ya is a yellow tea from the famous Yellow Mountain region of Anhui Province. This tea combines the distinctive terroir of Huangshan with traditional yellow tea processing to create a unique flavor profile.",
+  "brewTime": "3:15",
+  "temperature": "80°C",
+  "notes": "A refined yellow tea with a clean, elegant character. The misty mountain environment contributes to its distinctive flavor. Offers notes of orchid, chestnut, and sweet corn with a smooth, lingering finish.",
+  "tags": ["huangshan", "elegant", "sweet", "floral", "mountain"],
+  
+  "westernBrewTime": "3:15",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Early Spring",
+  "processingMethod": "Withered, fixed, wrapped and smothered (men huan), dried",
+  "flavorProfile": ["orchid", "chestnut", "sweet corn", "honey", "bamboo"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors.",
+  "elevation": "800-1200 meters",
+  "oxidationLevel": "Very Light with slight yellowing",
+  "uniqueFeature": "Grown in the misty Huangshan mountains, creating a distinctive terroir",
+  "appearance": "Slender buds with a bright yellow-green color"
+} 

@@ -1,0 +1,28 @@
+{
+  "name": "Bai Hao Yin Zhen",
+  "category": "White",
+  "origin": "Fujian Province, China",
+  "description": "Bai Hao Yin Zhen (Silver Needle) is the most prestigious white tea, consisting entirely of downy, unopened buds harvested in early spring. These silver-colored buds create a delicate, sweet infusion with minimal processing.",
+  "brewTime": "4:00",
+  "temperature": "80°C",
+  "notes": "Exceptionally delicate with subtle notes of honey, melon, and fresh hay. The liquor is pale yellow with a silky texture and sweet, clean finish. Best brewed with care to appreciate its subtle complexity.",
+  "tags": ["silver needle", "premium", "delicate", "sweet", "buds only"],
+  
+  "westernBrewTime": "4:00",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "45",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Early Spring",
+  "processingMethod": "Withered and air-dried, minimal oxidation",
+  "flavorProfile": ["honey", "cucumber", "melon", "fresh hay", "white peach"],
+  "caffeineLevel": "Low-Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Can be aged for deeper flavor.",
+  "elevation": "500-1500 meters",
+  "oxidationLevel": "Very Light (5-10%)",
+  "alternativeNames": "Silver Needle",
+  "uniqueFeature": "Consists entirely of downy, unopened buds"
+} 

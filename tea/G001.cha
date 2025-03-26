@@ -1,0 +1,28 @@
+{
+  "name": "Dragon Well",
+  "category": "Green",
+  "origin": "West Lake region, Hangzhou, Zhejiang Province, China",
+  "description": "Dragon Well (Longjing) is one of China's most celebrated green teas, known for its distinctive flat, sword-shaped leaves and characteristic 'chestnut' aroma. Authentic West Lake Dragon Well is grown in the hills surrounding the UNESCO World Heritage site of West Lake.",
+  "brewTime": "2:30",
+  "temperature": "80°C",
+  "notes": "The epitome of Chinese green tea with a distinctive flat appearance and signature pan-fired aroma. Offers a perfect balance of sweet, vegetal notes with a gentle, toasty character reminiscent of chestnuts. The mouthfeel is smooth and rounded with a clean, refreshing finish.",
+  "tags": ["longjing", "pan-fired", "nutty", "classic", "premium"],
+  
+  "westernBrewTime": "2:30",
+  "westernTemperature": "80°C",
+  "westernLeafRatio": "3g per 200ml",
+  
+  "gongfuBrewTime": "20",
+  "gongfuTemperature": "85°C",
+  "gongfuLeafRatio": "5g per 100ml",
+  
+  "harvestDate": "Pre-Qingming (early spring)",
+  "processingMethod": "Hand-picked, withered, pan-fired",
+  "flavorProfile": ["chestnut", "sweet grass", "orchid", "umami", "clean mineral"],
+  "caffeineLevel": "Medium",
+  "storageInstructions": "Store in airtight container away from light, moisture, and strong odors. Best consumed within 6-12 months of harvest.",
+  "elevation": "100-600 meters",
+  "gradeClassification": "Premium (Pre-Qingming)",
+  "uniqueFeature": "Traditionally pan-fired by hand in woks to create the distinctive flat shape and nutty flavor",
+  "alternativeNames": "Longjing, Lung Ching"
+} 
